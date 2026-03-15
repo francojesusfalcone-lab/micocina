@@ -11,6 +11,7 @@ import ToastContainer from './components/ToastContainer'
 
 // Pages
 import LoginPage           from './pages/LoginPage'
+import AuthCallback        from './pages/AuthCallback'
 import OnboardingPage      from './pages/OnboardingPage'
 import DashboardPage       from './pages/DashboardPage'
 import ProductsPage        from './pages/ProductsPage'
@@ -45,13 +46,11 @@ function LoadingScreen() {
   )
 }
 
-// ─── Main layout wrapper (with bottom nav) ────────────────────────────────────
+// ─── Main layout wrapper ──────────────────────────────────────────────────────
 function AppLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto relative">
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
       <BottomNav />
     </div>
   )
@@ -60,28 +59,26 @@ function AppLayout({ children }) {
 // ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [loading, setLoading] = useState(true)
-  const [session, setSession] = useState(null)
+  const [session, setSession] = useState(undefined) // undefined = todavía no sabemos
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
+  // 1. Manejar sesión de Supabase
   useEffect(() => {
-    // Obtener sesión actual de Supabase
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
 
-    // Escuchar cambios de sesión — esto captura el callback de OAuth
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
-      // Si viene de un callback de OAuth, aseguramos que loading se resuelva
-      if (event === 'SIGNED_IN') {
-        setLoading(false)
-      }
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
+  // 2. Cargar datos locales (solo cuando ya sabemos si hay sesión o no)
   useEffect(() => {
+    if (session === undefined) return // esperar
+
     async function bootstrap() {
       try {
         await initDB()
@@ -112,7 +109,7 @@ export default function App() {
           setOnboardingDone(true)
         }
 
-        // Cargar plan desde Supabase si hay sesión, si no desde DB local
+        // Plan desde Supabase o DB local
         if (session) {
           try {
             const { data: profile } = await supabase
@@ -120,12 +117,7 @@ export default function App() {
               .select('plan')
               .eq('id', session.user.id)
               .single()
-            if (profile?.plan === 'premium') {
-              setPlan('premium')
-            } else {
-              const resolvedPlan = await loadPlanFromDB(db)
-              setPlan(resolvedPlan)
-            }
+            setPlan(profile?.plan === 'premium' ? 'premium' : 'free')
           } catch {
             const resolvedPlan = await loadPlanFromDB(db)
             setPlan(resolvedPlan)
@@ -144,22 +136,29 @@ export default function App() {
     bootstrap()
   }, [session])
 
-  if (loading) return <LoadingScreen />
-
-  // Sin sesión → mostrar login
-  if (!session) return <LoginPage />
+  // Mientras no sabemos nada → loading
+  if (session === undefined || loading) return <LoadingScreen />
 
   return (
     <BrowserRouter>
       <ToastContainer />
       <Routes>
+        {/* Callback de OAuth — procesa el token de Google */}
+        <Route path="/auth/callback" element={<AuthCallback />} />
+
+        {/* Login — solo si no hay sesión */}
+        <Route
+          path="/login"
+          element={session ? <Navigate to="/" replace /> : <LoginPage />}
+        />
+
         {/* Onboarding */}
         <Route
           path="/onboarding"
           element={
-            onboardingDone
-              ? <Navigate to="/" replace />
-              : <OnboardingPage />
+            !session ? <Navigate to="/login" replace /> :
+            onboardingDone ? <Navigate to="/" replace /> :
+            <OnboardingPage />
           }
         />
 
@@ -167,42 +166,42 @@ export default function App() {
         <Route
           path="/*"
           element={
-            !onboardingDone
-              ? <Navigate to="/onboarding" replace />
-              : (
-                <AppLayout>
-                  <Routes>
-                    <Route path="/"                          element={<DashboardPage />} />
-                    <Route path="/productos"                 element={<ProductsPage />} />
-                    <Route path="/comandas"                  element={<OrdersPage />} />
-                    <Route path="/comandas/nueva"            element={<OrderFormPage />} />
-                    <Route path="/comandas/:id"              element={<OrderDetailPage />} />
-                    <Route path="/stock"                     element={<StockPage />} />
-                    <Route path="/stock/nuevo"               element={<IngredientFormPage />} />
-                    <Route path="/stock/editar/:id"          element={<IngredientFormPage />} />
-                    <Route path="/stock/:id"                 element={<IngredientDetailPage />} />
-                    <Route path="/stock/actualizar-precios"  element={<UpdatePricesPage />} />
-                    <Route path="/productos/nuevo"           element={<RecipeFormPage />} />
-                    <Route path="/productos/editar/:id"      element={<RecipeFormPage />} />
-                    <Route path="/productos/:id"             element={<RecipeDetailPage />} />
-                    <Route path="/precio-rapido"             element={<QuickPricePage />} />
-                    <Route path="/configuracion"             element={<SettingsPage />} />
-                    <Route path="/premium"                   element={<PremiumPage />} />
-                    <Route path="/gastos"                    element={<ExpensesPage />} />
-                    <Route path="/gastos/nuevo"              element={<ExpenseFormPage />} />
-                    <Route path="/gastos/editar/:id"         element={<ExpenseFormPage />} />
-                    <Route path="/clientes"                  element={<ClientsPage />} />
-                    <Route path="/clientes/nuevo"            element={<ClientFormPage />} />
-                    <Route path="/clientes/editar/:id"       element={<ClientFormPage />} />
-                    <Route path="/clientes/:id"              element={<ClientDetailPage />} />
-                    <Route path="/ia"                        element={<AIPage />} />
-                    <Route path="/premium/success"           element={<Navigate to="/premium?status=approved" replace />} />
-                    <Route path="/premium/failure"           element={<Navigate to="/premium?status=failure" replace />} />
-                    <Route path="/premium/pending"           element={<Navigate to="/premium?status=pending" replace />} />
-                    <Route path="*"                          element={<Navigate to="/" replace />} />
-                  </Routes>
-                </AppLayout>
-              )
+            !session ? <Navigate to="/login" replace /> :
+            !onboardingDone ? <Navigate to="/onboarding" replace /> :
+            (
+              <AppLayout>
+                <Routes>
+                  <Route path="/"                         element={<DashboardPage />} />
+                  <Route path="/productos"                element={<ProductsPage />} />
+                  <Route path="/comandas"                 element={<OrdersPage />} />
+                  <Route path="/comandas/nueva"           element={<OrderFormPage />} />
+                  <Route path="/comandas/:id"             element={<OrderDetailPage />} />
+                  <Route path="/stock"                    element={<StockPage />} />
+                  <Route path="/stock/nuevo"              element={<IngredientFormPage />} />
+                  <Route path="/stock/editar/:id"         element={<IngredientFormPage />} />
+                  <Route path="/stock/:id"                element={<IngredientDetailPage />} />
+                  <Route path="/stock/actualizar-precios" element={<UpdatePricesPage />} />
+                  <Route path="/productos/nuevo"          element={<RecipeFormPage />} />
+                  <Route path="/productos/editar/:id"     element={<RecipeFormPage />} />
+                  <Route path="/productos/:id"            element={<RecipeDetailPage />} />
+                  <Route path="/precio-rapido"            element={<QuickPricePage />} />
+                  <Route path="/configuracion"            element={<SettingsPage />} />
+                  <Route path="/premium"                  element={<PremiumPage />} />
+                  <Route path="/gastos"                   element={<ExpensesPage />} />
+                  <Route path="/gastos/nuevo"             element={<ExpenseFormPage />} />
+                  <Route path="/gastos/editar/:id"        element={<ExpenseFormPage />} />
+                  <Route path="/clientes"                 element={<ClientsPage />} />
+                  <Route path="/clientes/nuevo"           element={<ClientFormPage />} />
+                  <Route path="/clientes/editar/:id"      element={<ClientFormPage />} />
+                  <Route path="/clientes/:id"             element={<ClientDetailPage />} />
+                  <Route path="/ia"                       element={<AIPage />} />
+                  <Route path="/premium/success"          element={<Navigate to="/premium?status=approved" replace />} />
+                  <Route path="/premium/failure"          element={<Navigate to="/premium?status=failure" replace />} />
+                  <Route path="/premium/pending"          element={<Navigate to="/premium?status=pending" replace />} />
+                  <Route path="*"                         element={<Navigate to="/" replace />} />
+                </Routes>
+              </AppLayout>
+            )
           }
         />
       </Routes>
