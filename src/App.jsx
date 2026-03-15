@@ -69,9 +69,13 @@ export default function App() {
       setSession(session)
     })
 
-    // Escuchar cambios de sesión
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Escuchar cambios de sesión — esto captura el callback de OAuth
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
+      // Si viene de un callback de OAuth, aseguramos que loading se resuelva
+      if (event === 'SIGNED_IN') {
+        setLoading(false)
+      }
     })
 
     return () => subscription.unsubscribe()
