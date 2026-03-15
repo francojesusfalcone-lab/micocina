@@ -92,7 +92,7 @@ export default function OnboardingPage() {
     ])
 
     setOnboardingDone(true)
-    navigate('/', { replace: true })
+    window.location.href = "/"
   }
 
   function handleNext() {
