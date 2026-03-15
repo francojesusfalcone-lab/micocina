@@ -10,31 +10,30 @@ import BottomNav from './components/BottomNav'
 import ToastContainer from './components/ToastContainer'
 
 // Pages
-import LoginPage           from './pages/LoginPage'
-import AuthCallback        from './pages/AuthCallback'
-import OnboardingPage      from './pages/OnboardingPage'
-import DashboardPage       from './pages/DashboardPage'
-import ProductsPage        from './pages/ProductsPage'
-import OrdersPage          from './pages/OrdersPage'
-import StockPage           from './pages/StockPage'
-import SettingsPage        from './pages/SettingsPage'
-import PremiumPage         from './pages/PremiumPage'
-import IngredientFormPage  from './pages/IngredientFormPage'
+import LoginPage            from './pages/LoginPage'
+import AuthCallback         from './pages/AuthCallback'
+import OnboardingPage       from './pages/OnboardingPage'
+import DashboardPage        from './pages/DashboardPage'
+import ProductsPage         from './pages/ProductsPage'
+import OrdersPage           from './pages/OrdersPage'
+import StockPage            from './pages/StockPage'
+import SettingsPage         from './pages/SettingsPage'
+import PremiumPage          from './pages/PremiumPage'
+import IngredientFormPage   from './pages/IngredientFormPage'
 import IngredientDetailPage from './pages/IngredientDetailPage'
-import UpdatePricesPage    from './pages/UpdatePricesPage'
-import RecipeFormPage      from './pages/RecipeFormPage'
-import RecipeDetailPage    from './pages/RecipeDetailPage'
-import QuickPricePage      from './pages/QuickPricePage'
-import OrderFormPage       from './pages/OrderFormPage'
-import OrderDetailPage     from './pages/OrderDetailPage'
-import ExpensesPage        from './pages/ExpensesPage'
-import ExpenseFormPage     from './pages/ExpenseFormPage'
-import ClientsPage         from './pages/ClientsPage'
-import ClientDetailPage    from './pages/ClientDetailPage'
-import ClientFormPage      from './pages/ClientFormPage'
-import AIPage              from './pages/AIPage'
+import UpdatePricesPage     from './pages/UpdatePricesPage'
+import RecipeFormPage       from './pages/RecipeFormPage'
+import RecipeDetailPage     from './pages/RecipeDetailPage'
+import QuickPricePage       from './pages/QuickPricePage'
+import OrderFormPage        from './pages/OrderFormPage'
+import OrderDetailPage      from './pages/OrderDetailPage'
+import ExpensesPage         from './pages/ExpensesPage'
+import ExpenseFormPage      from './pages/ExpenseFormPage'
+import ClientsPage          from './pages/ClientsPage'
+import ClientDetailPage     from './pages/ClientDetailPage'
+import ClientFormPage       from './pages/ClientFormPage'
+import AIPage               from './pages/AIPage'
 
-// ─── Loading screen ───────────────────────────────────────────────────────────
 function LoadingScreen() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -46,7 +45,6 @@ function LoadingScreen() {
   )
 }
 
-// ─── Main layout wrapper ──────────────────────────────────────────────────────
 function AppLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto relative">
@@ -56,29 +54,34 @@ function AppLayout({ children }) {
   )
 }
 
-// ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [loading, setLoading] = useState(true)
-  const [session, setSession] = useState(undefined) // undefined = todavía no sabemos
+  // null = sin sesión, objeto = con sesión, undefined = todavía cargando
+  const [session, setSession] = useState(undefined)
+  const [appReady, setAppReady] = useState(false)
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
-  // 1. Manejar sesión de Supabase
+  // PASO 1: Verificar sesión de Supabase PRIMERO
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
+      setSession(session ?? null)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
+      setSession(session ?? null)
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  // 2. Cargar datos locales (solo cuando ya sabemos si hay sesión o no)
+  // PASO 2: Solo cargar DB local si hay sesión
   useEffect(() => {
-    if (session === undefined) return // esperar
+    if (session === undefined) return // esperar sesión
+    if (session === null) {
+      setAppReady(true) // sin sesión → ir al login, no cargar DB
+      return
+    }
 
+    // Hay sesión → cargar datos locales
     async function bootstrap() {
       try {
         await initDB()
@@ -98,9 +101,9 @@ export default function App() {
         if (businessName) {
           updateSettings({
             businessName:       businessName.value,
-            country:            country?.value       || 'AR',
-            currency:           currency?.value      || 'ARS',
-            currencySymbol:     currencySymbol?.value || '$',
+            country:            country?.value        || 'AR',
+            currency:           currency?.value       || 'ARS',
+            currencySymbol:     currencySymbol?.value  || '$',
             productionCapacity: productionCapacity?.value || 10,
           })
         }
@@ -109,66 +112,59 @@ export default function App() {
           setOnboardingDone(true)
         }
 
-        // Plan desde Supabase o DB local
-        if (session) {
-          try {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('plan')
-              .eq('id', session.user.id)
-              .single()
-            setPlan(profile?.plan === 'premium' ? 'premium' : 'free')
-          } catch {
-            const resolvedPlan = await loadPlanFromDB(db)
-            setPlan(resolvedPlan)
-          }
-        } else {
+        // Plan desde Supabase
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('plan')
+            .eq('id', session.user.id)
+            .single()
+          setPlan(profile?.plan === 'premium' ? 'premium' : 'free')
+        } catch {
           const resolvedPlan = await loadPlanFromDB(db)
           setPlan(resolvedPlan)
         }
       } catch (err) {
         console.error('Bootstrap error:', err)
       } finally {
-        setLoading(false)
+        setAppReady(true)
       }
     }
 
     bootstrap()
   }, [session])
 
-  // Mientras no sabemos nada → loading
-  if (session === undefined || loading) return <LoadingScreen />
+  // Todavía no sabemos si hay sesión
+  if (session === undefined || !appReady) return <LoadingScreen />
 
+  // Sin sesión → mostrar login (con BrowserRouter para /auth/callback)
+  if (session === null) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+    )
+  }
+
+  // Con sesión → app completa
   return (
     <BrowserRouter>
       <ToastContainer />
       <Routes>
-        {/* Callback de OAuth — procesa el token de Google */}
         <Route path="/auth/callback" element={<AuthCallback />} />
 
-        {/* Login — solo si no hay sesión */}
-        <Route
-          path="/login"
-          element={session ? <Navigate to="/" replace /> : <LoginPage />}
-        />
-
-        {/* Onboarding */}
         <Route
           path="/onboarding"
-          element={
-            !session ? <Navigate to="/login" replace /> :
-            onboardingDone ? <Navigate to="/" replace /> :
-            <OnboardingPage />
-          }
+          element={onboardingDone ? <Navigate to="/" replace /> : <OnboardingPage />}
         />
 
-        {/* App principal */}
         <Route
           path="/*"
           element={
-            !session ? <Navigate to="/login" replace /> :
-            !onboardingDone ? <Navigate to="/onboarding" replace /> :
-            (
+            !onboardingDone ? <Navigate to="/onboarding" replace /> : (
               <AppLayout>
                 <Routes>
                   <Route path="/"                         element={<DashboardPage />} />
