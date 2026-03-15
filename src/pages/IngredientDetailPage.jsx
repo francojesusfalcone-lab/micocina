@@ -1,0 +1,205 @@
+import React, { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { Edit2, TrendingUp, Package, Clock, AlertTriangle } from 'lucide-react'
+import PageHeader from '../components/PageHeader'
+import { PremiumBadge } from '../components/PremiumGate'
+import { useAppStore, formatCurrency } from '../store/appStore'
+import {
+  useIngredient,
+  useIngredientPriceHistory,
+  updateIngredientStock,
+} from '../hooks/useIngredients'
+
+export default function IngredientDetailPage() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const settings = useAppStore((s) => s.settings)
+  const isPremium = useAppStore((s) => s.isPremium())
+  const addToast = useAppStore((s) => s.addToast)
+
+  const ingredient = useIngredient(Number(id))
+  const priceHistory = useIngredientPriceHistory(Number(id))
+
+  const [editStock, setEditStock] = useState(false)
+  const [newStock, setNewStock] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  if (!ingredient) {
+    return (
+      <div className="flex flex-col min-h-full">
+        <PageHeader title="Ingrediente" back />
+        <div className="flex items-center justify-center flex-1">
+          <p className="text-gray-400">Cargando...</p>
+        </div>
+      </div>
+    )
+  }
+
+  const isLow = ingredient.stock !== null &&
+    ingredient.lowStockAlert !== null &&
+    ingredient.stock <= ingredient.lowStockAlert
+
+  async function handleSaveStock() {
+    if (newStock === '' || isNaN(Number(newStock))) return
+    setSaving(true)
+    try {
+      await updateIngredientStock(Number(id), Number(newStock))
+      addToast({ type: 'success', message: 'Stock actualizado ✓' })
+      setEditStock(false)
+      setNewStock('')
+    } catch (err) {
+      addToast({ type: 'error', message: err.message })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso)
+    return d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
+  }
+
+  return (
+    <div className="flex flex-col min-h-full bg-surface-50">
+      <PageHeader
+        title={ingredient.name}
+        subtitle={ingredient.category}
+        back
+        action={
+          <button
+            onClick={() => navigate(`/stock/editar/${id}`)}
+            className="flex items-center gap-1.5 bg-surface-100 text-gray-700 text-sm font-semibold px-3 py-2 rounded-xl active:scale-95 transition-all"
+          >
+            <Edit2 size={15} />
+            Editar
+          </button>
+        }
+      />
+
+      <div className="flex-1 overflow-y-auto scrollbar-none pb-24 px-4 py-4 space-y-4">
+
+        {/* ── Main info card ── */}
+        <div className="card space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-2xl font-display font-bold text-gray-900">
+                {formatCurrency(ingredient.pricePerUnit, settings.currencySymbol)}
+              </p>
+              <p className="text-sm text-gray-500">por {ingredient.unit}</p>
+            </div>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isLow ? 'bg-amber-100' : 'bg-primary-50'}`}>
+              <Package size={22} className={isLow ? 'text-amber-600' : 'text-primary-600'} />
+            </div>
+          </div>
+
+          {isLow && (
+            <div className="flex items-center gap-2 bg-amber-50 rounded-xl px-3 py-2">
+              <AlertTriangle size={14} className="text-amber-600 shrink-0" />
+              <p className="text-xs text-amber-700 font-medium">
+                Stock bajo — quedan {ingredient.stock} {ingredient.unit}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Stock card ── */}
+        <div className="card space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-bold text-gray-700">Stock actual</p>
+            <button
+              onClick={() => {
+                setEditStock(!editStock)
+                setNewStock(ingredient.stock?.toString() || '0')
+              }}
+              className="text-xs font-bold text-primary-600 px-3 py-1.5 bg-primary-50 rounded-xl active:scale-95 transition-all"
+            >
+              {editStock ? 'Cancelar' : 'Actualizar stock'}
+            </button>
+          </div>
+
+          {ingredient.stock !== null ? (
+            <div className="flex items-end gap-2">
+              <p className="text-3xl font-display font-bold text-gray-900">
+                {ingredient.stock}
+              </p>
+              <p className="text-gray-500 mb-1">{ingredient.unit}</p>
+            </div>
+          ) : (
+            <p className="text-gray-400 text-sm">Sin stock registrado</p>
+          )}
+
+          {ingredient.lowStockAlert !== null && (
+            <p className="text-xs text-gray-500">
+              Alarma: cuando baje de <strong>{ingredient.lowStockAlert} {ingredient.unit}</strong>
+            </p>
+          )}
+
+          {editStock && (
+            <div className="space-y-3 pt-2 border-t border-surface-200">
+              <div>
+                <label className="label">Nuevo stock ({ingredient.unit})</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  value={newStock}
+                  onChange={(e) => setNewStock(e.target.value)}
+                  className="input-field"
+                  min="0"
+                  step="0.01"
+                  autoFocus
+                />
+              </div>
+              <button
+                onClick={handleSaveStock}
+                disabled={saving}
+                className="btn-primary w-full py-3"
+              >
+                {saving ? 'Guardando...' : 'Guardar stock'}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ── Price history (Premium) ── */}
+        <div className="card space-y-3">
+          <div className="flex items-center gap-2">
+            <TrendingUp size={16} className="text-gray-600" />
+            <p className="text-sm font-bold text-gray-700">Historial de precios</p>
+            {!isPremium && <PremiumBadge />}
+          </div>
+
+          {!isPremium ? (
+            <p className="text-sm text-gray-500">
+              Con Premium podés ver cómo fue cambiando el precio de cada ingrediente.
+            </p>
+          ) : priceHistory.length === 0 ? (
+            <p className="text-sm text-gray-400">Sin historial aún.</p>
+          ) : (
+            <div className="space-y-2">
+              {priceHistory.map((h, i) => (
+                <div key={h.id} className="flex items-center justify-between py-2 border-b border-surface-100 last:border-0">
+                  <div className="flex items-center gap-2">
+                    <Clock size={12} className="text-gray-400" />
+                    <p className="text-sm text-gray-600">{formatDate(h.date)}</p>
+                    {i === 0 && (
+                      <span className="badge-green text-[10px]">Actual</span>
+                    )}
+                  </div>
+                  <p className="text-sm font-bold text-gray-900">
+                    {formatCurrency(h.price, settings.currencySymbol)}
+                    <span className="text-gray-400 font-normal"> /{ingredient.unit}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── Last updated ── */}
+        <p className="text-center text-xs text-gray-400">
+          Última actualización: {ingredient.updatedAt ? new Date(ingredient.updatedAt).toLocaleDateString('es-AR') : '—'}
+        </p>
+      </div>
+    </div>
+  )
+}
