@@ -6,14 +6,25 @@ export default function AuthCallback() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Supabase lee el #access_token de la URL automáticamente
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+    // Supabase procesa el #access_token del hash automáticamente
+    // Escuchamos el evento SIGNED_IN que dispara cuando está listo
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        subscription.unsubscribe()
         navigate('/', { replace: true })
-      } else {
-        navigate('/login', { replace: true })
       }
     })
+
+    // Timeout de seguridad — si en 5 segundos no hay sesión, volvemos al login
+    const timeout = setTimeout(() => {
+      subscription.unsubscribe()
+      navigate('/login', { replace: true })
+    }, 5000)
+
+    return () => {
+      subscription.unsubscribe()
+      clearTimeout(timeout)
+    }
   }, [])
 
   return (
