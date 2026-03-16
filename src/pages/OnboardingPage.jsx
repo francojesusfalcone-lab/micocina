@@ -91,8 +91,9 @@ export default function OnboardingPage() {
       { key: 'onboardingDone', value: true },
     ])
 
-    setOnboardingDone(true)
-    window.location.href = "/"
+setOnboardingDone(true)
+await new Promise(r => setTimeout(r, 300))
+window.location.href = "/"
   }
 
   function handleNext() {
