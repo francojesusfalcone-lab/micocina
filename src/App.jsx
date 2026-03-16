@@ -76,12 +76,8 @@ export default function App() {
   // PASO 2: Solo cargar DB local si hay sesión
   useEffect(() => {
     if (session === undefined) return // esperar sesión
-    if (session === null) {
-      setAppReady(true) // sin sesión → ir al login, no cargar DB
-      return
-    }
 
-    // Hay sesión → cargar datos locales
+    // Siempre cargar DB local (con o sin sesión)
     async function bootstrap() {
       try {
         await initDB()
@@ -112,15 +108,20 @@ export default function App() {
           setOnboardingDone(true)
         }
 
-        // Plan desde Supabase
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('plan')
-            .eq('id', session.user.id)
-            .single()
-          setPlan(profile?.plan === 'premium' ? 'premium' : 'free')
-        } catch {
+        // Plan desde Supabase o DB local
+        if (session) {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('plan')
+              .eq('id', session.user.id)
+              .single()
+            setPlan(profile?.plan === 'premium' ? 'premium' : 'free')
+          } catch {
+            const resolvedPlan = await loadPlanFromDB(db)
+            setPlan(resolvedPlan)
+          }
+        } else {
           const resolvedPlan = await loadPlanFromDB(db)
           setPlan(resolvedPlan)
         }
