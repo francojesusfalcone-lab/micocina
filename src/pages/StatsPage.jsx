@@ -102,7 +102,7 @@ export default function StatsPage() {
 
   return (
     <div className="flex flex-col min-h-full bg-surface-50">
-      <PageHeader title="Estadisticas" />
+      <PageHeader title="Estadisticas" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24 px-4 py-4 space-y-4">
 

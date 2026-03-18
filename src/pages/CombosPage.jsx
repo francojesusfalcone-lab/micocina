@@ -20,6 +20,7 @@ export default function CombosPage() {
       <PageHeader
         title="Combos"
         subtitle={`${combos.length} combo${combos.length !== 1 ? 's' : ''}`}
+        back
         action={
           <button
             onClick={() => navigate('/combos/nuevo')}

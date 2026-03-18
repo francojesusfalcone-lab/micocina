@@ -67,7 +67,7 @@ export default function ExpensesPage() {
   if (!isPremium) {
     return (
       <div className="flex flex-col min-h-full bg-surface-50">
-        <PageHeader title="Gastos fijos" />
+        <PageHeader title="Gastos fijos" back />
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5">
           <div className="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
             <Lock size={32} className="text-amber-500" />
@@ -97,6 +97,7 @@ export default function ExpensesPage() {
       <PageHeader
         title="Gastos fijos"
         subtitle="Lo que sale aunque no vendas"
+        back
         action={
           <button
             onClick={() => navigate('/gastos/nuevo')}

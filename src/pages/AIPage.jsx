@@ -87,7 +87,7 @@ export default function AIPage() {
   if (!isPremium) {
     return (
       <div className="flex flex-col min-h-full bg-surface-50">
-        <PageHeader title="Asistente IA" />
+        <PageHeader title="Asistente IA" back />
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5 pb-24">
           <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
             <Sparkles size={40} className="text-white" />
@@ -167,7 +167,7 @@ export default function AIPage() {
 
   return (
     <div className="flex flex-col min-h-full bg-surface-50">
-      <PageHeader title="Asistente IA" subtitle="Análisis de tu negocio" />
+      <PageHeader title="Asistente IA" subtitle="Análisis de tu negocio" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-28 px-4 py-4 space-y-4">
 

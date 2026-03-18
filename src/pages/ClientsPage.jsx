@@ -54,7 +54,7 @@ export default function ClientsPage() {
   if (!isPremium) {
     return (
       <div className="flex flex-col min-h-full bg-surface-50">
-        <PageHeader title="Clientes" />
+        <PageHeader title="Clientes" back />
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5">
           <div className="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
             <Lock size={32} className="text-amber-500" />
@@ -90,6 +90,7 @@ export default function ClientsPage() {
       <PageHeader
         title="Clientes"
         subtitle={`${clients.length} registrado${clients.length !== 1 ? 's' : ''}`}
+        back
         action={
           <button
             onClick={() => navigate('/clientes/nuevo')}
