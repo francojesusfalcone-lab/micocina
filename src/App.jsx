@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from './store/appStore'
 import { db, initDB } from './db'
@@ -30,6 +30,9 @@ import ClientDetailPage     from './pages/ClientDetailPage'
 import ClientFormPage       from './pages/ClientFormPage'
 import AIPage               from './pages/AIPage'
 
+// Flag global fuera de React — sobrevive remounts y Strict Mode
+let appInitialized = false
+
 function LoadingScreen() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -53,13 +56,12 @@ function AppLayout({ children }) {
 export default function App() {
   const [ready, setReady] = useState(false)
   const [hasSession, setHasSession] = useState(false)
-  const initialized = useRef(false)
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
     async function init(session) {
-      if (initialized.current) return
-      initialized.current = true
+      if (appInitialized) return
+      appInitialized = true
       try {
         await initDB()
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
@@ -83,14 +85,13 @@ export default function App() {
 
     // Escuchar solo el primer evento de sesion
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!initialized.current) init(session)
+      if (!appInitialized) init(session)
       else setHasSession(!!session)
     })
 
-    // Tambien intentar obtener sesion directamente
     supabase.auth.getSession().then(({ data }) => {
-      if (!initialized.current) init(data?.session ?? null)
-    }).catch(() => { if (!initialized.current) init(null) })
+      if (!appInitialized) init(data?.session ?? null)
+    }).catch(() => { if (!appInitialized) init(null) })
 
     return () => subscription.unsubscribe()
   }, [])
