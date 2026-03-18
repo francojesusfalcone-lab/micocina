@@ -32,8 +32,6 @@ import AIPage               from './pages/AIPage'
 import StatsPage            from './pages/StatsPage'
 import LowStockPage         from './pages/LowStockPage'
 
-let appInitialized = false
-
 function LoadingScreen() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -60,9 +58,11 @@ export default function App() {
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
+    let booted = false
+
     async function init(session) {
-      if (appInitialized) return
-      appInitialized = true
+      if (booted) return
+      booted = true
       try {
         await initDB()
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
@@ -84,17 +84,13 @@ export default function App() {
       finally { setHasSession(!!session); setReady(true) }
     }
 
-  useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (appInitialized) setHasSession(!!session)
+      if (booted) setHasSession(!!session)
     })
 
-    ;(async () => {
-      try {
-        const { data } = await supabase.auth.getSession()
-        await init(data?.session ?? null)
-      } catch { await init(null) }
-    })()
+    supabase.auth.getSession()
+      .then(({ data }) => init(data?.session ?? null))
+      .catch(() => init(null))
 
     return () => subscription.unsubscribe()
   }, [])
