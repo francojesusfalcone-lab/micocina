@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Edit2, TrendingUp, Package, Clock, AlertTriangle } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import PageHeader from '../components/PageHeader'
 import { PremiumBadge } from '../components/PremiumGate'
 import { useAppStore, formatCurrency } from '../store/appStore'
@@ -8,6 +9,7 @@ import {
   useIngredient,
   useIngredientPriceHistory,
   updateIngredientStock,
+  updateIngredientPrice,
 } from '../hooks/useIngredients'
 
 export default function IngredientDetailPage() {
@@ -22,6 +24,7 @@ export default function IngredientDetailPage() {
 
   const [editStock, setEditStock] = useState(false)
   const [newStock, setNewStock] = useState('')
+  const [newPrice, setNewPrice] = useState('')
   const [saving, setSaving] = useState(false)
 
   if (!ingredient) {
@@ -44,9 +47,13 @@ export default function IngredientDetailPage() {
     setSaving(true)
     try {
       await updateIngredientStock(Number(id), Number(newStock))
+      if (newPrice !== '' && !isNaN(Number(newPrice)) && Number(newPrice) > 0) {
+        await updateIngredientPrice(Number(id), Number(newPrice))
+      }
       addToast({ type: 'success', message: 'Stock actualizado ✓' })
       setEditStock(false)
       setNewStock('')
+      setNewPrice('')
     } catch (err) {
       addToast({ type: 'error', message: err.message })
     } finally {
@@ -56,8 +63,13 @@ export default function IngredientDetailPage() {
 
   function formatDate(iso) {
     const d = new Date(iso)
-    return d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' })
+    return d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' })
   }
+
+  const chartData = [...priceHistory].reverse().map((h) => ({
+    date: formatDate(h.date),
+    precio: h.price,
+  }))
 
   return (
     <div className="flex flex-col min-h-full bg-surface-50">
@@ -91,7 +103,6 @@ export default function IngredientDetailPage() {
               <Package size={22} className={isLow ? 'text-amber-600' : 'text-primary-600'} />
             </div>
           </div>
-
           {isLow && (
             <div className="flex items-center gap-2 bg-amber-50 rounded-xl px-3 py-2">
               <AlertTriangle size={14} className="text-amber-600 shrink-0" />
@@ -110,6 +121,7 @@ export default function IngredientDetailPage() {
               onClick={() => {
                 setEditStock(!editStock)
                 setNewStock(ingredient.stock?.toString() || '0')
+                setNewPrice('')
               }}
               className="text-xs font-bold text-primary-600 px-3 py-1.5 bg-primary-50 rounded-xl active:scale-95 transition-all"
             >
@@ -119,9 +131,7 @@ export default function IngredientDetailPage() {
 
           {ingredient.stock !== null ? (
             <div className="flex items-end gap-2">
-              <p className="text-3xl font-display font-bold text-gray-900">
-                {ingredient.stock}
-              </p>
+              <p className="text-3xl font-display font-bold text-gray-900">{ingredient.stock}</p>
               <p className="text-gray-500 mb-1">{ingredient.unit}</p>
             </div>
           ) : (
@@ -149,12 +159,28 @@ export default function IngredientDetailPage() {
                   autoFocus
                 />
               </div>
+              <div>
+                <label className="label">
+                  Nuevo precio por {ingredient.unit}{' '}
+                  <span className="text-gray-400 font-normal">(opcional — si cambio el precio)</span>
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder={`Precio actual: ${ingredient.pricePerUnit}`}
+                  value={newPrice}
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  className="input-field"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
               <button
                 onClick={handleSaveStock}
                 disabled={saving}
                 className="btn-primary w-full py-3"
               >
-                {saving ? 'Guardando...' : 'Guardar stock'}
+                {saving ? 'Guardando...' : 'Guardar'}
               </button>
             </div>
           )}
@@ -170,34 +196,41 @@ export default function IngredientDetailPage() {
 
           {!isPremium ? (
             <p className="text-sm text-gray-500">
-              Con Premium podés ver cómo fue cambiando el precio de cada ingrediente.
+              Con Premium ves como fue cambiando el precio de cada ingrediente con grafica.
             </p>
-          ) : priceHistory.length === 0 ? (
-            <p className="text-sm text-gray-400">Sin historial aún.</p>
+          ) : priceHistory.length < 2 ? (
+            <p className="text-sm text-gray-400">Necesitas al menos 2 precios registrados para ver la grafica.</p>
           ) : (
-            <div className="space-y-2">
-              {priceHistory.map((h, i) => (
-                <div key={h.id} className="flex items-center justify-between py-2 border-b border-surface-100 last:border-0">
-                  <div className="flex items-center gap-2">
-                    <Clock size={12} className="text-gray-400" />
-                    <p className="text-sm text-gray-600">{formatDate(h.date)}</p>
-                    {i === 0 && (
-                      <span className="badge-green text-[10px]">Actual</span>
-                    )}
+            <>
+              <ResponsiveContainer width="100%" height={160}>
+                <LineChart data={chartData}>
+                  <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                  <YAxis tick={{ fontSize: 11 }} width={60} tickFormatter={(v) => `${settings.currencySymbol}${v}`} />
+                  <Tooltip formatter={(v) => formatCurrency(v, settings.currencySymbol)} />
+                  <Line type="monotone" dataKey="precio" stroke="#16a34a" strokeWidth={2} dot={{ r: 3 }} />
+                </LineChart>
+              </ResponsiveContainer>
+              <div className="space-y-2 pt-2 border-t border-surface-100">
+                {priceHistory.map((h, i) => (
+                  <div key={h.id} className="flex items-center justify-between py-1">
+                    <div className="flex items-center gap-2">
+                      <Clock size={12} className="text-gray-400" />
+                      <p className="text-sm text-gray-600">{formatDate(h.date)}</p>
+                      {i === 0 && <span className="text-[10px] font-bold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">Actual</span>}
+                    </div>
+                    <p className="text-sm font-bold text-gray-900">
+                      {formatCurrency(h.price, settings.currencySymbol)}
+                      <span className="text-gray-400 font-normal"> /{ingredient.unit}</span>
+                    </p>
                   </div>
-                  <p className="text-sm font-bold text-gray-900">
-                    {formatCurrency(h.price, settings.currencySymbol)}
-                    <span className="text-gray-400 font-normal"> /{ingredient.unit}</span>
-                  </p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
 
-        {/* ── Last updated ── */}
         <p className="text-center text-xs text-gray-400">
-          Última actualización: {ingredient.updatedAt ? new Date(ingredient.updatedAt).toLocaleDateString('es-AR') : '—'}
+          Ultima actualizacion: {ingredient.updatedAt ? new Date(ingredient.updatedAt).toLocaleDateString('es-AR') : '—'}
         </p>
       </div>
     </div>

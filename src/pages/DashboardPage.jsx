@@ -269,8 +269,8 @@ export default function DashboardPage() {
           <div className="grid grid-cols-4 gap-2">
             <QuickAction icon={Plus} label="Nueva comanda" onClick={() => navigate('/comandas/nueva')} color="green" />
             <QuickAction icon={ShoppingBag} label="Productos" onClick={() => navigate('/productos')} />
-            <QuickAction icon={Zap} label="Precio rápido" onClick={() => navigate('/precio-rapido')} />
-            <QuickAction icon={AlertTriangle} label="Stock bajo" onClick={() => navigate('/stock')} badge={stats?.lowStockCount ?? 0} />
+            <QuickAction icon={BarChart2} label="Stats" onClick={() => navigate('/estadisticas')} />
+            <QuickAction icon={AlertTriangle} label="Stock bajo" onClick={() => navigate('/stock/alertas')} badge={stats?.lowStockCount ?? 0} />
           </div>
         </div>
 

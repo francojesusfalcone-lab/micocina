@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, ShoppingBag, ClipboardList,
-  Package, Settings, Sparkles
+  Package, Settings, Sparkles, BarChart2
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAppStore } from '../store/appStore'
@@ -17,9 +17,7 @@ export default function BottomNav() {
     { id: 'products',  label: 'Productos', icon: ShoppingBag,     path: '/productos' },
     { id: 'orders',    label: 'Comandas',  icon: ClipboardList,   path: '/comandas' },
     { id: 'stock',     label: 'Stock',     icon: Package,         path: '/stock' },
-    isPremium
-      ? { id: 'ai',       label: 'IA',      icon: Sparkles, path: '/ia',            premium: true }
-      : { id: 'settings', label: 'Config',  icon: Settings, path: '/configuracion' },
+    { id: 'stats',     label: 'Stats',     icon: BarChart2,       path: '/estadisticas' },
   ]
 
   return (

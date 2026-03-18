@@ -29,6 +29,8 @@ import ClientsPage          from './pages/ClientsPage'
 import ClientDetailPage     from './pages/ClientDetailPage'
 import ClientFormPage       from './pages/ClientFormPage'
 import AIPage               from './pages/AIPage'
+import StatsPage            from './pages/StatsPage'
+import LowStockPage         from './pages/LowStockPage'
 
 let appInitialized = false
 
@@ -139,6 +141,8 @@ export default function App() {
               <Route path="/clientes/nuevo"           element={<ClientFormPage />} />
               <Route path="/clientes/editar/:id"      element={<ClientFormPage />} />
               <Route path="/clientes/:id"             element={<ClientDetailPage />} />
+              <Route path="/estadisticas"             element={<StatsPage />} />
+              <Route path="/stock/alertas"             element={<LowStockPage />} />
               <Route path="/ia"                       element={<AIPage />} />
               <Route path="/premium/success"          element={<Navigate to="/premium?status=approved" replace />} />
               <Route path="/premium/failure"          element={<Navigate to="/premium?status=failure" replace />} />
