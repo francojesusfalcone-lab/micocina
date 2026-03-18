@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ChevronLeft, Plus, X, Tag } from 'lucide-react'
+import { ChevronLeft, Plus, X, Tag, Minus } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -13,7 +13,7 @@ export default function ComboFormPage() {
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
-  const [selectedItems, setSelectedItems] = useState([]) // [{recipeId, qty}]
+  const [selectedItems, setSelectedItems] = useState([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -21,7 +21,6 @@ export default function ComboFormPage() {
     db.recipes.filter(r => !r.isPremiumCombo).toArray()
   , [], [])
 
-  // Cargar combo si es edición
   useEffect(() => {
     if (isEdit) {
       db.recipes.get(Number(id)).then(combo => {
@@ -41,6 +40,14 @@ export default function ComboFormPage() {
 
   function removeItem(recipeId) {
     setSelectedItems(prev => prev.filter(i => i.recipeId !== recipeId))
+  }
+
+  function changeQty(recipeId, delta) {
+    setSelectedItems(prev => prev.map(i => {
+      if (i.recipeId !== recipeId) return i
+      const newQty = Math.max(1, i.qty + delta)
+      return { ...i, qty: newQty }
+    }))
   }
 
   async function handleSave() {
@@ -115,39 +122,66 @@ export default function ComboFormPage() {
         <div className="card space-y-3">
           <p className="text-sm font-bold text-gray-700">Productos incluidos</p>
 
+          {/* Items ya agregados con selector de cantidad */}
           {selectedItems.length > 0 && (
             <div className="space-y-2">
               {selectedItems.map(item => (
                 <div key={item.recipeId} className="flex items-center gap-2 bg-primary-50 rounded-xl px-3 py-2.5">
                   <Tag size={14} className="text-primary-600 shrink-0" />
-                  <p className="text-sm font-semibold text-primary-700 flex-1">{item.name}</p>
-                  <button onClick={() => removeItem(item.recipeId)} className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center">
-                    <X size={12} className="text-primary-700" />
+                  <p className="text-sm font-semibold text-primary-700 flex-1 truncate">{item.name}</p>
+                  {/* Selector cantidad */}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      onClick={() => changeQty(item.recipeId, -1)}
+                      className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center active:scale-95"
+                    >
+                      <Minus size={11} className="text-primary-700" />
+                    </button>
+                    <span className="text-sm font-bold text-primary-700 w-5 text-center">{item.qty}</span>
+                    <button
+                      onClick={() => changeQty(item.recipeId, 1)}
+                      className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center active:scale-95"
+                    >
+                      <Plus size={11} className="text-primary-700" />
+                    </button>
+                  </div>
+                  <button onClick={() => removeItem(item.recipeId)} className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center ml-1 shrink-0">
+                    <X size={12} className="text-red-500" />
                   </button>
                 </div>
               ))}
             </div>
           )}
 
-          <p className="text-xs text-gray-500 font-semibold">Tocá un producto para agregarlo:</p>
-          <div className="space-y-1.5 max-h-48 overflow-y-auto">
-            {allRecipes?.filter(r => !selectedItems.find(i => i.recipeId === r.id)).map(recipe => (
-              <button
-                key={recipe.id}
-                onClick={() => addItem(recipe)}
-                className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-surface-200 bg-white active:bg-surface-50 transition-colors text-left"
-              >
-                <Plus size={14} className="text-gray-400 shrink-0" />
-                <p className="text-sm font-medium text-gray-700">{recipe.name}</p>
-                <p className="text-xs text-gray-400 ml-auto">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</p>
-              </button>
-            ))}
-          </div>
+          {/* Lista de productos para agregar */}
+          {allRecipes?.filter(r => !selectedItems.find(i => i.recipeId === r.id)).length > 0 && (
+            <>
+              <p className="text-xs text-gray-500 font-semibold">Tocá un producto para agregarlo:</p>
+              <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                {allRecipes?.filter(r => !selectedItems.find(i => i.recipeId === r.id)).map(recipe => (
+                  <button
+                    key={recipe.id}
+                    onClick={() => addItem(recipe)}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-surface-200 bg-white active:bg-surface-50 transition-colors text-left"
+                  >
+                    <Plus size={14} className="text-gray-400 shrink-0" />
+                    <p className="text-sm font-medium text-gray-700">{recipe.name}</p>
+                    <p className="text-xs text-gray-400 ml-auto">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</p>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {allRecipes?.length === 0 && (
+            <p className="text-xs text-gray-400 text-center py-4">Primero agregá productos en la sección Productos</p>
+          )}
         </div>
 
         {error && <p className="text-sm text-red-500 text-center font-medium">{error}</p>}
       </div>
 
+      {/* Botón guardar — siempre visible */}
       <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
         <button
           onClick={handleSave}
