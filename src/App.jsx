@@ -63,13 +63,16 @@ export default function App() {
     async function init(session) {
       if (booted) return
       booted = true
+      console.log('[boot] init start, session:', !!session)
       try {
         await initDB()
+        console.log('[boot] db ok')
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
           db.settings.get('businessName'), db.settings.get('country'),
           db.settings.get('currency'), db.settings.get('currencySymbol'),
           db.settings.get('productionCapacity'), db.settings.get('onboardingDone'),
         ])
+        console.log('[boot] settings ok, onboarding:', ob?.value)
         if (bn) updateSettings({ businessName: bn.value, country: co?.value||'AR', currency: cu?.value||'ARS', currencySymbol: cs?.value||'$', productionCapacity: pc?.value||10 })
         if (ob?.value) setOnboardingDone(true)
         if (session) {
@@ -80,8 +83,9 @@ export default function App() {
         } else {
           setPlan(await loadPlanFromDB(db))
         }
-      } catch(e) { console.error(e) }
-      finally { setHasSession(!!session); setReady(true) }
+        console.log('[boot] plan ok')
+      } catch(e) { console.error('[boot] error:', e) }
+      finally { console.log('[boot] done, ready=true'); setHasSession(!!session); setReady(true) }
     }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
