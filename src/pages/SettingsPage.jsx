@@ -37,6 +37,13 @@ export default function SettingsPage() {
   const isPremium = useAppStore((s) => s.isPremium())
   const setPlan = useAppStore((s) => s.setPlan)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [devTaps, setDevTaps] = useState(0)
+
+  function handleDevTap() {
+    const next = devTaps + 1
+    setDevTaps(next)
+    if (next >= 7) { setPlan(isPremium ? 'free' : 'premium'); setDevTaps(0) }
+  }
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -44,12 +51,9 @@ export default function SettingsPage() {
 
   async function handleDeleteAllData() {
     if (!confirmDelete) { setConfirmDelete(true); return }
-    await Promise.all([
-      db.ingredients?.clear(), db.recipes?.clear(),
-      db.orders?.clear(), db.orderItems?.clear(),
-      db.expenses?.clear(), db.clients?.clear(),
-      db.settings?.clear(),
-    ].filter(Boolean))
+    const stores = ['ingredients','recipes','orders','orderItems','recipeIngredients',
+      'expenses','clients','settings','ingredientPriceHistory']
+    await Promise.all(stores.map(s => db[s]?.clear()).filter(Boolean))
     setConfirmDelete(false)
     window.location.replace('/')
   }
@@ -110,11 +114,7 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        {/* DEV toggle premium — doble tap en el texto de versión */}
-        <button onDoubleClick={() => setPlan(isPremium ? 'free' : 'premium')} className="mx-auto block text-xs text-gray-300 mt-6 mb-1 py-2 px-4 select-none">
-          {isPremium ? '★ Premium activo' : 'v0.1.0-beta'}
-        </button>
-        <p className="text-center text-xs text-gray-400 mb-4">MiCocina · Hecho con ❤️ para cocineras de Latinoamérica</p>
+        <p onClick={handleDevTap} className="text-center text-xs text-gray-400 mt-6 mb-4 select-none">MiCuchina · Hecho con ❤️ para cocineras de Latinoamérica</p>
 
       </div>
     </div>
