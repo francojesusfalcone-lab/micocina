@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   TrendingUp, TrendingDown, ShoppingBag, ClipboardList,
   AlertTriangle, ChevronRight, Plus, Zap, Crown,
@@ -10,12 +10,6 @@ import { PremiumBadge } from '../components/PremiumGate'
 import { useDashboardStats, useActiveOrders, useRealProfit } from '../hooks/useDashboard'
 import { STATUS_CONFIG, PAYMENT_METHODS } from '../hooks/useOrders'
 import clsx from 'clsx'
-
-const PERIODS = [
-  { id: 'day',   label: 'Hoy' },
-  { id: 'week',  label: 'Semana' },
-  { id: 'month', label: 'Mes' },
-]
 
 function HeroStatCard({ label, value, sub, change }) {
   return (
@@ -128,11 +122,10 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const settings = useAppStore((s) => s.settings)
   const isPremium = useAppStore((s) => s.isPremium())
-  const [period, setPeriod] = useState('day')
 
-  const stats = useDashboardStats(period)
+  const stats = useDashboardStats('day')
   const activeOrders = useActiveOrders()
-  const profit = useRealProfit(period, stats?.revenue ?? 0)
+  const profit = useRealProfit('day', stats?.revenue ?? 0)
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches'
@@ -170,21 +163,6 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-
-        <div className="flex gap-2 mt-4 pb-4">
-          {PERIODS.map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => setPeriod(id)}
-              className={clsx(
-                'px-4 py-1.5 rounded-xl text-sm font-semibold transition-all active:scale-95',
-                period === id ? 'bg-primary-600 text-white shadow-sm' : 'bg-surface-100 text-gray-500'
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-none px-4 py-4 pb-24 space-y-3">
@@ -195,7 +173,7 @@ export default function DashboardPage() {
         ) : (
           <div className="flex gap-3">
             <HeroStatCard
-              label={period === 'day' ? 'Ganado hoy' : period === 'week' ? 'Esta semana' : 'Este mes'}
+              label='Ganado hoy'
               value={formatCurrency(stats.revenue, settings.currencySymbol)}
               sub={`${stats.deliveredOrders} pedido${stats.deliveredOrders !== 1 ? 's' : ''} entregado${stats.deliveredOrders !== 1 ? 's' : ''}`}
               change={stats.revenueChange}
