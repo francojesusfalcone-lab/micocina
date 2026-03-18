@@ -42,7 +42,12 @@ export default function SettingsPage() {
   function handleDevTap() {
     const next = devTaps + 1
     setDevTaps(next)
-    if (next >= 7) { setPlan(isPremium ? 'free' : 'premium'); setDevTaps(0) }
+    if (next >= 7) {
+      const newPlan = isPremium ? 'free' : 'premium'
+      setPlan(newPlan)
+      db.user.put({ key: 'plan', value: newPlan })
+      setDevTaps(0)
+    }
   }
 
   async function handleSignOut() {

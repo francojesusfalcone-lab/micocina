@@ -42,7 +42,7 @@ function LoadingScreen() {
       <div className="w-16 h-16 rounded-2xl bg-primary-600 flex items-center justify-center mb-4 animate-pulse">
         <span className="text-white text-2xl">🍳</span>
       </div>
-      <p className="text-primary-600 font-semibold text-sm">Cargando MiCocina...</p>
+      <p className="text-primary-600 font-semibold text-sm">Cargando MiCuchina...</p>
     </div>
   )
 }
