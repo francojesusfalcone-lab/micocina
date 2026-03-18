@@ -31,6 +31,8 @@ import ClientFormPage       from './pages/ClientFormPage'
 import AIPage               from './pages/AIPage'
 import StatsPage            from './pages/StatsPage'
 import LowStockPage         from './pages/LowStockPage'
+import EditBusinessNamePage from './pages/EditBusinessNamePage'
+import EditCountryPage      from './pages/EditCountryPage'
 
 function LoadingScreen() {
   return (
@@ -135,7 +137,9 @@ export default function App() {
               <Route path="/productos/editar/:id"     element={<RecipeFormPage />} />
               <Route path="/productos/:id"            element={<RecipeDetailPage />} />
               <Route path="/precio-rapido"            element={<QuickPricePage />} />
-              <Route path="/configuracion"            element={<SettingsPage />} />
+              <Route path="/configuracion"             element={<SettingsPage />} />
+              <Route path="/configuracion/negocio"     element={<EditBusinessNamePage />} />
+              <Route path="/configuracion/pais"        element={<EditCountryPage />} />
               <Route path="/premium"                  element={<PremiumPage />} />
               <Route path="/gastos"                   element={<ExpensesPage />} />
               <Route path="/gastos/nuevo"             element={<ExpenseFormPage />} />

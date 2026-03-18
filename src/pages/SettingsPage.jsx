@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import {
-  Store, Globe, Sliders, Crown, ChevronRight, Wallet, Users, Sparkles,
+  Store, Globe, Crown, ChevronRight, Wallet, Users,
   Bell, Moon, Info, LogOut, Shield, Trash2
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -90,14 +90,6 @@ export default function SettingsPage() {
             value={`${settings.country} · ${settings.currency}`}
             onClick={() => navigate('/configuracion/pais')}
             color="blue"
-          />
-          <div className="border-t border-surface-100" />
-          <SettingsRow
-            icon={Sliders}
-            label="Capacidad de producción"
-            value={`${settings.productionCapacity} platos simultáneos`}
-            onClick={() => navigate('/configuracion/capacidad')}
-            color="gray"
           />
         </div>
 
