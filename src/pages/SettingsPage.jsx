@@ -138,7 +138,8 @@ export default function SettingsPage() {
           <SettingsRow
             icon={Bell}
             label="Notificaciones y alarmas"
-            onClick={() => navigate('/configuracion/notificaciones')}
+            value="Próximamente"
+            onClick={() => {}}
             color="blue"
           />
           <div className="border-t border-surface-100" />
@@ -153,7 +154,8 @@ export default function SettingsPage() {
           <SettingsRow
             icon={Shield}
             label="Privacidad y datos"
-            onClick={() => navigate('/configuracion/privacidad')}
+            value="Próximamente"
+            onClick={() => {}}
             color="gray"
           />
         </div>
