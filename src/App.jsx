@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from './store/appStore'
 import { db, initDB } from './db'
@@ -55,49 +55,55 @@ function AppLayout({ children }) {
 export default function App() {
   const [ready, setReady] = useState(false)
   const [hasSession, setHasSession] = useState(false)
-  const initialized = useRef(false)
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
-    async function init(session) {
-      if (initialized.current) return
-      initialized.current = true
+    let cancelled = false
+
+    async function bootstrap() {
       try {
+        const { data } = await supabase.auth.getSession()
+        if (cancelled) return
+        const session = data?.session ?? null
+
         await initDB()
+        if (cancelled) return
+
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
           db.settings.get('businessName'), db.settings.get('country'),
           db.settings.get('currency'), db.settings.get('currencySymbol'),
           db.settings.get('productionCapacity'), db.settings.get('onboardingDone'),
         ])
+        if (cancelled) return
+
         if (bn) updateSettings({ businessName: bn.value, country: co?.value||'AR', currency: cu?.value||'ARS', currencySymbol: cs?.value||'$', productionCapacity: pc?.value||10 })
         if (ob?.value) setOnboardingDone(true)
+
         if (session) {
           try {
-            const { data } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
-            setPlan(data?.plan === 'premium' ? 'premium' : 'free')
-          } catch { setPlan(await loadPlanFromDB(db)) }
+            const { data: p } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
+            if (!cancelled) setPlan(p?.plan === 'premium' ? 'premium' : 'free')
+          } catch { if (!cancelled) setPlan(await loadPlanFromDB(db)) }
         } else {
-          setPlan(await loadPlanFromDB(db))
+          if (!cancelled) setPlan(await loadPlanFromDB(db))
         }
-      } catch(e) { console.error(e) }
-      finally { setHasSession(!!session); setReady(true) }
+
+        if (!cancelled) { setHasSession(!!session); setReady(true) }
+      } catch(e) {
+        console.error(e)
+        if (!cancelled) setReady(true)
+      }
     }
 
-    // Usar solo getSession — sin onAuthStateChange para evitar el loop
-    supabase.auth.getSession()
-      .then(({ data }) => init(data?.session ?? null))
-      .catch(() => init(null))
+    bootstrap()
 
-    // onAuthStateChange solo para cambios POSTERIORES (sign in / sign out)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-        if (initialized.current) {
-          setHasSession(!!session)
-        }
+      if (!cancelled && (event === 'SIGNED_IN' || event === 'SIGNED_OUT')) {
+        setHasSession(!!session)
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => { cancelled = true; subscription.unsubscribe() }
   }, [])
 
   if (!ready) return <LoadingScreen />
