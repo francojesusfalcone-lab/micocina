@@ -101,7 +101,21 @@ export default function OnboardingPage() {
           {current.subtitle}
         </p>
 
-        {step === 1 && (
+        {step === 0 && (
+          <div className="flex flex-col gap-4 mt-2">
+            {[
+              { emoji: '💰', text: 'Sabe exactamente cuanto ganas con cada plato' },
+              { emoji: '📦', text: 'Controla tu stock e ingredientes en tiempo real' },
+              { emoji: '📋', text: 'Gestioná tus comandas del dia facilmente' },
+              { emoji: '📊', text: 'Ve tus estadisticas de ventas y ganancias' },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-3 bg-surface-50 rounded-2xl px-4 py-3 border border-surface-200">
+                <span className="text-2xl">{item.emoji}</span>
+                <p className="text-sm font-medium text-gray-700">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
           <div className="flex flex-col gap-6">
             <div>
               <label className="label">Nombre de tu negocio</label>
