@@ -58,7 +58,7 @@ export default function ProductsPage() {
           <div className="flex gap-2 mt-3">
             {[
               { id: 'recipes', label: 'Con receta' },
-              { id: 'simple',  label: 'Simples' },
+              { id: 'simple',  label: 'Sin receta' },
             ].map(({ id, label }) => (
               <button
                 key={id}

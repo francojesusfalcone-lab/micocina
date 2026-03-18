@@ -251,20 +251,26 @@ export default function OrderFormPage() {
       <div className="flex-1 overflow-y-auto scrollbar-none pb-36 px-4 py-4 space-y-4">
 
         {/* Limit warning */}
-        {atLimit && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-start gap-2">
-            <AlertCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-bold text-amber-700">Límite del plan Gratis</p>
-              <p className="text-xs text-amber-600 mt-0.5">
-                Ya creaste {FREE_DAILY_LIMIT} comandas hoy. Con Premium tenés comandas ilimitadas.
+        {!isPremium && todayCount >= FREE_DAILY_LIMIT - 5 && (
+          <div
+            onClick={() => navigate('/premium')}
+            className={`rounded-2xl px-4 py-3 flex items-start gap-2 cursor-pointer active:scale-[0.99] border ${
+              atLimit ? 'bg-red-50 border-red-200' : 'bg-amber-50 border-amber-200'
+            }`}
+          >
+            <AlertCircle size={16} className={`shrink-0 mt-0.5 ${atLimit ? 'text-red-500' : 'text-amber-600'}`} />
+            <div className="flex-1">
+              <p className={`text-sm font-bold ${atLimit ? 'text-red-700' : 'text-amber-700'}`}>
+                {atLimit ? 'Limite alcanzado — Plan Gratis' : `Casi en el limite — ${todayCount}/${FREE_DAILY_LIMIT} comandas hoy`}
               </p>
-              <button
-                onClick={() => navigate('/premium')}
-                className="mt-2 text-xs font-bold text-amber-700 underline"
-              >
-                Activar Premium →
-              </button>
+              <p className={`text-xs mt-0.5 ${atLimit ? 'text-red-600' : 'text-amber-600'}`}>
+                {atLimit
+                  ? 'Con Premium tenes comandas ilimitadas + analisis IA de costos.'
+                  : 'Con Premium: ilimitadas + analisis IA + sugerencia de precios.'}
+              </p>
+              <span className={`mt-1 inline-block text-xs font-bold underline ${atLimit ? 'text-red-700' : 'text-amber-700'}`}>
+                Ver Premium →
+              </span>
             </div>
           </div>
         )}

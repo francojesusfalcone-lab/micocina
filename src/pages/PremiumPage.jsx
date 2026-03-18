@@ -177,7 +177,7 @@ export default function PremiumPage() {
             <Crown size={26} className="text-white" />
           </div>
           <h2 className="text-2xl font-display font-bold text-white mb-2">MiCocina Premium</h2>
-          <p className="text-amber-100 text-sm mb-5">Sabe exactamente cuanto ganas con cada plato. La IA te dice que precio poner.</p>
+          <p className="text-amber-100 text-sm mb-5">Sabe exactamente cuanto ganas con cada plato. La IA te sugiere el precio ideal.</p>
           <div className="bg-white/20 rounded-2xl px-6 py-4 inline-block">
             <div className="flex items-end justify-center gap-2">
               <span className="text-4xl font-display font-bold text-white">USD 5</span>
