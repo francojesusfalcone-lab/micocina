@@ -32,23 +32,7 @@ import AIPage               from './pages/AIPage'
 import StatsPage            from './pages/StatsPage'
 import LowStockPage         from './pages/LowStockPage'
 
-// Promesa singleton — se ejecuta una sola vez por carga de pagina
-const bootPromise = (async () => {
-  try {
-    const { data } = await supabase.auth.getSession()
-    const session = data?.session ?? null
-    await initDB()
-    const [bn, co, cu, cs, pc, ob] = await Promise.all([
-      db.settings.get('businessName'), db.settings.get('country'),
-      db.settings.get('currency'), db.settings.get('currencySymbol'),
-      db.settings.get('productionCapacity'), db.settings.get('onboardingDone'),
-    ])
-    return { session, bn, co, cu, cs, pc, ob }
-  } catch(e) {
-    console.error('boot error', e)
-    return { session: null, bn: null }
-  }
-})()
+let appInitialized = false
 
 function LoadingScreen() {
   return (
@@ -76,36 +60,54 @@ export default function App() {
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
-    bootPromise.then(async ({ session, bn, co, cu, cs, pc, ob }) => {
-      if (bn) updateSettings({ businessName: bn.value, country: co?.value||'AR', currency: cu?.value||'ARS', currencySymbol: cs?.value||'$', productionCapacity: pc?.value||10 })
-      if (ob?.value) setOnboardingDone(true)
-      if (session) {
-        try {
-          const { data } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
-          setPlan(data?.plan === 'premium' ? 'premium' : 'free')
-        } catch { setPlan(await loadPlanFromDB(db)) }
-      } else {
-        setPlan(await loadPlanFromDB(db))
-      }
-      setHasSession(!!session)
-      setReady(true)
+    async function init(session) {
+      if (appInitialized) return
+      appInitialized = true
+      try {
+        await initDB()
+        const [bn, co, cu, cs, pc, ob] = await Promise.all([
+          db.settings.get('businessName'), db.settings.get('country'),
+          db.settings.get('currency'), db.settings.get('currencySymbol'),
+          db.settings.get('productionCapacity'), db.settings.get('onboardingDone'),
+        ])
+        if (bn) updateSettings({ businessName: bn.value, country: co?.value||'AR', currency: cu?.value||'ARS', currencySymbol: cs?.value||'$', productionCapacity: pc?.value||10 })
+        if (ob?.value) setOnboardingDone(true)
+        if (session) {
+          try {
+            const { data } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
+            setPlan(data?.plan === 'premium' ? 'premium' : 'free')
+          } catch { setPlan(await loadPlanFromDB(db)) }
+        } else {
+          setPlan(await loadPlanFromDB(db))
+        }
+      } catch(e) { console.error(e) }
+      finally { setHasSession(!!session); setReady(true) }
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!appInitialized) init(session)
+      else setHasSession(!!session)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') setHasSession(!!session)
-    })
+    supabase.auth.getSession().then(({ data }) => {
+      if (!appInitialized) init(data?.session ?? null)
+    }).catch(() => { if (!appInitialized) init(null) })
+
     return () => subscription.unsubscribe()
   }, [])
 
   if (!ready) return <LoadingScreen />
-  if (!hasSession) return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="*" element={<LoginPage />} />
-      </Routes>
-    </BrowserRouter>
-  )
+
+  if (!hasSession) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="*" element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+    )
+  }
 
   return (
     <BrowserRouter>
