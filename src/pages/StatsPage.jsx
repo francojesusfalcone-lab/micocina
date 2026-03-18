@@ -5,7 +5,6 @@ import PageHeader from '../components/PageHeader'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
-import { PremiumBadge } from '../components/PremiumGate'
 import { Crown } from 'lucide-react'
 
 const PERIODS = [
@@ -49,9 +48,16 @@ export default function StatsPage() {
   const [period, setPeriod] = useState('week')
 
   const data = useLiveQuery(async () => {
-    const from = startOf(period)
+    // Para "day" usar apertura de jornada si existe
+    let from
+    if (period === 'day') {
+      const jornadaApertura = await db.jornada?.get('apertura').catch(() => null)
+      from = jornadaApertura?.value ? new Date(jornadaApertura.value) : startOf('day')
+    } else {
+      from = startOf(period)
+    }
     const orders = await db.orders
-      .where('createdAt').aboveOrEqual(from.toISOString())
+      .where('createdAt').aboveOrEqual(from instanceof Date ? from.toISOString() : from)
       .toArray()
     const expenses = await db.expenses.toArray()
 
