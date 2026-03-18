@@ -60,6 +60,8 @@ export default function App() {
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
+    appInitialized = false  // reset en cada mount
+
     async function init(session) {
       if (appInitialized) return
       appInitialized = true
