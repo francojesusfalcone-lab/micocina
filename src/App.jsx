@@ -61,6 +61,8 @@ export default function App() {
 
   useEffect(() => {
     async function init(session) {
+      if (appInitialized) return
+      appInitialized = true
       try {
         await initDB()
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
@@ -82,17 +84,19 @@ export default function App() {
       finally { setHasSession(!!session); setReady(true) }
     }
 
-    supabase.auth.getSession().then(({ data }) => {
-      init(data?.session ?? null).then(() => {
-        // Solo registrar onAuthStateChange DESPUES de que init termine
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-          setHasSession(!!session)
-        })
-        return () => subscription.unsubscribe()
-      })
-    }).catch(() => init(null))
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (appInitialized) setHasSession(!!session)
+    })
 
-    return () => {}
+    ;(async () => {
+      try {
+        const { data } = await supabase.auth.getSession()
+        await init(data?.session ?? null)
+      } catch { await init(null) }
+    })()
+
+    return () => subscription.unsubscribe()
   }, [])
 
   if (!ready) return <LoadingScreen />
