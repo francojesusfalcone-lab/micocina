@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   TrendingUp, TrendingDown, ShoppingBag, ClipboardList,
   AlertTriangle, ChevronRight, Plus, Zap, Crown,
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { PremiumBadge } from '../components/PremiumGate'
 import { useDashboardStats, useActiveOrders, useRealProfit } from '../hooks/useDashboard'
+import { useJornada, abrirJornada, cerrarJornada } from '../hooks/useJornada'
 import { STATUS_CONFIG, PAYMENT_METHODS } from '../hooks/useOrders'
 import clsx from 'clsx'
 
@@ -92,6 +93,8 @@ export default function DashboardPage() {
   const stats = useDashboardStats('day')
   const activeOrders = useActiveOrders()
   const profit = useRealProfit('day', stats?.revenue ?? 0)
+  const jornada = useJornada()
+  const [confirmCerrar, setConfirmCerrar] = useState(false)
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches'
@@ -109,27 +112,56 @@ export default function DashboardPage() {
 
       {/* Header */}
       <div className="bg-white px-5 pt-safe border-b border-surface-200">
-        <div className="pt-4 pb-1 flex items-start justify-between">
+        <div className="pt-4 pb-3 flex items-start justify-between">
           <div>
             <p className="text-sm text-gray-400 font-medium">{greeting} {emoji}</p>
             <h1 className="text-2xl font-display font-bold text-gray-900 mt-0.5 leading-tight">
               {settings.businessName}
             </h1>
           </div>
-          {!isPremium ? (
-            <button
-              onClick={() => navigate('/premium')}
-              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-sm shadow-amber-200 active:scale-95 transition-all"
-            >
-              <Crown size={13} /> Premium
-            </button>
-          ) : (
-            <div className="flex items-center gap-1.5 bg-primary-50 text-primary-700 text-xs font-bold px-3 py-2 rounded-xl border border-primary-200">
-              <Star size={13} /> Premium
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {/* Botón jornada */}
+            {!jornada.abierto ? (
+              <button
+                onClick={abrirJornada}
+                className="flex items-center gap-1.5 bg-primary-600 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-sm active:scale-95 transition-all"
+              >
+                <span className="text-base leading-none">🟢</span> Abrir
+              </button>
+            ) : confirmCerrar ? (
+              <div className="flex items-center gap-1.5">
+                <button onClick={() => setConfirmCerrar(false)} className="text-xs font-bold text-gray-500 bg-surface-100 px-2 py-2 rounded-xl">Cancelar</button>
+                <button onClick={() => { cerrarJornada(); setConfirmCerrar(false) }} className="text-xs font-bold text-white bg-red-500 px-2 py-2 rounded-xl">Confirmar</button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmCerrar(true)}
+                className="flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-all"
+              >
+                <span className="text-base leading-none">🔴</span> Cerrar
+              </button>
+            )}
+            {/* Badge Premium */}
+            {!isPremium ? (
+              <button onClick={() => navigate('/premium')} className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-sm shadow-amber-200 active:scale-95 transition-all">
+                <Crown size={13} /> Premium
+              </button>
+            ) : (
+              <div className="flex items-center gap-1.5 bg-primary-50 text-primary-700 text-xs font-bold px-3 py-2 rounded-xl border border-primary-200">
+                <Star size={13} /> Premium
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Banner jornada cerrada */}
+      {!jornada.abierto && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between">
+          <p className="text-xs font-semibold text-amber-700">Jornada cerrada — las stats son del último período</p>
+          <button onClick={abrirJornada} className="text-xs font-bold text-amber-700 underline">Abrir ahora</button>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto scrollbar-none px-4 py-4 pb-24 space-y-3">
 

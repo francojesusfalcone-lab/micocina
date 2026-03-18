@@ -22,7 +22,9 @@ function startOf(period) {
 export function useDashboardStats(period = 'day') {
   return useLiveQuery(
     async () => {
-      const from = startOf(period)
+      // Usar apertura de jornada si existe, si no usar inicio del día
+      const jornadaApertura = await db.jornada?.get('apertura').catch(() => null)
+      const from = jornadaApertura?.value ?? startOf(period)
 
       // Órdenes del período
       const orders = await db.orders

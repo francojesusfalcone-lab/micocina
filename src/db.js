@@ -4,29 +4,30 @@ import Dexie from 'dexie'
 export const db = new Dexie('MiCocinaDB')
 
 db.version(1).stores({
-  // Ingredientes y stock
   ingredients: '++id, name, category, createdAt, updatedAt',
   ingredientPriceHistory: '++id, ingredientId, price, date',
-
-  // Recetas y productos
   recipes: '++id, name, category, isActive, isPremiumCombo, createdAt, updatedAt',
   recipeIngredients: '++id, recipeId, ingredientId',
-
-  // Comandas (pedidos)
   orders: '++id, clientId, status, deliveryTime, paymentMethod, createdAt, updatedAt',
   orderItems: '++id, orderId, recipeId, quantity',
-
-  // Clientes (premium)
   clients: '++id, name, phone, address, createdAt',
-
-  // Gastos fijos
   expenses: '++id, name, category, amount, isRecurring, createdAt',
-
-  // Configuración del negocio
   settings: 'key',
-
-  // Usuario / plan
   user: 'key',
+})
+
+db.version(2).stores({
+  ingredients: '++id, name, category, createdAt, updatedAt',
+  ingredientPriceHistory: '++id, ingredientId, price, date',
+  recipes: '++id, name, category, isActive, isPremiumCombo, createdAt, updatedAt',
+  recipeIngredients: '++id, recipeId, ingredientId',
+  orders: '++id, clientId, status, deliveryTime, paymentMethod, createdAt, updatedAt',
+  orderItems: '++id, orderId, recipeId, quantity',
+  clients: '++id, name, phone, address, createdAt',
+  expenses: '++id, name, category, amount, isRecurring, createdAt',
+  settings: 'key',
+  user: 'key',
+  jornada: 'key',
 })
 
 // ─── Seeds de configuración inicial ─────────────────────────────────────────
