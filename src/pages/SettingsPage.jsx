@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Store, Globe, Sliders, Crown, ChevronRight, Wallet, Users, Sparkles,
-  Bell, Moon, Info, LogOut, Shield
+  Bell, Moon, Info, LogOut, Shield, Trash2
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import { useAppStore } from '../store/appStore'
 import { PremiumBadge } from '../components/PremiumGate'
+import { supabase } from '../lib/supabase'
+import { db } from '../db'
 
 function SettingsRow({ icon: Icon, label, value, onClick, badge, color = 'gray' }) {
   const iconColors = {
@@ -38,6 +40,29 @@ export default function SettingsPage() {
   const navigate = useNavigate()
   const settings = useAppStore((s) => s.settings)
   const isPremium = useAppStore((s) => s.isPremium())
+  const [confirmDelete, setConfirmDelete] = useState(false)
+
+  async function handleSignOut() {
+    // Solo cierra sesión — NO toca IndexedDB
+    await supabase.auth.signOut()
+  }
+
+  async function handleDeleteAllData() {
+    if (!confirmDelete) {
+      setConfirmDelete(true)
+      return
+    }
+    // Borra todas las stores de IndexedDB
+    await Promise.all([
+      db.productos?.clear(),
+      db.comandas?.clear(),
+      db.ingredientes?.clear(),
+      db.settings?.clear(),
+    ].filter(Boolean))
+    setConfirmDelete(false)
+    // Recargar para reiniciar el estado de la app (irá al onboarding)
+    window.location.replace('/')
+  }
 
   return (
     <div className="flex flex-col min-h-full bg-surface-50">
@@ -140,10 +165,10 @@ export default function SettingsPage() {
           />
         </div>
 
-        {/* About */}
+        {/* Cuenta y datos */}
         <div className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden border border-surface-200">
           <div className="px-4 py-3 border-b border-surface-100">
-            <p className="section-title mb-0">Acerca de</p>
+            <p className="section-title mb-0">Cuenta y datos</p>
           </div>
           <SettingsRow
             icon={Info}
@@ -156,9 +181,29 @@ export default function SettingsPage() {
           <SettingsRow
             icon={LogOut}
             label="Cerrar sesión"
-            onClick={() => {}}
+            value="Tus datos quedan guardados"
+            onClick={handleSignOut}
             color="red"
           />
+          <div className="border-t border-surface-100" />
+          {/* Borrar todos los datos — requiere doble tap */}
+          <button
+            onClick={handleDeleteAllData}
+            className="w-full flex items-center gap-3 px-4 py-3.5 bg-white active:bg-red-50 transition-colors"
+          >
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-red-50 text-red-500">
+              <Trash2 size={18} />
+            </div>
+            <div className="flex-1 text-left min-w-0">
+              <p className="text-sm font-semibold text-red-500">
+                {confirmDelete ? '¿Confirmar? Tocá de nuevo para borrar' : 'Borrar todos los datos'}
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {confirmDelete ? 'Esta acción no se puede deshacer' : 'Borra ingredientes, productos y comandas'}
+              </p>
+            </div>
+            <ChevronRight size={16} className="text-red-300 shrink-0" />
+          </button>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6 mb-2">
