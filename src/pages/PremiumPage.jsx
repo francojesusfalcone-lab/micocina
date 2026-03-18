@@ -10,14 +10,15 @@ import { db } from '../db'
 import { createMPPreference, activatePlanLocally, getPlanPrice } from '../lib/mercadopago'
 
 const FEATURES = [
-  { icon: ShoppingBag, label: 'Recetas',                free: 'Hasta 5',  premium: 'Ilimitadas' },
-  { icon: null,        label: 'Comandas por día',        free: 'Hasta 5',  premium: 'Ilimitadas' },
-  { icon: BarChart2,   label: 'Dashboard completo + IA', free: false,      premium: true },
-  { icon: Users,       label: 'CRM de clientes',         free: false,      premium: true },
-  { icon: null,        label: 'Historial de precios',    free: false,      premium: true },
-  { icon: Wallet,      label: 'Gastos fijos',            free: false,      premium: true },
-  { icon: Sparkles,    label: 'Sugerencias IA',          free: false,      premium: true },
-  { icon: Shield,      label: 'Soporte prioritario',     free: false,      premium: true },
+  { icon: ShoppingBag, label: 'Recetas',                    free: 'Hasta 8',     premium: 'Ilimitadas' },
+  { icon: null,        label: 'Comandas por dia',            free: 'Hasta 25',    premium: 'Ilimitadas' },
+  { icon: Sparkles,    label: 'Analisis IA de costos',       free: false,         premium: true },
+  { icon: BarChart2,   label: 'Sugerencia de precio optimo', free: false,         premium: true },
+  { icon: null,        label: 'Reportes semanales/mensuales',free: false,         premium: true },
+  { icon: Users,       label: 'CRM de clientes',             free: false,         premium: true },
+  { icon: null,        label: 'Historial de costos',         free: false,         premium: true },
+  { icon: Wallet,      label: 'Gastos fijos',                free: false,         premium: true },
+  { icon: Shield,      label: 'Soporte prioritario',         free: false,         premium: true },
 ]
 
 function FeatureValue({ val }) {
@@ -176,7 +177,7 @@ export default function PremiumPage() {
             <Crown size={26} className="text-white" />
           </div>
           <h2 className="text-2xl font-display font-bold text-white mb-2">MiCocina Premium</h2>
-          <p className="text-amber-100 text-sm mb-5">Todo lo que necesitás para hacer crecer tu negocio de comida casera</p>
+          <p className="text-amber-100 text-sm mb-5">Sabe exactamente cuanto ganas con cada plato. La IA te dice que precio poner.</p>
           <div className="bg-white/20 rounded-2xl px-6 py-4 inline-block">
             <div className="flex items-end justify-center gap-2">
               <span className="text-4xl font-display font-bold text-white">USD 5</span>
