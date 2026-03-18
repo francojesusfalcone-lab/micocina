@@ -63,9 +63,10 @@ export default function App() {
 
   // PASO 1: Verificar sesión de Supabase PRIMERO
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session ?? null)
-    })
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (error) console.error('Session error:', error)
+      setSession(data?.session ?? null)
+    }).catch(() => setSession(null))
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session ?? null)
