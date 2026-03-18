@@ -125,31 +125,46 @@ export default function ComboFormPage() {
           {/* Items ya agregados con selector de cantidad */}
           {selectedItems.length > 0 && (
             <div className="space-y-2">
-              {selectedItems.map(item => (
-                <div key={item.recipeId} className="flex items-center gap-2 bg-primary-50 rounded-xl px-3 py-2.5">
-                  <Tag size={14} className="text-primary-600 shrink-0" />
-                  <p className="text-sm font-semibold text-primary-700 flex-1 truncate">{item.name}</p>
-                  {/* Selector cantidad */}
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      onClick={() => changeQty(item.recipeId, -1)}
-                      className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center active:scale-95"
-                    >
-                      <Minus size={11} className="text-primary-700" />
-                    </button>
-                    <span className="text-sm font-bold text-primary-700 w-5 text-center">{item.qty}</span>
-                    <button
-                      onClick={() => changeQty(item.recipeId, 1)}
-                      className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center active:scale-95"
-                    >
-                      <Plus size={11} className="text-primary-700" />
-                    </button>
+              {selectedItems.map(item => {
+                const recipe = allRecipes?.find(r => r.id === item.recipeId)
+                const unitPrice = recipe?.salePrice || 0
+                const subtotal = unitPrice * item.qty
+                return (
+                  <div key={item.recipeId} className="bg-primary-50 rounded-xl px-3 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <Tag size={14} className="text-primary-600 shrink-0" />
+                      <p className="text-sm font-semibold text-primary-700 flex-1 truncate">{item.name}</p>
+                      <button onClick={() => removeItem(item.recipeId)} className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                        <X size={12} className="text-red-500" />
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between mt-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => changeQty(item.recipeId, -1)} className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center active:scale-95">
+                          <Minus size={11} className="text-primary-700" />
+                        </button>
+                        <span className="text-sm font-bold text-primary-700 w-5 text-center">{item.qty}</span>
+                        <button onClick={() => changeQty(item.recipeId, 1)} className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center active:scale-95">
+                          <Plus size={11} className="text-primary-700" />
+                        </button>
+                        <span className="text-xs text-primary-500 ml-1">{formatCurrency(unitPrice, settings.currencySymbol)} c/u</span>
+                      </div>
+                      <span className="text-sm font-bold text-primary-700">{formatCurrency(subtotal, settings.currencySymbol)}</span>
+                    </div>
                   </div>
-                  <button onClick={() => removeItem(item.recipeId)} className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center ml-1 shrink-0">
-                    <X size={12} className="text-red-500" />
-                  </button>
-                </div>
-              ))}
+                )
+              })}
+
+              {/* Total real */}
+              <div className="flex items-center justify-between px-3 py-2.5 bg-surface-100 rounded-xl border border-surface-200">
+                <p className="text-sm font-bold text-gray-700">Total precio real</p>
+                <p className="text-sm font-bold text-gray-900">
+                  {formatCurrency(selectedItems.reduce((sum, item) => {
+                    const recipe = allRecipes?.find(r => r.id === item.recipeId)
+                    return sum + (recipe?.salePrice || 0) * item.qty
+                  }, 0), settings.currencySymbol)}
+                </p>
+              </div>
             </div>
           )}
 
