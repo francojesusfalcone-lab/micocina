@@ -74,11 +74,11 @@ export default function OnboardingPage() {
     setOnboardingDone(true)
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (!isLastStep) {
       setStep(step + 1)
     } else {
-      handleFinish()
+      await handleFinish()
     }
   }
 
