@@ -5,6 +5,7 @@ import { db, initDB } from './db'
 import { loadPlanFromDB } from './lib/mercadopago'
 import { supabase } from './lib/supabase'
 
+// v2.1
 // Layout
 import BottomNav from './components/BottomNav'
 import ToastContainer from './components/ToastContainer'
