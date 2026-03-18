@@ -15,7 +15,7 @@ export default function ProductsPage() {
   const [tab, setTab] = useState('recipes')
 
   const allRecipes = useRecipes()
-  const FREE_LIMIT = 5
+  const FREE_LIMIT = 8
 
   const filtered = allRecipes
     .filter((r) => tab === 'recipes' ? !r.isSimple : !!r.isSimple)
@@ -84,18 +84,26 @@ export default function ProductsPage() {
 
         {/* Plan limit banner */}
         {!isPremium && (
-          <div className={`mx-4 mt-3 px-4 py-3 rounded-2xl border flex items-center gap-2 ${atLimit ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-100'}`}>
-            <Flame size={16} className={atLimit ? 'text-amber-500 shrink-0' : 'text-blue-500 shrink-0'} />
-            <p className={`text-xs font-medium flex-1 ${atLimit ? 'text-amber-700' : 'text-blue-600'}`}>
-              Plan Gratis: hasta <strong>{FREE_LIMIT} recetas</strong>. Tenés {allRecipes.length}/{FREE_LIMIT}.
-              {atLimit && ' ¡Límite alcanzado!'}
+          <div
+            onClick={() => navigate('/premium')}
+            className={`mx-4 mt-3 px-4 py-3 rounded-2xl border flex items-center gap-2 cursor-pointer active:scale-[0.99] transition-all ${
+              atLimit
+                ? 'bg-red-50 border-red-200'
+                : allRecipes.length >= FREE_LIMIT - 2
+                ? 'bg-amber-50 border-amber-200'
+                : 'bg-blue-50 border-blue-100'
+            }`}
+          >
+            <Flame size={16} className={atLimit ? 'text-red-500 shrink-0' : allRecipes.length >= FREE_LIMIT - 2 ? 'text-amber-500 shrink-0' : 'text-blue-500 shrink-0'} />
+            <p className={`text-xs font-medium flex-1 ${atLimit ? 'text-red-700' : allRecipes.length >= FREE_LIMIT - 2 ? 'text-amber-700' : 'text-blue-600'}`}>
+              {atLimit
+                ? '¡Limite alcanzado! Con Premium tenes recetas ilimitadas + analisis IA de costos.'
+                : <><strong>Plan Gratis:</strong> hasta {FREE_LIMIT} recetas. Tenes {allRecipes.length}/{FREE_LIMIT}. Con Premium: ilimitadas + IA.</>
+              }
             </p>
-            <button
-              onClick={() => navigate('/premium')}
-              className={`text-xs font-bold underline shrink-0 ${atLimit ? 'text-amber-700' : 'text-blue-700'}`}
-            >
-              Mejorar
-            </button>
+            <span className={`text-xs font-bold underline shrink-0 ${atLimit ? 'text-red-700' : 'text-amber-700'}`}>
+              Ver Premium
+            </span>
           </div>
         )}
 
