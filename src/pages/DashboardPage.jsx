@@ -2,7 +2,7 @@ import React from 'react'
 import {
   TrendingUp, TrendingDown, ShoppingBag, ClipboardList,
   AlertTriangle, ChevronRight, Plus, Zap, Crown,
-  Clock, Star, CreditCard, BarChart2, Wallet, Timer
+  Clock, Star, CreditCard, BarChart2, Wallet
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore, formatCurrency } from '../store/appStore'
@@ -37,47 +37,7 @@ function HeroStatCard({ label, value, sub, change, marginPct }) {
   )
 }
 
-function EarningsRateCard({ period, stats }) {
-  const settings = useAppStore((s) => s.settings)
-  let hourlyRate = null
 
-  if (stats && stats.revenue > 0) {
-    if (period === 'day') {
-      const now = new Date()
-      const hoursWorked = Math.max(1, now.getHours() - 8)
-      hourlyRate = stats.revenue / hoursWorked
-    } else if (period === 'week') {
-      hourlyRate = stats.revenue / (7 * 6)
-    } else {
-      hourlyRate = stats.revenue / (30 * 6)
-    }
-  }
-
-  return (
-    <div className="card min-w-0" style={{ flex: '0 0 auto', width: '44%' }}>
-      <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-2.5 bg-blue-50">
-        <Timer size={16} className="text-blue-600" />
-      </div>
-      {hourlyRate !== null ? (
-        <>
-          <div className="text-lg font-display font-bold text-gray-900 truncate leading-none">
-            {formatCurrency(hourlyRate, settings.currencySymbol)}
-          </div>
-          <div className="text-xs font-medium text-gray-500 mt-1">por hora</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">
-            {period === 'day' ? 'hoy' : period === 'week' ? 'esta semana' : 'este mes'}
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="text-xl font-display font-bold text-gray-300">—</div>
-          <div className="text-xs font-medium text-gray-500 mt-1">por hora</div>
-          <div className="text-[11px] text-gray-400 mt-0.5">sin ventas aún</div>
-        </>
-      )}
-    </div>
-  )
-}
 
 function StatCard({ label, value, sub, icon: Icon, color = 'green' }) {
   const colors = {
@@ -175,7 +135,7 @@ export default function DashboardPage() {
 
         {/* Hero + por hora */}
         {isLoading ? (
-          <div className="flex gap-3"><Skeleton className="flex-1 h-28" /><Skeleton className="h-28" style={{ width: '44%' }} /></div>
+          <div className="flex gap-3"><Skeleton className="h-28 w-full" /></div>
         ) : (
           <div className="flex gap-3">
             <HeroStatCard
@@ -185,7 +145,6 @@ export default function DashboardPage() {
               change={stats.revenueChange}
               marginPct={stats.marginPct}
             />
-            <EarningsRateCard period="day" stats={stats} />
           </div>
         )}
 
