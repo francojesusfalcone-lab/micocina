@@ -110,14 +110,12 @@ export default function ProductsPage() {
                   : 'Los productos simples son bebidas o extras sin receta.'
               }
               action={
-                !atLimit && (
-                  <button
-                    onClick={() => navigate('/productos/nuevo')}
-                    className="btn-primary text-sm py-2.5 px-6"
-                  >
-                    + Agregar producto
-                  </button>
-                )
+                <button
+                  onClick={() => navigate('/productos/nuevo')}
+                  className="btn-primary text-sm py-2.5 px-6"
+                >
+                  + Agregar producto
+                </button>
               }
             />
           ) : (
