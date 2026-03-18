@@ -10,9 +10,9 @@ import { Crown } from 'lucide-react'
 
 const PERIODS = [
   { id: 'day',   label: 'Hoy' },
-  { id: 'week',  label: 'Semana' },
-  { id: 'month', label: 'Mes' },
-  { id: 'year',  label: 'Año', premium: true },
+  { id: 'week',  label: 'Semana', premium: true },
+  { id: 'month', label: 'Mes',    premium: true },
+  { id: 'year',  label: 'Año',    premium: true },
 ]
 
 function startOf(period) {
@@ -166,7 +166,7 @@ export default function StatsPage() {
             </ResponsiveContainer>
           )}
 
-          {/* Nota gastos */}
+          {/* Nota gastos premium */}
           {!isPremium && (
             <button onClick={() => navigate('/premium')} className="mt-3 w-full flex items-center justify-center gap-1.5 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl py-2 font-medium">
               <Crown size={12} className="text-amber-500" />

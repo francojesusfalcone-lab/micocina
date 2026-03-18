@@ -17,7 +17,7 @@ export default function BottomNav() {
     { id: 'products',  label: 'Productos', icon: ShoppingBag,     path: '/productos' },
     { id: 'orders',    label: 'Comandas',  icon: ClipboardList,   path: '/comandas' },
     { id: 'stock',     label: 'Stock',     icon: Package,         path: '/stock' },
-    { id: 'stats',     label: 'Stats',     icon: BarChart2,       path: '/estadisticas' },
+    { id: 'settings',  label: 'Config',    icon: Settings,        path: '/configuracion' },
   ]
 
   return (
