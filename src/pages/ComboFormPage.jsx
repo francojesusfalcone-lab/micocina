@@ -182,7 +182,7 @@ export default function ComboFormPage() {
       </div>
 
       {/* Botón guardar — siempre visible */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
         <button
           onClick={handleSave}
           disabled={saving}
