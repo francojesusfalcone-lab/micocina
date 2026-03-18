@@ -178,7 +178,7 @@ export default function DashboardPage() {
               sub={`${stats.deliveredOrders} pedido${stats.deliveredOrders !== 1 ? 's' : ''} entregado${stats.deliveredOrders !== 1 ? 's' : ''}`}
               change={stats.revenueChange}
             />
-            <EarningsRateCard period={period} stats={stats} />
+            <EarningsRateCard period="day" stats={stats} />
           </div>
         )}
 
