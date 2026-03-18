@@ -58,61 +58,38 @@ export default function App() {
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
-    let cancelled = false
-    const key = 'mc_boot_' + Date.now()
-
     async function bootstrap() {
-      // Evitar múltiples bootstraps en la misma sesión de página
-      if (sessionStorage.getItem('mc_booted')) {
-        // Ya corrió — solo actualizar sesión
-        const { data } = await supabase.auth.getSession()
-        if (!cancelled) { setHasSession(!!data?.session); setReady(true) }
-        return
-      }
-      sessionStorage.setItem('mc_booted', '1')
       try {
         const { data } = await supabase.auth.getSession()
-        if (cancelled) return
         const session = data?.session ?? null
-
         await initDB()
-        if (cancelled) return
-
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
           db.settings.get('businessName'), db.settings.get('country'),
           db.settings.get('currency'), db.settings.get('currencySymbol'),
           db.settings.get('productionCapacity'), db.settings.get('onboardingDone'),
         ])
-        if (cancelled) return
-
         if (bn) updateSettings({ businessName: bn.value, country: co?.value||'AR', currency: cu?.value||'ARS', currencySymbol: cs?.value||'$', productionCapacity: pc?.value||10 })
         if (ob?.value) setOnboardingDone(true)
-
         if (session) {
           try {
             const { data: p } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
-            if (!cancelled) setPlan(p?.plan === 'premium' ? 'premium' : 'free')
-          } catch { if (!cancelled) setPlan(await loadPlanFromDB(db)) }
+            setPlan(p?.plan === 'premium' ? 'premium' : 'free')
+          } catch { setPlan(await loadPlanFromDB(db)) }
         } else {
-          if (!cancelled) setPlan(await loadPlanFromDB(db))
+          setPlan(await loadPlanFromDB(db))
         }
-
-        if (!cancelled) { setHasSession(!!session); setReady(true) }
-      } catch(e) {
-        console.error(e)
-        if (!cancelled) setReady(true)
-      }
+        setHasSession(!!session)
+      } catch(e) { console.error(e) }
+      finally { setReady(true) }
     }
 
     bootstrap()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!cancelled && (event === 'SIGNED_IN' || event === 'SIGNED_OUT')) {
-        setHasSession(!!session)
-      }
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') setHasSession(!!session)
     })
 
-    return () => { cancelled = true; sessionStorage.removeItem('mc_booted'); subscription.unsubscribe() }
+    return () => subscription.unsubscribe()
   }, [])
 
   if (!ready) return <LoadingScreen />
