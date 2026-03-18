@@ -86,7 +86,7 @@ export default function App() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!appInitialized) init(session)
-      else setHasSession(!!session)
+      else { setHasSession(!!session); setReady(true) }
     })
 
     supabase.auth.getSession().then(({ data }) => {
