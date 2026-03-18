@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   Store, Globe, Crown, ChevronRight, Wallet, Users,
-  Bell, Moon, Info, LogOut, Shield, Trash2
+  Bell, Moon, Info, LogOut, Shield, Trash2, Share2
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
@@ -107,6 +107,10 @@ export default function SettingsPage() {
         <div className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden border border-surface-200">
           <div className="px-4 py-3 border-b border-surface-100"><p className="section-title mb-0">Cuenta y datos</p></div>
           <SettingsRow icon={Info} label="Versión de la app" value="0.1.0 — Beta" onClick={() => {}} color="gray" />
+          <div className="border-t border-surface-100" />
+          <SettingsRow icon={Share2} label="Invitar amigos" value="Compartí MiCuchina" onClick={() => navigate('/invitar')} color="green" />
+          <div className="border-t border-surface-100" />
+          <SettingsRow icon={Shield} label="Términos y condiciones" value="Privacidad y uso" onClick={() => navigate('/terminos')} color="gray" />
           <div className="border-t border-surface-100" />
           <SettingsRow icon={LogOut} label="Cerrar sesión" value="Tus datos quedan guardados" onClick={handleSignOut} color="red" />
           <div className="border-t border-surface-100" />

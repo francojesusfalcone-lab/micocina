@@ -11,7 +11,8 @@ import { useDashboardStats, useActiveOrders, useRealProfit } from '../hooks/useD
 import { STATUS_CONFIG, PAYMENT_METHODS } from '../hooks/useOrders'
 import clsx from 'clsx'
 
-function HeroStatCard({ label, value, sub, change }) {
+function HeroStatCard({ label, value, sub, change, marginPct }) {
+  const marginColor = marginPct === null ? null : marginPct >= 30 ? 'text-primary-200' : marginPct >= 15 ? 'text-amber-300' : 'text-red-300'
   return (
     <div className="relative overflow-hidden bg-primary-600 rounded-2xl p-4 flex-1 min-w-0">
       <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-primary-500/40" />
@@ -20,8 +21,13 @@ function HeroStatCard({ label, value, sub, change }) {
         <p className="text-primary-200 text-xs font-semibold uppercase tracking-wider">{label}</p>
         <p className="text-white text-3xl font-display font-bold mt-1 leading-none">{value}</p>
         <p className="text-primary-300 text-xs mt-1.5">{sub}</p>
+        {marginPct !== null && (
+          <div className={clsx('text-xs font-bold mt-1', marginColor)}>
+            Margen del día: {marginPct}%
+          </div>
+        )}
         {change !== null && change !== undefined && (
-          <div className={clsx('flex items-center gap-1 text-xs font-bold mt-2', change >= 0 ? 'text-primary-200' : 'text-red-300')}>
+          <div className={clsx('flex items-center gap-1 text-xs font-bold mt-1', change >= 0 ? 'text-primary-200' : 'text-red-300')}>
             {change >= 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
             {change >= 0 ? '+' : ''}{change.toFixed(0)}% vs anterior
           </div>
@@ -177,6 +183,7 @@ export default function DashboardPage() {
               value={formatCurrency(stats.revenue, settings.currencySymbol)}
               sub={`${stats.deliveredOrders} pedido${stats.deliveredOrders !== 1 ? 's' : ''} entregado${stats.deliveredOrders !== 1 ? 's' : ''}`}
               change={stats.revenueChange}
+              marginPct={stats.marginPct}
             />
             <EarningsRateCard period="day" stats={stats} />
           </div>

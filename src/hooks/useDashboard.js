@@ -61,6 +61,20 @@ export function useDashboardStats(period = 'day') {
       }
       const topRecipe = topRecipeId ? await db.recipes.get(topRecipeId) : null
 
+      // ── Costo ingredientes del período (para margen %) ──
+      let ingredientCost = 0
+      for (const order of delivered) {
+        const items = await db.orderItems.where('orderId').equals(order.id).toArray()
+        for (const item of items) {
+          const ri = await db.recipeIngredients.where('recipeId').equals(item.recipeId).toArray()
+          for (const r of ri) {
+            const ing = await db.ingredients.get(r.ingredientId)
+            if (ing) ingredientCost += (ing.pricePerUnit || 0) * r.quantity * item.quantity
+          }
+        }
+      }
+      const marginPct = revenue > 0 ? Math.round(((revenue - ingredientCost) / revenue) * 100) : null
+
       // ── Stock bajo ──
       const allIngredients = await db.ingredients.toArray()
       const lowStock = allIngredients.filter(
@@ -115,6 +129,9 @@ export function useDashboardStats(period = 'day') {
         // Stock
         lowStockCount:  lowStock.length,
         lowStockNames:  lowStock.slice(0, 3).map((i) => i.name),
+        // Margen
+        ingredientCost,
+        marginPct,
         // Hora pico
         peakHour: hasPeakData ? peakHour : null,
         // Activas (para la lista en dashboard)
