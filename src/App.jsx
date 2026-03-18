@@ -84,13 +84,13 @@ export default function App() {
       finally { setHasSession(!!session); setReady(true) }
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (appInitialized) setHasSession(!!session)
-    })
-
     supabase.auth.getSession().then(({ data }) => {
       init(data?.session ?? null)
     }).catch(() => init(null))
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (appInitialized) setHasSession(!!session)
+    })
 
     return () => subscription.unsubscribe()
   }, [])
