@@ -33,6 +33,8 @@ import StatsPage            from './pages/StatsPage'
 import LowStockPage         from './pages/LowStockPage'
 import EditBusinessNamePage from './pages/EditBusinessNamePage'
 import EditCountryPage      from './pages/EditCountryPage'
+import CombosPage           from './pages/CombosPage'
+import ComboFormPage        from './pages/ComboFormPage'
 
 function LoadingScreen() {
   return (
@@ -150,6 +152,9 @@ export default function App() {
               <Route path="/clientes/:id"             element={<ClientDetailPage />} />
               <Route path="/estadisticas"             element={<StatsPage />} />
               <Route path="/stock/alertas"            element={<LowStockPage />} />
+              <Route path="/combos"                   element={<CombosPage />} />
+              <Route path="/combos/nuevo"             element={<ComboFormPage />} />
+              <Route path="/combos/:id"               element={<ComboFormPage />} />
               <Route path="/ia"                       element={<AIPage />} />
               <Route path="/premium/success"          element={<Navigate to="/premium?status=approved" replace />} />
               <Route path="/premium/failure"          element={<Navigate to="/premium?status=failure" replace />} />

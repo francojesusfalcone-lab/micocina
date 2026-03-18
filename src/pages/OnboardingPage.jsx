@@ -72,7 +72,7 @@ export default function OnboardingPage() {
 
         {step === 0 ? (
           <>
-            <h1 className="text-2xl font-display font-bold text-gray-900 mb-2">Bienvenida a MiCocina!</h1>
+            <h1 className="text-2xl font-display font-bold text-gray-900 mb-2">Bienvenida a MiCuchina!</h1>
             <p className="text-gray-500 text-base leading-relaxed mb-8">Tu app para manejar tu negocio de comida casera.</p>
             <div className="flex flex-col gap-4">
               {[

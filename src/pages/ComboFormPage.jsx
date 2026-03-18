@@ -1,0 +1,162 @@
+import React, { useState, useEffect } from 'react'
+import { ChevronLeft, Plus, X, Tag } from 'lucide-react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useAppStore, formatCurrency } from '../store/appStore'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db } from '../db'
+
+export default function ComboFormPage() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const isEdit = !!id
+  const settings = useAppStore((s) => s.settings)
+
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState('')
+  const [selectedItems, setSelectedItems] = useState([]) // [{recipeId, qty}]
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+
+  const allRecipes = useLiveQuery(() =>
+    db.recipes.filter(r => !r.isPremiumCombo).toArray()
+  , [], [])
+
+  // Cargar combo si es edición
+  useEffect(() => {
+    if (isEdit) {
+      db.recipes.get(Number(id)).then(combo => {
+        if (combo) {
+          setName(combo.name)
+          setPrice(String(combo.salePrice || ''))
+          setSelectedItems(combo.comboItems || [])
+        }
+      })
+    }
+  }, [id, isEdit])
+
+  function addItem(recipe) {
+    if (selectedItems.find(i => i.recipeId === recipe.id)) return
+    setSelectedItems(prev => [...prev, { recipeId: recipe.id, name: recipe.name, qty: 1 }])
+  }
+
+  function removeItem(recipeId) {
+    setSelectedItems(prev => prev.filter(i => i.recipeId !== recipeId))
+  }
+
+  async function handleSave() {
+    if (!name.trim()) { setError('Ponele un nombre al combo'); return }
+    if (!price || isNaN(Number(price)) || Number(price) <= 0) { setError('El precio debe ser mayor a 0'); return }
+    if (selectedItems.length < 2) { setError('Un combo necesita al menos 2 productos'); return }
+
+    setSaving(true)
+    const data = {
+      name: name.trim(),
+      salePrice: Number(price),
+      isPremiumCombo: 1,
+      comboItems: selectedItems,
+      isActive: 1,
+      updatedAt: new Date().toISOString(),
+    }
+
+    if (isEdit) {
+      await db.recipes.update(Number(id), data)
+    } else {
+      await db.recipes.add({ ...data, createdAt: new Date().toISOString() })
+    }
+    navigate('/combos')
+  }
+
+  return (
+    <div className="flex flex-col min-h-full bg-surface-50">
+      <div className="bg-white border-b border-surface-200 px-4 py-4 flex items-center gap-3">
+        <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center">
+          <ChevronLeft size={20} />
+        </button>
+        <h1 className="text-lg font-display font-bold text-gray-900">
+          {isEdit ? 'Editar combo' : 'Nuevo combo'}
+        </h1>
+      </div>
+
+      <div className="flex-1 overflow-y-auto scrollbar-none pb-32 px-4 py-4 space-y-4">
+
+        {/* Nombre */}
+        <div className="card space-y-3">
+          <p className="text-sm font-bold text-gray-700">Nombre del combo</p>
+          <input
+            type="text"
+            placeholder="Ej: Combo Familiar, Combo Ejecutivo..."
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="input-field"
+          />
+        </div>
+
+        {/* Precio fijo */}
+        <div className="card space-y-3">
+          <div>
+            <p className="text-sm font-bold text-gray-700">Precio del combo</p>
+            <p className="text-xs text-gray-500 mt-0.5">Precio especial de oferta — no tiene que tener lógica de margen</p>
+          </div>
+          <div className="relative">
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">{settings.currencySymbol}</span>
+            <input
+              type="number"
+              placeholder="0.00"
+              value={price}
+              onChange={e => setPrice(e.target.value)}
+              className="input-field pl-8"
+              min="0"
+              step="0.01"
+            />
+          </div>
+        </div>
+
+        {/* Productos incluidos */}
+        <div className="card space-y-3">
+          <p className="text-sm font-bold text-gray-700">Productos incluidos</p>
+
+          {selectedItems.length > 0 && (
+            <div className="space-y-2">
+              {selectedItems.map(item => (
+                <div key={item.recipeId} className="flex items-center gap-2 bg-primary-50 rounded-xl px-3 py-2.5">
+                  <Tag size={14} className="text-primary-600 shrink-0" />
+                  <p className="text-sm font-semibold text-primary-700 flex-1">{item.name}</p>
+                  <button onClick={() => removeItem(item.recipeId)} className="w-6 h-6 rounded-full bg-primary-200 flex items-center justify-center">
+                    <X size={12} className="text-primary-700" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className="text-xs text-gray-500 font-semibold">Tocá un producto para agregarlo:</p>
+          <div className="space-y-1.5 max-h-48 overflow-y-auto">
+            {allRecipes?.filter(r => !selectedItems.find(i => i.recipeId === r.id)).map(recipe => (
+              <button
+                key={recipe.id}
+                onClick={() => addItem(recipe)}
+                className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-surface-200 bg-white active:bg-surface-50 transition-colors text-left"
+              >
+                <Plus size={14} className="text-gray-400 shrink-0" />
+                <p className="text-sm font-medium text-gray-700">{recipe.name}</p>
+                <p className="text-xs text-gray-400 ml-auto">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {error && <p className="text-sm text-red-500 text-center font-medium">{error}</p>}
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="btn-primary w-full py-4 text-base disabled:opacity-50"
+        >
+          {saving ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear combo'}
+        </button>
+      </div>
+    </div>
+  )
+}

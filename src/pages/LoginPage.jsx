@@ -26,7 +26,7 @@ export default function LoginPage() {
         <span className="text-4xl">🍳</span>
       </div>
 
-      <h1 className="text-3xl font-display font-bold text-gray-900 mb-2">MiCocina</h1>
+      <h1 className="text-3xl font-display font-bold text-gray-900 mb-2">MiCuchina</h1>
       <p className="text-gray-500 text-center text-sm leading-relaxed mb-10">
         Tu app para manejar tu negocio<br />de comida casera
       </p>
