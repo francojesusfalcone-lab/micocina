@@ -134,6 +134,14 @@ export default function AIPage() {
     setResult(null)
     try {
       const context = await buildAIContext(settings)
+
+      // Verificar que haya datos suficientes para analizar
+      const hasData = context.recipes?.length > 0 || context.orders?.length > 0 || context.ingredients?.length > 0
+      if (!hasData) {
+        setError('Todavía no tenés datos cargados. Agregá ingredientes, productos o comandas para que la IA pueda analizar tu negocio.')
+        setLoading(false)
+        return
+      }
       const systemPrompt = buildSystemPrompt(context)
       const userPrompt   = buildUserPrompt(context)
 
