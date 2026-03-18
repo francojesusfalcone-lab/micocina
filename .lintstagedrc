@@ -1,1 +1,1 @@
-{"*.{js,jsx}": "eslint"}
+{"*.{js,jsx}": "npx eslint"}

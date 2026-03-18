@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { Plus, Search, Package, AlertTriangle, RefreshCw } from 'lucide-react'
+import { Plus, Search, Package, AlertTriangle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
-import { PremiumBadge } from '../components/PremiumGate'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { useIngredients } from '../hooks/useIngredients'
 import clsx from 'clsx'
@@ -69,25 +68,6 @@ export default function StockPage() {
             </div>
           </div>
         )}
-
-        {/* Price update shortcut */}
-        <button
-          onClick={() => navigate('/stock/actualizar-precios')}
-          className="mx-4 mt-3 w-[calc(100%-2rem)] flex items-center justify-between bg-primary-50 border border-primary-200 rounded-2xl px-4 py-3 active:scale-[0.99] transition-all"
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-primary-100 flex items-center justify-center">
-              <RefreshCw size={16} className="text-primary-600" />
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-bold text-primary-700">Actualizar precios</p>
-              <p className="text-xs text-primary-500">Dos toques para actualizar</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <PremiumBadge />
-          </div>
-        </button>
 
         {/* Ingredients list */}
         <div className="px-4 mt-4 space-y-3">
