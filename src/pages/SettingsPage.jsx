@@ -44,8 +44,9 @@ export default function SettingsPage() {
     setDevTaps(next)
     if (next >= 7) {
       const newPlan = isPremium ? 'free' : 'premium'
-      setPlan(newPlan)
-      db.user.put({ key: 'plan', value: newPlan })
+      db.user.put({ key: 'plan', value: newPlan }).then(() => {
+        window.location.reload()
+      })
       setDevTaps(0)
     }
   }
