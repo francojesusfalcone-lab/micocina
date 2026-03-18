@@ -138,7 +138,7 @@ export default function AIPage() {
       // Verificar que haya datos suficientes para analizar
       const hasData = context.recipes?.length > 0 || context.orders?.length > 0 || context.ingredients?.length > 0
       if (!hasData) {
-        setError('Todavía no tenés datos cargados. Agregá ingredientes, productos o comandas para que la IA pueda analizar tu negocio.')
+        setError('No hay datos suficientes. Agregá al menos un ingrediente, un producto y una comanda para que la IA pueda analizar tu negocio.')
         setLoading(false)
         return
       }
@@ -248,11 +248,27 @@ export default function AIPage() {
 
         {/* ── Error ── */}
         {error && !loading && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-4 flex items-start gap-3">
-            <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-bold text-red-700">No se pudo analizar</p>
-              <p className="text-xs text-red-500 mt-1">{error}</p>
+          <div className="space-y-3">
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-4 flex items-start gap-3">
+              <AlertTriangle size={18} className="text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-amber-700">No hay datos suficientes</p>
+                <p className="text-xs text-amber-600 mt-1">Necesitás al menos un ingrediente, un producto y una comanda entregada para que la IA pueda analizar tu negocio.</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <button onClick={() => navigate('/stock/nuevo')} className="card text-center py-3 active:scale-95 transition-all">
+                <p className="text-xl mb-1">🧂</p>
+                <p className="text-xs font-semibold text-gray-700">Ingrediente</p>
+              </button>
+              <button onClick={() => navigate('/productos/nuevo')} className="card text-center py-3 active:scale-95 transition-all">
+                <p className="text-xl mb-1">🍳</p>
+                <p className="text-xs font-semibold text-gray-700">Producto</p>
+              </button>
+              <button onClick={() => navigate('/comandas/nueva')} className="card text-center py-3 active:scale-95 transition-all">
+                <p className="text-xl mb-1">📋</p>
+                <p className="text-xs font-semibold text-gray-700">Comanda</p>
+              </button>
             </div>
           </div>
         )}
