@@ -82,7 +82,12 @@ export default function App() {
         if (session) {
           try {
             const { data } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
-            setPlan(data?.plan === 'premium' ? 'premium' : 'free')
+            // Si Supabase tiene plan premium, usar ese. Si no, usar el local (permite dev toggle)
+            if (data?.plan === 'premium') {
+              setPlan('premium')
+            } else {
+              setPlan(await loadPlanFromDB(db))
+            }
           } catch { setPlan(await loadPlanFromDB(db)) }
         } else {
           setPlan(await loadPlanFromDB(db))
