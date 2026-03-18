@@ -205,6 +205,24 @@ export default function SettingsPage() {
           MiCocina · Hecho con ❤️ para cocineras de Latinoamérica
         </p>
 
+        {/* DEV: activar premium sin pago */}
+        {!isPremium && (
+          <button
+            onClick={() => { useAppStore.getState().setPlan('premium') }}
+            className="mx-auto block text-xs text-gray-300 mt-1 mb-4 underline"
+          >
+            [DEV] Activar Premium gratis
+          </button>
+        )}
+        {isPremium && (
+          <button
+            onClick={() => { useAppStore.getState().setPlan('free') }}
+            className="mx-auto block text-xs text-gray-300 mt-1 mb-4 underline"
+          >
+            [DEV] Volver a Free
+          </button>
+        )}
+
       </div>
     </div>
   )
