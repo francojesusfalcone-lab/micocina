@@ -63,16 +63,25 @@ export default function App() {
 
   // PASO 1: Verificar sesión de Supabase PRIMERO
   useEffect(() => {
+    let mounted = true
+
     supabase.auth.getSession().then(({ data, error }) => {
       if (error) console.error('Session error:', error)
-      setSession(data?.session ?? null)
-    }).catch(() => setSession(null))
+      if (mounted) setSession(data?.session ?? null)
+    }).catch(() => { if (mounted) setSession(null) })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session ?? null)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      if (mounted) setSession(prev => {
+        // Solo actualizar si cambió realmente (evita loops)
+        if (prev?.access_token === newSession?.access_token) return prev
+        return newSession ?? null
+      })
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   // PASO 2: Solo cargar DB local si hay sesión
