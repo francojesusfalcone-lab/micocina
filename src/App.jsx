@@ -59,8 +59,17 @@ export default function App() {
 
   useEffect(() => {
     let cancelled = false
+    const key = 'mc_boot_' + Date.now()
 
     async function bootstrap() {
+      // Evitar múltiples bootstraps en la misma sesión de página
+      if (sessionStorage.getItem('mc_booted')) {
+        // Ya corrió — solo actualizar sesión
+        const { data } = await supabase.auth.getSession()
+        if (!cancelled) { setHasSession(!!data?.session); setReady(true) }
+        return
+      }
+      sessionStorage.setItem('mc_booted', '1')
       try {
         const { data } = await supabase.auth.getSession()
         if (cancelled) return
@@ -103,7 +112,7 @@ export default function App() {
       }
     })
 
-    return () => { cancelled = true; subscription.unsubscribe() }
+    return () => { cancelled = true; sessionStorage.removeItem('mc_booted'); subscription.unsubscribe() }
   }, [])
 
   if (!ready) return <LoadingScreen />
