@@ -1,4 +1,4 @@
-// v2.0`r`nimport React, { useState } from 'react'
+import React, { useState } from 'react'
 import {
   TrendingUp, TrendingDown, ShoppingBag, ClipboardList,
   AlertTriangle, ChevronRight, Plus, Zap, Crown,
