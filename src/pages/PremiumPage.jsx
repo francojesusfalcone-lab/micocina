@@ -11,7 +11,7 @@ import { createMPPreference, activatePlanLocally, getPlanPrice } from '../lib/me
 
 const FEATURES = [
   { icon: ShoppingBag, label: 'Recetas',                    free: 'Hasta 8',     premium: 'Ilimitadas' },
-  { icon: null,        label: 'Comandas por dia',            free: 'Hasta 25',    premium: 'Ilimitadas' },
+  { icon: null,        label: 'Comandas por dia',            free: 'Hasta 15',    premium: 'Ilimitadas' },
   { icon: Sparkles,    label: 'Analisis IA de costos',       free: false,         premium: true },
   { icon: BarChart2,   label: 'Sugerencia de precio optimo', free: false,         premium: true },
   { icon: null,        label: 'Reportes semanales/mensuales',free: false,         premium: true },
