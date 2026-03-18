@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from './store/appStore'
 import { db, initDB } from './db'
@@ -32,8 +32,6 @@ import AIPage               from './pages/AIPage'
 import StatsPage            from './pages/StatsPage'
 import LowStockPage         from './pages/LowStockPage'
 
-let appInitialized = false
-
 function LoadingScreen() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -57,14 +55,13 @@ function AppLayout({ children }) {
 export default function App() {
   const [ready, setReady] = useState(false)
   const [hasSession, setHasSession] = useState(false)
+  const initialized = useRef(false)
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
-    appInitialized = false  // reset en cada mount
-
     async function init(session) {
-      if (appInitialized) return
-      appInitialized = true
+      if (initialized.current) return
+      initialized.current = true
       try {
         await initDB()
         const [bn, co, cu, cs, pc, ob] = await Promise.all([
@@ -86,18 +83,19 @@ export default function App() {
       finally { setHasSession(!!session); setReady(true) }
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!appInitialized) {
-        init(session)
-      } else {
-        setHasSession(!!session)
-        setReady(true)
+    // Usar solo getSession — sin onAuthStateChange para evitar el loop
+    supabase.auth.getSession()
+      .then(({ data }) => init(data?.session ?? null))
+      .catch(() => init(null))
+
+    // onAuthStateChange solo para cambios POSTERIORES (sign in / sign out)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+        if (initialized.current) {
+          setHasSession(!!session)
+        }
       }
     })
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (!appInitialized) init(data?.session ?? null)
-    }).catch(() => { if (!appInitialized) init(null) })
 
     return () => subscription.unsubscribe()
   }, [])
@@ -148,7 +146,7 @@ export default function App() {
               <Route path="/clientes/editar/:id"      element={<ClientFormPage />} />
               <Route path="/clientes/:id"             element={<ClientDetailPage />} />
               <Route path="/estadisticas"             element={<StatsPage />} />
-              <Route path="/stock/alertas"             element={<LowStockPage />} />
+              <Route path="/stock/alertas"            element={<LowStockPage />} />
               <Route path="/ia"                       element={<AIPage />} />
               <Route path="/premium/success"          element={<Navigate to="/premium?status=approved" replace />} />
               <Route path="/premium/failure"          element={<Navigate to="/premium?status=failure" replace />} />
