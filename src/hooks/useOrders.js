@@ -4,11 +4,12 @@ import { deductStock } from './useIngredients'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 export const STATUS_CONFIG = {
-  pending:   { label: 'Pendiente',  color: 'bg-amber-100 text-amber-700',      dot: 'bg-amber-400' },
-  preparing: { label: 'Preparando', color: 'bg-blue-100 text-blue-700',        dot: 'bg-blue-400' },
-  ready:     { label: 'Listo',      color: 'bg-primary-100 text-primary-700',  dot: 'bg-primary-500' },
-  delivered: { label: 'Entregado',  color: 'bg-gray-100 text-gray-500',        dot: 'bg-gray-400' },
-  cancelled: { label: 'Cancelado',  color: 'bg-red-100 text-red-500',          dot: 'bg-red-400' },
+  pending:             { label: 'Pendiente',    color: 'bg-amber-100 text-amber-700',     dot: 'bg-amber-400' },
+  preparing:           { label: 'Preparando',   color: 'bg-blue-100 text-blue-700',       dot: 'bg-blue-400' },
+  ready:               { label: 'Listo',         color: 'bg-primary-100 text-primary-700', dot: 'bg-primary-500' },
+  delivered:           { label: 'Entregado',    color: 'bg-gray-100 text-gray-500',       dot: 'bg-gray-400' },
+  cancelled:           { label: 'No entregado — vuelve al stock', color: 'bg-orange-100 text-orange-600', dot: 'bg-orange-400' },
+  cancelled_wasted:    { label: 'No entregado — inutilizado',     color: 'bg-red-100 text-red-500',       dot: 'bg-red-400' },
 }
 
 export const STATUS_FLOW = ['pending', 'preparing', 'ready', 'delivered']
@@ -150,24 +151,21 @@ export async function updateOrderStatus(id, status) {
   }
 }
 
-export async function cancelOrder(id, restoreStock) {
+// mode: 'restore' = vuelve al stock | 'wasted' = inutilizado (no vuelve)
+export async function cancelOrder(id, mode = 'restore') {
   const now = new Date().toISOString()
   const order = await db.orders.get(id)
   if (!order) return
 
-  // Si se pide devolver stock y ya se había descontado
-  if (restoreStock && order.stockDeducted) {
+  if (mode === 'restore' && order.stockDeducted) {
     const items = await db.orderItems.where('orderId').equals(id).toArray()
     for (const item of items) {
-      const recipeItems = await db.recipeIngredients
-        .where('recipeId').equals(item.recipeId)
-        .toArray()
+      const recipeItems = await db.recipeIngredients.where('recipeId').equals(item.recipeId).toArray()
       for (const ri of recipeItems) {
         const ing = await db.ingredients.get(ri.ingredientId)
         if (ing) {
-          const restored = (ing.stock || 0) + ri.quantity * item.quantity
           await db.ingredients.update(ri.ingredientId, {
-            stock: restored,
+            stock: (ing.stock || 0) + ri.quantity * item.quantity,
             updatedAt: now,
           })
         }
@@ -176,7 +174,7 @@ export async function cancelOrder(id, restoreStock) {
   }
 
   await db.orders.update(id, {
-    status: 'cancelled',
+    status: mode === 'wasted' ? 'cancelled_wasted' : 'cancelled',
     stockDeducted: false,
     updatedAt: now,
   })

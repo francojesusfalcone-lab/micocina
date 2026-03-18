@@ -85,46 +85,36 @@ function StatusStepper({ currentStatus, onAdvance, advancing }) {
 
 // ─── Cancel sheet ─────────────────────────────────────────────────────────────
 function CancelSheet({ isOpen, onClose, onConfirm }) {
-  const [restoreStock, setRestoreStock] = useState(true)
   return (
-    <BottomSheet isOpen={isOpen} onClose={onClose} title="Cancelar comanda">
-      <div className="px-5 py-5 space-y-5">
-        <p className="text-sm text-gray-600">
-          ¿Cancelás este pedido? Esta acción no se puede deshacer.
-        </p>
+    <BottomSheet isOpen={isOpen} onClose={onClose} title="¿Qué pasó con este pedido?">
+      <div className="px-5 py-4 space-y-3">
+        <p className="text-sm text-gray-500">Elegí la opción correcta para actualizar el stock:</p>
 
-        <div className="flex items-center justify-between p-4 bg-surface-50 rounded-2xl">
+        <button
+          onClick={() => onConfirm('restore')}
+          className="w-full flex items-start gap-3 p-4 bg-primary-50 border border-primary-200 rounded-2xl active:scale-[0.99] transition-all text-left"
+        >
+          <span className="text-xl">🔄</span>
           <div>
-            <p className="text-sm font-semibold text-gray-800">¿Devolver stock?</p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Si el pedido ya se preparó y usa ingredientes, podés volver a sumarlos al stock.
-            </p>
+            <p className="text-sm font-bold text-primary-700">No se entregó — vuelve al stock</p>
+            <p className="text-xs text-primary-600 mt-0.5">Ej: cliente canceló, la gaseosa vuelve a la heladera</p>
           </div>
-          <button
-            onClick={() => setRestoreStock(!restoreStock)}
-            className={`w-12 h-6 rounded-full transition-all relative ${restoreStock ? 'bg-primary-500' : 'bg-surface-300'}`}
-          >
-            <div
-              className="w-5 h-5 rounded-full bg-white shadow transition-all absolute top-0.5"
-              style={{ left: restoreStock ? '26px' : '2px' }}
-            />
-          </button>
-        </div>
+        </button>
 
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 btn-secondary py-3"
-          >
-            Volver
-          </button>
-          <button
-            onClick={() => onConfirm(restoreStock)}
-            className="flex-1 bg-red-500 text-white font-semibold py-3 rounded-2xl active:scale-95 transition-all"
-          >
-            Cancelar pedido
-          </button>
-        </div>
+        <button
+          onClick={() => onConfirm('wasted')}
+          className="w-full flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl active:scale-[0.99] transition-all text-left"
+        >
+          <span className="text-xl">🗑️</span>
+          <div>
+            <p className="text-sm font-bold text-red-600">No se entregó — inutilizado</p>
+            <p className="text-xs text-red-500 mt-0.5">Ej: la hamburguesa ya estaba hecha, no se puede reutilizar</p>
+          </div>
+        </button>
+
+        <button onClick={onClose} className="w-full btn-secondary py-3 text-sm">
+          Cancelar
+        </button>
       </div>
     </BottomSheet>
   )
@@ -155,7 +145,7 @@ export default function OrderDetailPage() {
     )
   }
 
-  const isCancelled = order.status === 'cancelled'
+  const isCancelled = order.status === 'cancelled' || order.status === 'cancelled_wasted'
   const isDelivered = order.status === 'delivered'
   const isDone = isCancelled || isDelivered
 
@@ -181,10 +171,11 @@ export default function OrderDetailPage() {
     }
   }
 
-  async function handleCancel(restoreStock) {
+  async function handleCancel(mode) {
     try {
-      await cancelOrder(Number(id), restoreStock)
-      addToast({ type: 'success', message: 'Comanda cancelada' })
+      await cancelOrder(Number(id), mode)
+      const msg = mode === 'restore' ? 'Stock devuelto ✓' : 'Comanda marcada como inutilizada'
+      addToast({ type: 'success', message: msg })
       setCancelOpen(false)
     } catch (err) {
       addToast({ type: 'error', message: err.message })
