@@ -84,9 +84,13 @@ export default function App() {
     }
   }, [])
 
+  const bootstrapRan = React.useRef(false)
+
   // PASO 2: Solo cargar DB local si hay sesión
   useEffect(() => {
-    if (session === undefined) return // esperar sesión
+    if (session === undefined) return
+    if (bootstrapRan.current) return
+    bootstrapRan.current = true
 
     // Siempre cargar DB local (con o sin sesión)
     async function bootstrap() {
