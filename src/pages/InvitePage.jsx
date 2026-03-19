@@ -37,7 +37,7 @@ export default function InvitePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title="Invitar amigos" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24 px-4 py-6 space-y-5">
@@ -48,17 +48,17 @@ export default function InvitePage() {
             <Users size={36} className="text-primary-600" />
           </div>
           <div>
-            <h2 className="text-xl font-display font-bold text-gray-900">Compartí MiCuchina</h2>
-            <p className="text-sm text-gray-500 mt-1 leading-relaxed max-w-xs mx-auto">
+            <h2 className="text-xl font-display font-bold text-app-primary">Compartí MiCuchina</h2>
+            <p className="text-sm text-app-muted mt-1 leading-relaxed max-w-xs mx-auto">
               Si conocés a alguien que cocina para vender, ayudala a saber cuánto gana de verdad.
             </p>
           </div>
         </div>
 
         {/* Preview del mensaje */}
-        <div className="card bg-surface-50 border border-surface-200">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Mensaje a compartir</p>
-          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{SHARE_TEXT}</p>
+        <div className="card bg-app border border-app">
+          <p className="text-xs font-bold text-app-muted uppercase tracking-wide mb-3">Mensaje a compartir</p>
+          <p className="text-sm text-app-secondary leading-relaxed whitespace-pre-line">{SHARE_TEXT}</p>
         </div>
 
         {/* Botones */}
@@ -73,14 +73,14 @@ export default function InvitePage() {
 
           <button
             onClick={handleCopy}
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-surface-200 bg-white text-gray-700 font-semibold text-sm active:scale-[0.99] transition-all"
+            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl border-2 border-app bg-white text-app-secondary font-semibold text-sm active:scale-[0.99] transition-all"
           >
             {copied ? <Check size={18} className="text-primary-600" /> : <Copy size={18} />}
             {copied ? '¡Copiado!' : 'Copiar mensaje'}
           </button>
         </div>
 
-        <p className="text-center text-xs text-gray-400 px-4">
+        <p className="text-center text-xs text-app-faint px-4">
           Cada persona que uses MiCuchina ayuda a que sigamos mejorando la app 🙌
         </p>
 

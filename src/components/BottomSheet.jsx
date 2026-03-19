@@ -36,13 +36,13 @@ export default function BottomSheet({ isOpen, onClose, title, children, classNam
 
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-5 py-3 border-b border-surface-200">
-            <h2 className="text-lg font-display font-bold text-gray-900">{title}</h2>
+          <div className="flex items-center justify-between px-5 py-3 border-b border-app">
+            <h2 className="text-lg font-display font-bold text-app-primary">{title}</h2>
             <button
               onClick={onClose}
               className="flex items-center justify-center w-8 h-8 rounded-xl bg-surface-100 active:scale-95 transition-all"
             >
-              <X size={18} className="text-gray-500" />
+              <X size={18} className="text-app-muted" />
             </button>
           </div>
         )}

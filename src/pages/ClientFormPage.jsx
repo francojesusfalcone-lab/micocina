@@ -56,7 +56,7 @@ export default function ClientFormPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title={isEditing ? 'Editar cliente' : 'Nuevo cliente'} back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-36 px-4 py-4 space-y-4">
@@ -121,7 +121,7 @@ export default function ClientFormPage() {
       </div>
 
       {/* Footer */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         <button
           onClick={handleSave}
           disabled={saving}

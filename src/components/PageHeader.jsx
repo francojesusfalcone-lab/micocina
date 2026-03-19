@@ -8,14 +8,14 @@ export default function PageHeader({ title, subtitle, back, action, className })
   const [imgError, setImgError] = useState(false)
 
   return (
-    <header className={clsx('page-header dark:bg-gray-950/90 dark:border-gray-800 pt-safe', className)}>
+    <header className={clsx('page-header /90  pt-safe', className)}>
       <div className="flex items-center gap-3">
         {back ? (
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center justify-center w-9 h-9 rounded-xl bg-surface-100 dark:bg-gray-800 active:scale-95 transition-all"
+            className="flex items-center justify-center w-9 h-9 rounded-xl bg-surface-100  active:scale-95 transition-all"
           >
-            <ChevronLeft size={20} className="text-gray-600 dark:text-gray-300" />
+            <ChevronLeft size={20} className="text-app-muted dark:text-gray-300" />
           </button>
         ) : (
           /* Logo en páginas principales */
@@ -33,9 +33,9 @@ export default function PageHeader({ title, subtitle, back, action, className })
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <h1 className="page-title dark:text-gray-100 truncate">{title}</h1>
+          <h1 className="page-title  truncate">{title}</h1>
           {subtitle && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{subtitle}</p>
+            <p className="text-sm text-app-muted dark:text-app-faint mt-0.5">{subtitle}</p>
           )}
         </div>
         {action && (

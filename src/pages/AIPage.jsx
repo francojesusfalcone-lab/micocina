@@ -30,10 +30,10 @@ function SuggestionCard({ s, onAction }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-bold text-gray-900">{s.title}</p>
+            <p className="text-sm font-bold text-app-primary">{s.title}</p>
             <span className={`w-2 h-2 rounded-full shrink-0 ${PRIORITY_DOT[s.priority]}`} />
           </div>
-          <p className="text-xs text-gray-500 mt-1 leading-relaxed">{s.body}</p>
+          <p className="text-xs text-app-muted mt-1 leading-relaxed">{s.body}</p>
         </div>
       </div>
       {s.action && (
@@ -52,7 +52,7 @@ function LoadingSkeleton() {
         <div className="h-20 bg-surface-200 rounded-2xl" />
         {[1,2,3].map(i => <div key={i} className="h-32 bg-surface-200 rounded-2xl" />)}
       </div>
-      <p className="text-center text-sm text-gray-400 animate-pulse">Analizando tu negocio...</p>
+      <p className="text-center text-sm text-app-faint animate-pulse">Analizando tu negocio...</p>
     </div>
   )
 }
@@ -86,19 +86,19 @@ export default function AIPage() {
   // Premium gate
   if (!isPremium) {
     return (
-      <div className="flex flex-col min-h-full bg-surface-50">
+      <div className="flex flex-col min-h-full bg-app">
         <PageHeader title="Asistente IA" back />
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5 pb-24">
           <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg">
             <Sparkles size={40} className="text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-display font-bold text-gray-900 mb-2">Tu asesora de negocio con IA</h2>
-            <p className="text-sm text-gray-500 leading-relaxed">Analizá tus ventas, costos y patrones en segundos.</p>
+            <h2 className="text-xl font-display font-bold text-app-primary mb-2">Tu asesora de negocio con IA</h2>
+            <p className="text-sm text-app-muted leading-relaxed">Analizá tus ventas, costos y patrones en segundos.</p>
           </div>
           <div className="w-full space-y-2.5 text-left">
             {['📈 Detecta qué platos te dan más ganancia real','⏰ Te dice cuándo es tu hora pico de pedidos','🛒 Alerta si vas a quedarte sin stock','💡 Sugiere acciones concretas con tus números','📉 Identifica gastos que se comen tu ganancia'].map(f => (
-              <div key={f} className="flex items-center gap-2 text-sm text-gray-600 bg-white rounded-xl px-3 py-2.5 border border-surface-200">{f}</div>
+              <div key={f} className="flex items-center gap-2 text-sm text-app-muted bg-white rounded-xl px-3 py-2.5 border border-app">{f}</div>
             ))}
           </div>
           <button onClick={() => navigate('/premium')} className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-2xl active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-base shadow-md">
@@ -166,7 +166,7 @@ export default function AIPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title="Asistente IA" subtitle="Análisis de tu negocio" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-28 px-4 py-4 space-y-4">
@@ -178,12 +178,12 @@ export default function AIPage() {
               <Sparkles size={36} className="text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-display font-bold text-gray-900">¿Qué está pasando en tu negocio?</h2>
-              <p className="text-sm text-gray-500 mt-2 leading-relaxed max-w-xs mx-auto">La IA analiza tus ventas, costos, stock y clientes para darte sugerencias concretas.</p>
+              <h2 className="text-lg font-display font-bold text-app-primary">¿Qué está pasando en tu negocio?</h2>
+              <p className="text-sm text-app-muted mt-2 leading-relaxed max-w-xs mx-auto">La IA analiza tus ventas, costos, stock y clientes para darte sugerencias concretas.</p>
             </div>
-            <div className="w-full space-y-2 text-left text-sm text-gray-500">
+            <div className="w-full space-y-2 text-left text-sm text-app-muted">
               {['📊 Últimos 30 días de ventas','🏆 Platos más vendidos y rentables','⚠️ Stock bajo y compras urgentes','💸 Gastos fijos vs ganancias reales','🕐 Hora pico y patrones de pedidos'].map(item => (
-                <div key={item} className="bg-white rounded-xl px-3 py-2.5 border border-surface-200">{item}</div>
+                <div key={item} className="bg-white rounded-xl px-3 py-2.5 border border-app">{item}</div>
               ))}
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function AIPage() {
               {[['🧂','Ingrediente','/stock/nuevo'],['🍳','Producto','/productos/nuevo'],['📋','Comanda','/comandas/nueva']].map(([emoji,label,path]) => (
                 <button key={path} onClick={() => navigate(path)} className="card text-center py-3 active:scale-95 transition-all">
                   <p className="text-xl mb-1">{emoji}</p>
-                  <p className="text-xs font-semibold text-gray-700">{label}</p>
+                  <p className="text-xs font-semibold text-app-secondary">{label}</p>
                 </button>
               ))}
             </div>
@@ -241,26 +241,26 @@ export default function AIPage() {
             )}
 
             <div className="space-y-3">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide px-1">{result.suggestions?.length} sugerencias personalizadas</p>
+              <p className="text-xs font-bold text-app-muted uppercase tracking-wide px-1">{result.suggestions?.length} sugerencias personalizadas</p>
               {result.suggestions?.map(s => <SuggestionCard key={s.id} s={s} onAction={handleAction} />)}
             </div>
 
             {/* Aviso de bloqueo */}
             {isBlocked && (
               <div className="flex items-center gap-2 bg-surface-100 rounded-2xl px-4 py-3">
-                <Clock size={16} className="text-gray-400 shrink-0" />
-                <p className="text-xs text-gray-500">Próximo análisis disponible en <span className="font-bold text-gray-700">{hoursLeft}hs</span></p>
+                <Clock size={16} className="text-app-faint shrink-0" />
+                <p className="text-xs text-app-muted">Próximo análisis disponible en <span className="font-bold text-app-secondary">{hoursLeft}hs</span></p>
               </div>
             )}
 
-            <p className="text-xs text-gray-400 text-center px-4 leading-relaxed">Análisis basado en los datos registrados en MiCuchina.</p>
+            <p className="text-xs text-app-faint text-center px-4 leading-relaxed">Análisis basado en los datos registrados en MiCuchina.</p>
           </>
         )}
       </div>
 
       {/* Botón CTA — solo visible si puede analizar */}
       {!loading && canAnalyze && (
-        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
           <button onClick={runAnalysis} className="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold py-4 rounded-2xl active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-base shadow-sm">
             <Sparkles size={20} /> Analizar mi negocio
           </button>

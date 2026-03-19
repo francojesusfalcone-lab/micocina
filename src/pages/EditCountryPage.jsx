@@ -56,7 +56,7 @@ export default function EditCountryPage() {
   }
 
   return (
-    <div className="flex flex-col bg-surface-50">
+    <div className="flex flex-col bg-app">
       <PageHeader title="País y moneda" back />
       <div className="px-4 py-4 space-y-4">
         <div className="card p-0 overflow-hidden divide-y divide-surface-100">
@@ -72,7 +72,7 @@ export default function EditCountryPage() {
                 <p className={`text-sm font-semibold ${selected === c.code ? 'text-primary-700' : 'text-gray-900'}`}>
                   {c.name}
                 </p>
-                <p className="text-xs text-gray-400">{c.currency} · {c.symbol}</p>
+                <p className="text-xs text-app-faint">{c.currency} · {c.symbol}</p>
               </div>
               {selected === c.code && (
                 <div className="w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center">

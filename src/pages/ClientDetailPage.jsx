@@ -15,7 +15,7 @@ import clsx from 'clsx'
 // ─── Stat mini card ───────────────────────────────────────────────────────────
 function MiniStat({ label, value, color = 'gray' }) {
   const colors = {
-    gray:   'bg-surface-50 text-gray-700',
+    gray:   'bg-app text-gray-700',
     green:  'bg-primary-50 text-primary-700',
     red:    'bg-red-50 text-red-600',
     amber:  'bg-amber-50 text-amber-700',
@@ -33,7 +33,7 @@ function DeleteSheet({ isOpen, name, onClose, onConfirm }) {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Eliminar cliente">
       <div className="px-5 py-5 space-y-4">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-app-muted">
           ¿Eliminás a <strong>{name}</strong>? Sus pedidos no se borran, solo se desvinculan.
         </p>
         <div className="flex gap-3">
@@ -70,7 +70,7 @@ export default function ClientDetailPage() {
       <div className="flex flex-col min-h-full">
         <PageHeader title="Cliente" back />
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-sm text-gray-400">Cargando...</p>
+          <p className="text-sm text-app-faint">Cargando...</p>
         </div>
       </div>
     )
@@ -105,7 +105,7 @@ export default function ClientDetailPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={client.name}
         back
@@ -115,7 +115,7 @@ export default function ClientDetailPage() {
               onClick={() => navigate(`/clientes/editar/${id}`)}
               className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-90 transition-all"
             >
-              <Edit2 size={16} className="text-gray-600" />
+              <Edit2 size={16} className="text-app-muted" />
             </button>
             <button
               onClick={() => setDeleteOpen(true)}
@@ -136,9 +136,9 @@ export default function ClientDetailPage() {
               <span className="text-2xl font-bold text-primary-700">{initials}</span>
             </div>
             <div>
-              <h2 className="text-lg font-display font-bold text-gray-900">{client.name}</h2>
+              <h2 className="text-lg font-display font-bold text-app-primary">{client.name}</h2>
               {stats?.lastOrder && (
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-app-muted mt-0.5">
                   Último pedido: {formatRelativeDate(stats.lastOrder.createdAt)}
                 </p>
               )}
@@ -152,10 +152,10 @@ export default function ClientDetailPage() {
                 <div className="flex items-center gap-2">
                   <a
                     href={`tel:${client.phone}`}
-                    className="flex items-center gap-2 flex-1 p-2.5 bg-surface-50 rounded-xl active:bg-surface-100 transition-colors"
+                    className="flex items-center gap-2 flex-1 p-2.5 bg-app rounded-xl active:bg-surface-100 transition-colors"
                   >
-                    <Phone size={14} className="text-gray-500 shrink-0" />
-                    <span className="text-sm font-medium text-gray-700">{client.phone}</span>
+                    <Phone size={14} className="text-app-muted shrink-0" />
+                    <span className="text-sm font-medium text-app-secondary">{client.phone}</span>
                   </a>
                   {client.phone.replace(/\D/g, '').length >= 8 && (
                     <button
@@ -168,9 +168,9 @@ export default function ClientDetailPage() {
                 </div>
               )}
               {client.address && (
-                <div className="flex items-start gap-2 p-2.5 bg-surface-50 rounded-xl">
-                  <MapPin size={14} className="text-gray-500 shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">{client.address}</span>
+                <div className="flex items-start gap-2 p-2.5 bg-app rounded-xl">
+                  <MapPin size={14} className="text-app-muted shrink-0 mt-0.5" />
+                  <span className="text-sm text-app-secondary">{client.address}</span>
                 </div>
               )}
             </div>
@@ -179,7 +179,7 @@ export default function ClientDetailPage() {
           {client.notes && (
             <div className="flex items-start gap-2 p-2.5 bg-amber-50 rounded-xl mt-2">
               <MessageSquare size={14} className="text-amber-500 shrink-0 mt-0.5" />
-              <span className="text-sm text-gray-700 italic">{client.notes}</span>
+              <span className="text-sm text-app-secondary italic">{client.notes}</span>
             </div>
           )}
         </div>
@@ -214,8 +214,8 @@ export default function ClientDetailPage() {
                   <Star size={16} className="text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Producto favorito</p>
-                  <p className="text-sm font-bold text-gray-900">{stats.favRecipe.name}</p>
+                  <p className="text-xs text-app-muted font-medium">Producto favorito</p>
+                  <p className="text-sm font-bold text-app-primary">{stats.favRecipe.name}</p>
                   <p className="text-xs text-primary-600">{stats.favRecipeQty} unidades pedidas</p>
                 </div>
               </div>
@@ -240,13 +240,13 @@ export default function ClientDetailPage() {
         <div className="card">
           <div className="flex items-center justify-between mb-3">
             <p className="section-title mb-0">Historial de pedidos</p>
-            <span className="text-xs text-gray-400">{orders.length} en total</span>
+            <span className="text-xs text-app-faint">{orders.length} en total</span>
           </div>
 
           {orders.length === 0 ? (
             <div className="py-6 text-center">
               <ShoppingBag size={28} className="text-gray-200 mx-auto mb-2" />
-              <p className="text-sm text-gray-400">Sin pedidos todavía</p>
+              <p className="text-sm text-app-faint">Sin pedidos todavía</p>
             </div>
           ) : (
             <div className="space-y-0 -mx-1">
@@ -257,12 +257,12 @@ export default function ClientDetailPage() {
                   <button
                     key={order.id}
                     onClick={() => navigate(`/comandas/${order.id}`)}
-                    className="w-full flex items-center gap-3 px-1 py-3 border-b border-surface-100 last:border-0 active:bg-surface-50 transition-colors text-left rounded-xl"
+                    className="w-full flex items-center gap-3 px-1 py-3 border-b border-surface-100 last:border-0 active:bg-app transition-colors text-left rounded-xl"
                   >
                     <div className={clsx('w-2 h-2 rounded-full shrink-0', sc.dot)} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-gray-800">
+                        <p className="text-sm font-semibold text-app-secondary">
                           {formatCurrency(order.total, sym)}
                         </p>
                         <span className={clsx('badge text-[10px]', sc.color)}>
@@ -275,7 +275,7 @@ export default function ClientDetailPage() {
                           <AlertCircle size={12} className="text-red-400" />
                         )}
                       </div>
-                      <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
+                      <p className="text-xs text-app-faint mt-0.5 flex items-center gap-1">
                         <Clock size={10} />
                         {formatRelativeDate(order.createdAt)}
                         {order.deliveryTime && ` · Entrega ${order.deliveryTime}`}

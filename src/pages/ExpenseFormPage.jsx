@@ -76,7 +76,7 @@ export default function ExpenseFormPage() {
   const daily   = toDailyCost(amount, form.frequency)
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={isEditing ? 'Editar gasto' : 'Nuevo gasto fijo'}
         back
@@ -106,7 +106,7 @@ export default function ExpenseFormPage() {
 
         {/* ── Categoría ── */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">Categoría</p>
+          <p className="text-sm font-bold text-app-secondary">Categoría</p>
           <div className="grid grid-cols-2 gap-2">
             {EXPENSE_CATEGORIES.map(({ value, label, icon }) => (
               <button
@@ -116,7 +116,7 @@ export default function ExpenseFormPage() {
                   'flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-left transition-all active:scale-95',
                   form.category === value
                     ? 'border-primary-500 bg-primary-50'
-                    : 'border-surface-200 bg-white'
+                    : 'border-app bg-white'
                 )}
               >
                 <span className="text-lg">{icon}</span>
@@ -130,7 +130,7 @@ export default function ExpenseFormPage() {
 
         {/* ── Frecuencia ── */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">¿Con qué frecuencia lo pagás?</p>
+          <p className="text-sm font-bold text-app-secondary">¿Con qué frecuencia lo pagás?</p>
           <div className="space-y-2">
             {FREQUENCY_OPTIONS.map(({ value, label }) => (
               <button
@@ -140,7 +140,7 @@ export default function ExpenseFormPage() {
                   'w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all active:scale-[0.99]',
                   form.frequency === value
                     ? 'border-primary-500 bg-primary-50'
-                    : 'border-surface-200 bg-white'
+                    : 'border-app bg-white'
                 )}
               >
                 <span className={clsx('text-sm font-semibold', form.frequency === value ? 'text-primary-700' : 'text-gray-700')}>
@@ -163,7 +163,7 @@ export default function ExpenseFormPage() {
               Monto ({FREQUENCY_OPTIONS.find(f => f.value === form.frequency)?.label?.toLowerCase()}) *
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 font-semibold text-sm">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-faint font-semibold text-sm">
                 {sym}
               </span>
               <input
@@ -184,24 +184,24 @@ export default function ExpenseFormPage() {
 
           {/* Equivalencias */}
           {amount > 0 && form.frequency !== 'one_time' && (
-            <div className="p-3 bg-surface-50 rounded-xl space-y-1.5">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Equivale a</p>
+            <div className="p-3 bg-app rounded-xl space-y-1.5">
+              <p className="text-xs font-bold text-app-muted uppercase tracking-wide">Equivale a</p>
               {form.frequency !== 'monthly' && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Por mes</span>
-                  <span className="font-bold text-gray-800">{formatCurrency(monthly, sym)}</span>
+                  <span className="text-app-muted">Por mes</span>
+                  <span className="font-bold text-app-secondary">{formatCurrency(monthly, sym)}</span>
                 </div>
               )}
               {form.frequency !== 'daily' && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Por día</span>
-                  <span className="font-bold text-gray-800">{formatCurrency(daily, sym)}</span>
+                  <span className="text-app-muted">Por día</span>
+                  <span className="font-bold text-app-secondary">{formatCurrency(daily, sym)}</span>
                 </div>
               )}
             </div>
           )}
           {form.frequency === 'one_time' && (
-            <p className="text-xs text-gray-400 italic">
+            <p className="text-xs text-app-faint italic">
               Los gastos únicos no se suman al costo fijo mensual/diario recurrente.
             </p>
           )}
@@ -222,7 +222,7 @@ export default function ExpenseFormPage() {
       </div>
 
       {/* ── Fixed footer ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         <button
           onClick={handleSave}
           disabled={saving}

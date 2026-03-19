@@ -62,7 +62,7 @@ export default function UpdatePricesPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title="Actualizar precios"
         subtitle="Editá y guardá todo de una vez"
@@ -74,7 +74,7 @@ export default function UpdatePricesPage() {
         {ingredients.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 text-center">
             <RefreshCw size={32} className="text-gray-300 mb-3" />
-            <p className="text-gray-500 font-medium">No hay ingredientes cargados aún.</p>
+            <p className="text-app-muted font-medium">No hay ingredientes cargados aún.</p>
           </div>
         ) : (
           <>
@@ -91,8 +91,8 @@ export default function UpdatePricesPage() {
                   <div key={ing.id} className="card">
                     <div className="flex items-start gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900">{ing.name}</p>
-                        <p className="text-xs text-gray-500">{ing.category} · por {ing.unit}</p>
+                        <p className="font-semibold text-app-primary">{ing.name}</p>
+                        <p className="text-xs text-app-muted">{ing.category} · por {ing.unit}</p>
                       </div>
                       {diff && (
                         <div className={`flex items-center gap-1 text-xs font-bold ${diff.diff > 0 ? 'text-red-500' : 'text-primary-600'}`}>
@@ -106,7 +106,7 @@ export default function UpdatePricesPage() {
                     </div>
 
                     <div className="flex items-center gap-2 mt-3">
-                      <span className="text-gray-500 font-semibold text-sm shrink-0">
+                      <span className="text-app-muted font-semibold text-sm shrink-0">
                         {settings.currencySymbol}
                       </span>
                       <input
@@ -121,7 +121,7 @@ export default function UpdatePricesPage() {
                     </div>
 
                     {diff && (
-                      <p className="text-xs mt-1.5 text-gray-500">
+                      <p className="text-xs mt-1.5 text-app-muted">
                         Anterior: <span className="line-through">{settings.currencySymbol}{ing.pricePerUnit?.toFixed(2)}</span>
                         {' → '}
                         <strong className={diff.diff > 0 ? 'text-red-500' : 'text-primary-600'}>
@@ -139,7 +139,7 @@ export default function UpdatePricesPage() {
 
       {/* Save bar */}
       {ingredients.length > 0 && (
-        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
           <button
             onClick={handleSaveAll}
             disabled={saving || changedCount === 0}

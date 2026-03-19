@@ -196,7 +196,7 @@ export default function RecipeFormPage() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={isEdit ? 'Editar receta' : 'Nueva receta'}
         back
@@ -268,7 +268,7 @@ export default function RecipeFormPage() {
                   className={`w-10 h-10 rounded-xl text-sm font-bold border-2 transition-all active:scale-95 ${
                     form.portions === n
                       ? 'border-primary-500 bg-primary-50 text-primary-700'
-                      : 'border-surface-200 bg-white text-gray-600'
+                      : 'border-app bg-white text-gray-600'
                   }`}
                 >
                   {n}
@@ -276,7 +276,7 @@ export default function RecipeFormPage() {
               ))}
             </div>
             {form.portions > 1 && (
-              <p className="text-xs text-gray-400 mt-1.5">
+              <p className="text-xs text-app-faint mt-1.5">
                 El precio y el costo se calculan por porción individual.
               </p>
             )}
@@ -286,10 +286,10 @@ export default function RecipeFormPage() {
         {/* ── Ingredientes ── */}
         <div className="card space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-bold text-gray-700">
+            <p className="text-sm font-bold text-app-secondary">
               Ingredientes
               {items.length > 0 && (
-                <span className="ml-2 text-xs font-semibold text-gray-400">({items.length})</span>
+                <span className="ml-2 text-xs font-semibold text-app-faint">({items.length})</span>
               )}
             </p>
             <button
@@ -310,7 +310,7 @@ export default function RecipeFormPage() {
           {items.length === 0 ? (
             <button
               onClick={() => setShowIngPicker(true)}
-              className="w-full border-2 border-dashed border-surface-300 rounded-xl py-6 flex flex-col items-center gap-2 text-gray-400 active:bg-surface-50 transition-colors"
+              className="w-full border-2 border-dashed border-surface-300 rounded-xl py-6 flex flex-col items-center gap-2 text-app-faint active:bg-app transition-colors"
             >
               <Package size={24} />
               <p className="text-sm font-medium">Tocá para agregar ingredientes</p>
@@ -318,9 +318,9 @@ export default function RecipeFormPage() {
           ) : (
             <div className="space-y-2">
               {items.map((item, idx) => (
-                <div key={item.ingredientId} className="bg-surface-50 rounded-xl p-3 space-y-2">
+                <div key={item.ingredientId} className="bg-app rounded-xl p-3 space-y-2">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-gray-800">{item.ingredient?.name}</p>
+                    <p className="text-sm font-semibold text-app-secondary">{item.ingredient?.name}</p>
                     <button
                       onClick={() => removeItem(idx)}
                       className="w-6 h-6 rounded-lg bg-red-50 flex items-center justify-center text-red-400 active:scale-95 transition-all"
@@ -357,14 +357,14 @@ export default function RecipeFormPage() {
 
                   {/* Cost preview per ingredient */}
                   {item.quantity && Number(item.quantity) > 0 && item.ingredient?.pricePerUnit && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-app-muted">
                       Costo: <strong>
                         {formatCurrency(
                           item.ingredient.pricePerUnit * Number(item.quantity),
                           settings.currencySymbol
                         )}
                       </strong>
-                      <span className="text-gray-400"> (estimado)</span>
+                      <span className="text-app-faint"> (estimado)</span>
                     </p>
                   )}
                 </div>
@@ -381,12 +381,12 @@ export default function RecipeFormPage() {
               <p className="text-sm font-bold text-primary-700">Resumen de costos</p>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Costo total receta</span>
-              <strong className="text-gray-900">{formatCurrency(totalCost, settings.currencySymbol)}</strong>
+              <span className="text-app-muted">Costo total receta</span>
+              <strong className="text-app-primary">{formatCurrency(totalCost, settings.currencySymbol)}</strong>
             </div>
             {form.portions > 1 && (
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Costo por porción ({form.portions} porciones)</span>
+                <span className="text-app-muted">Costo por porción ({form.portions} porciones)</span>
                 <strong className="text-primary-700">{formatCurrency(costPerPortion, settings.currencySymbol)}</strong>
               </div>
             )}
@@ -395,7 +395,7 @@ export default function RecipeFormPage() {
 
         {/* ── Precio de venta ── */}
         <div className="card space-y-4">
-          <p className="text-sm font-bold text-gray-700">Precio de venta</p>
+          <p className="text-sm font-bold text-app-secondary">Precio de venta</p>
 
           {/* Mode toggle */}
           <div className="flex gap-2">
@@ -404,7 +404,7 @@ export default function RecipeFormPage() {
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
                 priceMode === 'margin'
                   ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-surface-200 bg-white text-gray-500'
+                  : 'border-app bg-white text-gray-500'
               }`}
             >
               Por margen %
@@ -414,7 +414,7 @@ export default function RecipeFormPage() {
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
                 priceMode === 'manual'
                   ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-surface-200 bg-white text-gray-500'
+                  : 'border-app bg-white text-gray-500'
               }`}
             >
               Precio fijo
@@ -433,14 +433,14 @@ export default function RecipeFormPage() {
                     className={`py-2 rounded-xl text-xs font-bold border-2 transition-all active:scale-95 ${
                       form.marginPercent === m
                         ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-surface-200 bg-white text-gray-600'
+                        : 'border-app bg-white text-gray-600'
                     }`}
                   >
                     {m}%
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-app-faint mt-2">
                 Con {form.marginPercent}% de margen, el precio sugerido es{' '}
                 <strong className="text-primary-600">
                   {formatCurrency(suggestedPrice, settings.currencySymbol)}
@@ -453,7 +453,7 @@ export default function RecipeFormPage() {
                 Precio de venta ({settings.currencySymbol}) *
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-muted font-semibold">
                   {settings.currencySymbol}
                 </span>
                 <input
@@ -479,12 +479,12 @@ export default function RecipeFormPage() {
           {finalPrice > 0 && costPerPortion > 0 && (
             <div className={`rounded-xl p-3 space-y-2 ${profit > 0 ? 'bg-primary-50' : 'bg-red-50'}`}>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Precio de venta</span>
+                <span className="text-app-muted">Precio de venta</span>
                 <strong>{formatCurrency(finalPrice, settings.currencySymbol)}</strong>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Costo por porción</span>
-                <span className="text-gray-700">- {formatCurrency(costPerPortion, settings.currencySymbol)}</span>
+                <span className="text-app-muted">Costo por porción</span>
+                <span className="text-app-secondary">- {formatCurrency(costPerPortion, settings.currencySymbol)}</span>
               </div>
               <div className="border-t border-black/10 pt-2 flex justify-between text-sm font-bold">
                 <span className={profit > 0 ? 'text-primary-700' : 'text-red-600'}>
@@ -501,7 +501,7 @@ export default function RecipeFormPage() {
       </div>
 
       {/* ── Save button ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         <button
           onClick={handleSave}
           disabled={saving}
@@ -518,9 +518,9 @@ export default function RecipeFormPage() {
         onClose={() => { setShowIngPicker(false); setIngSearch('') }}
         title="Elegir ingrediente"
       >
-        <div className="px-4 py-3 border-b border-surface-200">
+        <div className="px-4 py-3 border-b border-app">
           <div className="relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-faint" />
             <input
               type="text"
               placeholder="Buscar ingrediente..."
@@ -535,7 +535,7 @@ export default function RecipeFormPage() {
         <div className="px-4 py-3 space-y-2 pb-8">
           {filteredIngredients.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-400 text-sm">
+              <p className="text-app-faint text-sm">
                 {allIngredients.length === 0
                   ? 'No tenés ingredientes cargados aún.'
                   : 'No se encontraron ingredientes.'}
@@ -554,20 +554,20 @@ export default function RecipeFormPage() {
               <button
                 key={ing.id}
                 onClick={() => addIngredient(ing)}
-                className="w-full flex items-center gap-3 p-3 bg-surface-50 rounded-xl active:bg-surface-100 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-3 bg-app rounded-xl active:bg-surface-100 transition-colors text-left"
               >
                 <div className="w-9 h-9 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
                   <Package size={16} className="text-primary-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900">{ing.name}</p>
-                  <p className="text-xs text-gray-500">{ing.category} · {ing.unit}</p>
+                  <p className="text-sm font-semibold text-app-primary">{ing.name}</p>
+                  <p className="text-xs text-app-muted">{ing.category} · {ing.unit}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-sm font-bold text-gray-700">
+                  <p className="text-sm font-bold text-app-secondary">
                     {formatCurrency(ing.pricePerUnit, settings.currencySymbol)}
                   </p>
-                  <p className="text-xs text-gray-400">por {ing.unit}</p>
+                  <p className="text-xs text-app-faint">por {ing.unit}</p>
                 </div>
               </button>
             ))

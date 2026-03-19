@@ -32,7 +32,7 @@ export default function IngredientDetailPage() {
       <div className="flex flex-col min-h-full">
         <PageHeader title="Ingrediente" back />
         <div className="flex items-center justify-center flex-1">
-          <p className="text-gray-400">Cargando...</p>
+          <p className="text-app-faint">Cargando...</p>
         </div>
       </div>
     )
@@ -72,7 +72,7 @@ export default function IngredientDetailPage() {
   }))
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={ingredient.name}
         subtitle={ingredient.category}
@@ -80,7 +80,7 @@ export default function IngredientDetailPage() {
         action={
           <button
             onClick={() => navigate(`/stock/editar/${id}`)}
-            className="flex items-center gap-1.5 bg-surface-100 text-gray-700 text-sm font-semibold px-3 py-2 rounded-xl active:scale-95 transition-all"
+            className="flex items-center gap-1.5 bg-surface-100 text-app-secondary text-sm font-semibold px-3 py-2 rounded-xl active:scale-95 transition-all"
           >
             <Edit2 size={15} />
             Editar
@@ -94,10 +94,10 @@ export default function IngredientDetailPage() {
         <div className="card space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-2xl font-display font-bold text-gray-900">
+              <p className="text-2xl font-display font-bold text-app-primary">
                 {formatCurrency(ingredient.pricePerUnit, settings.currencySymbol)}
               </p>
-              <p className="text-sm text-gray-500">por {ingredient.unit}</p>
+              <p className="text-sm text-app-muted">por {ingredient.unit}</p>
             </div>
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isLow ? 'bg-amber-100' : 'bg-primary-50'}`}>
               <Package size={22} className={isLow ? 'text-amber-600' : 'text-primary-600'} />
@@ -116,7 +116,7 @@ export default function IngredientDetailPage() {
         {/* ── Stock card ── */}
         <div className="card space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-bold text-gray-700">Stock actual</p>
+            <p className="text-sm font-bold text-app-secondary">Stock actual</p>
             <button
               onClick={() => {
                 setEditStock(!editStock)
@@ -131,21 +131,21 @@ export default function IngredientDetailPage() {
 
           {ingredient.stock !== null ? (
             <div className="flex items-end gap-2">
-              <p className="text-3xl font-display font-bold text-gray-900">{ingredient.stock}</p>
-              <p className="text-gray-500 mb-1">{ingredient.unit}</p>
+              <p className="text-3xl font-display font-bold text-app-primary">{ingredient.stock}</p>
+              <p className="text-app-muted mb-1">{ingredient.unit}</p>
             </div>
           ) : (
-            <p className="text-gray-400 text-sm">Sin stock registrado</p>
+            <p className="text-app-faint text-sm">Sin stock registrado</p>
           )}
 
           {ingredient.lowStockAlert !== null && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-app-muted">
               Alarma: cuando baje de <strong>{ingredient.lowStockAlert} {ingredient.unit}</strong>
             </p>
           )}
 
           {editStock && (
-            <div className="space-y-3 pt-2 border-t border-surface-200">
+            <div className="space-y-3 pt-2 border-t border-app">
               <div>
                 <label className="label">Nuevo stock ({ingredient.unit})</label>
                 <input
@@ -162,7 +162,7 @@ export default function IngredientDetailPage() {
               <div>
                 <label className="label">
                   Nuevo precio por {ingredient.unit}{' '}
-                  <span className="text-gray-400 font-normal">(opcional — si cambio el precio)</span>
+                  <span className="text-app-faint font-normal">(opcional — si cambio el precio)</span>
                 </label>
                 <input
                   type="number"
@@ -189,17 +189,17 @@ export default function IngredientDetailPage() {
         {/* ── Price history (Premium) ── */}
         <div className="card space-y-3">
           <div className="flex items-center gap-2">
-            <TrendingUp size={16} className="text-gray-600" />
-            <p className="text-sm font-bold text-gray-700">Historial de precios</p>
+            <TrendingUp size={16} className="text-app-muted" />
+            <p className="text-sm font-bold text-app-secondary">Historial de precios</p>
             {!isPremium && <PremiumBadge />}
           </div>
 
           {!isPremium ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-app-muted">
               Con Premium ves como fue cambiando el precio de cada ingrediente con grafica.
             </p>
           ) : priceHistory.length < 2 ? (
-            <p className="text-sm text-gray-400">Necesitas al menos 2 precios registrados para ver la grafica.</p>
+            <p className="text-sm text-app-faint">Necesitas al menos 2 precios registrados para ver la grafica.</p>
           ) : (
             <>
               <ResponsiveContainer width="100%" height={160}>
@@ -214,13 +214,13 @@ export default function IngredientDetailPage() {
                 {priceHistory.map((h, i) => (
                   <div key={h.id} className="flex items-center justify-between py-1">
                     <div className="flex items-center gap-2">
-                      <Clock size={12} className="text-gray-400" />
-                      <p className="text-sm text-gray-600">{formatDate(h.date)}</p>
+                      <Clock size={12} className="text-app-faint" />
+                      <p className="text-sm text-app-muted">{formatDate(h.date)}</p>
                       {i === 0 && <span className="text-[10px] font-bold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">Actual</span>}
                     </div>
-                    <p className="text-sm font-bold text-gray-900">
+                    <p className="text-sm font-bold text-app-primary">
                       {formatCurrency(h.price, settings.currencySymbol)}
-                      <span className="text-gray-400 font-normal"> /{ingredient.unit}</span>
+                      <span className="text-app-faint font-normal"> /{ingredient.unit}</span>
                     </p>
                   </div>
                 ))}
@@ -229,7 +229,7 @@ export default function IngredientDetailPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-app-faint">
           Ultima actualizacion: {ingredient.updatedAt ? new Date(ingredient.updatedAt).toLocaleDateString('es-AR') : '—'}
         </p>
       </div>

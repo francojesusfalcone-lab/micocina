@@ -18,7 +18,7 @@ function DeleteSheet({ expense, settings, onClose, onConfirm }) {
   return (
     <BottomSheet isOpen={!!expense} onClose={onClose} title="Eliminar gasto">
       <div className="px-5 py-5 space-y-4">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-app-muted">
           ¿Eliminás <strong>{expense.name}</strong>? Esto no afecta el historial de ventas.
         </p>
         <div className="flex gap-3">
@@ -66,17 +66,17 @@ export default function ExpensesPage() {
   // ── Premium gate ──
   if (!isPremium) {
     return (
-      <div className="flex flex-col min-h-full bg-surface-50">
+      <div className="flex flex-col min-h-full bg-app">
         <PageHeader title="Gastos fijos" back />
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5">
           <div className="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
             <Lock size={32} className="text-amber-500" />
           </div>
           <div>
-            <h2 className="text-xl font-display font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-display font-bold text-app-primary mb-2">
               Función Premium
             </h2>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="text-sm text-app-muted leading-relaxed">
               Registrá tus gastos fijos (gas, luz, alquiler...) y descubrí tu ganancia real después de costos. Incluido en Premium.
             </p>
           </div>
@@ -93,7 +93,7 @@ export default function ExpensesPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title="Gastos fijos"
         subtitle="Lo que sale aunque no vendas"
@@ -169,20 +169,20 @@ export default function ExpensesPage() {
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-gray-900 truncate">{expense.name}</p>
+                      <p className="text-sm font-bold text-app-primary truncate">{expense.name}</p>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        <span className="text-xs text-gray-500">{getFreqLabel(expense.frequency)}</span>
+                        <span className="text-xs text-app-muted">{getFreqLabel(expense.frequency)}</span>
                         {expense.frequency !== 'monthly' && expense.frequency !== 'one_time' && (
                           <>
                             <span className="text-gray-300">·</span>
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs text-app-faint">
                               ≈ {formatCurrency(monthly, sym)}/mes
                             </span>
                           </>
                         )}
                       </div>
                       {expense.notes && (
-                        <p className="text-xs text-gray-400 mt-0.5 truncate italic">{expense.notes}</p>
+                        <p className="text-xs text-app-faint mt-0.5 truncate italic">{expense.notes}</p>
                       )}
                     </div>
 
@@ -196,7 +196,7 @@ export default function ExpensesPage() {
                           onClick={() => navigate(`/gastos/editar/${expense.id}`)}
                           className="w-8 h-8 rounded-xl bg-surface-100 flex items-center justify-center active:scale-90 transition-all"
                         >
-                          <ChevronRight size={14} className="text-gray-500" />
+                          <ChevronRight size={14} className="text-app-muted" />
                         </button>
                         <button
                           onClick={() => setToDelete(expense)}

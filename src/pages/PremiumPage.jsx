@@ -24,7 +24,7 @@ const FEATURES = [
 function FeatureValue({ val }) {
   if (val === true)  return <Check size={16} className="text-primary-600 mx-auto" />
   if (val === false) return <X     size={16} className="text-gray-300 mx-auto" />
-  return <span className="text-sm font-medium text-gray-700">{val}</span>
+  return <span className="text-sm font-medium text-app-secondary">{val}</span>
 }
 
 function SuccessScreen({ navigate }) {
@@ -33,8 +33,8 @@ function SuccessScreen({ navigate }) {
       <div className="w-20 h-20 rounded-3xl bg-primary-50 border-2 border-primary-200 flex items-center justify-center">
         <Crown size={36} className="text-primary-600" />
       </div>
-      <h2 className="text-2xl font-display font-bold text-gray-900">¡Bienvenida a Premium! 🎉</h2>
-      <p className="text-sm text-gray-500 leading-relaxed">Tu pago fue aprobado. Ya tenés acceso a todas las funciones Premium.</p>
+      <h2 className="text-2xl font-display font-bold text-app-primary">¡Bienvenida a Premium! 🎉</h2>
+      <p className="text-sm text-app-muted leading-relaxed">Tu pago fue aprobado. Ya tenés acceso a todas las funciones Premium.</p>
       <button onClick={() => navigate('/', { replace: true })} className="w-full btn-primary py-4 text-base">
         Ir al dashboard
       </button>
@@ -48,8 +48,8 @@ function PendingScreen({ navigate }) {
       <div className="w-20 h-20 rounded-3xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
         <AlertCircle size={36} className="text-amber-500" />
       </div>
-      <h2 className="text-xl font-display font-bold text-gray-900">Pago pendiente</h2>
-      <p className="text-sm text-gray-500 leading-relaxed">Tu pago está siendo procesado. Cuando se confirme, el plan se activa automáticamente.</p>
+      <h2 className="text-xl font-display font-bold text-app-primary">Pago pendiente</h2>
+      <p className="text-sm text-app-muted leading-relaxed">Tu pago está siendo procesado. Cuando se confirme, el plan se activa automáticamente.</p>
       <button onClick={() => navigate('/')} className="w-full btn-secondary py-3">Volver al inicio</button>
     </div>
   )
@@ -77,7 +77,7 @@ export default function PremiumPage() {
     activatePlanLocally(db).then(() => { setPlan('premium') })
     return (
       <div className="flex flex-col min-h-full bg-white pt-safe">
-        <div className="px-4 py-4 border-b border-surface-200"><h1 className="page-title">Premium</h1></div>
+        <div className="px-4 py-4 border-b border-app"><h1 className="page-title">Premium</h1></div>
         <SuccessScreen navigate={navigate} />
       </div>
     )
@@ -86,8 +86,8 @@ export default function PremiumPage() {
   if (mpStatus === 'pending') {
     return (
       <div className="flex flex-col min-h-full bg-white pt-safe">
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-surface-200">
-          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95"><ChevronLeft size={20} className="text-gray-600" /></button>
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-app">
+          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95"><ChevronLeft size={20} className="text-app-muted" /></button>
           <h1 className="page-title">Premium</h1>
         </div>
         <PendingScreen navigate={navigate} />
@@ -98,9 +98,9 @@ export default function PremiumPage() {
   // Ya es premium
   if (isPremium) {
     return (
-      <div className="flex flex-col min-h-full bg-surface-50 pt-safe">
-        <div className="flex items-center gap-3 px-4 py-4 bg-white border-b border-surface-200">
-          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95"><ChevronLeft size={20} className="text-gray-600" /></button>
+      <div className="flex flex-col min-h-full bg-app pt-safe">
+        <div className="flex items-center gap-3 px-4 py-4 bg-surface border-b border-app">
+          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95"><ChevronLeft size={20} className="text-app-muted" /></button>
           <h1 className="page-title">Premium activo</h1>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5 pb-24">
@@ -108,8 +108,8 @@ export default function PremiumPage() {
             <Crown size={36} className="text-primary-600" />
           </div>
           <div>
-            <h2 className="text-xl font-display font-bold text-gray-900 mb-2">¡Ya sos Premium! ⭐</h2>
-            <p className="text-sm text-gray-500">Tenés acceso a todas las funciones. Gracias por apoyar MiCocina.</p>
+            <h2 className="text-xl font-display font-bold text-app-primary mb-2">¡Ya sos Premium! ⭐</h2>
+            <p className="text-sm text-app-muted">Tenés acceso a todas las funciones. Gracias por apoyar MiCocina.</p>
           </div>
           <button onClick={() => navigate('/')} className="w-full btn-primary py-4">Ir al dashboard</button>
           <button
@@ -162,9 +162,9 @@ export default function PremiumPage() {
   return (
     <div className="flex flex-col min-h-screen bg-white pt-safe pb-safe">
 
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-surface-200">
+      <div className="flex items-center gap-3 px-4 py-4 border-b border-app">
         <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95 transition-all">
-          <ChevronLeft size={20} className="text-gray-600" />
+          <ChevronLeft size={20} className="text-app-muted" />
         </button>
         <h1 className="page-title">Premium</h1>
       </div>
@@ -189,16 +189,16 @@ export default function PremiumPage() {
 
         {/* Features table */}
         <div className="px-4 mt-6">
-          <div className="bg-surface-50 rounded-2xl overflow-hidden border border-surface-200">
+          <div className="bg-app rounded-2xl overflow-hidden border border-app">
             <div className="grid grid-cols-3 bg-surface-100">
-              <div className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">Función</div>
-              <div className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide text-center">Gratis</div>
+              <div className="px-3 py-3 text-xs font-bold text-app-muted uppercase tracking-wide">Función</div>
+              <div className="px-3 py-3 text-xs font-bold text-app-muted uppercase tracking-wide text-center">Gratis</div>
               <div className="px-3 py-3 text-xs font-bold text-amber-700 uppercase tracking-wide text-center bg-amber-50">Premium</div>
             </div>
             {FEATURES.map((f, i) => (
-              <div key={i} className={`grid grid-cols-3 border-t border-surface-200 ${i % 2 === 0 ? 'bg-white' : 'bg-surface-50/50'}`}>
-                <div className="px-3 py-3 text-sm text-gray-700 font-medium flex items-center gap-1.5">
-                  {f.icon && <f.icon size={13} className="text-gray-400 shrink-0" />}
+              <div key={i} className={`grid grid-cols-3 border-t border-app ${i % 2 === 0 ? 'bg-white' : 'bg-surface-50/50'}`}>
+                <div className="px-3 py-3 text-sm text-app-secondary font-medium flex items-center gap-1.5">
+                  {f.icon && <f.icon size={13} className="text-app-faint shrink-0" />}
                   {f.label}
                 </div>
                 <div className="px-3 py-3 text-center flex items-center justify-center"><FeatureValue val={f.free} /></div>
@@ -230,8 +230,8 @@ export default function PremiumPage() {
             {loading ? <span className="animate-pulse">Conectando...</span> : <><span className="text-2xl">💙</span> Pagar con MercadoPago</>}
           </button>
           <div className="flex items-center gap-2 justify-center">
-            <Shield size={12} className="text-gray-400" />
-            <p className="text-xs text-gray-400">Pago 100% seguro via MercadoPago · USD 5/mes</p>
+            <Shield size={12} className="text-app-faint" />
+            <p className="text-xs text-app-faint">Pago 100% seguro via MercadoPago · USD 5/mes</p>
           </div>
         </div>
 
@@ -241,22 +241,22 @@ export default function PremiumPage() {
             [Opciones de desarrollo]
           </button>
           {showDevPanel && (
-            <div className="mt-3 p-4 bg-surface-50 rounded-2xl border border-surface-200 space-y-3">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Dev Mode</p>
-              <p className="text-xs text-gray-500">Configurá tu archivo <code className="bg-surface-200 px-1 rounded">.env</code>:</p>
+            <div className="mt-3 p-4 bg-app rounded-2xl border border-app space-y-3">
+              <p className="text-xs font-bold text-app-muted uppercase tracking-wide">Dev Mode</p>
+              <p className="text-xs text-app-muted">Configurá tu archivo <code className="bg-surface-200 px-1 rounded">.env</code>:</p>
               <div className="bg-gray-900 text-green-400 text-xs font-mono p-3 rounded-xl leading-relaxed">
                 VITE_MP_PUBLIC_KEY=APP_USR-xxx<br/>
                 VITE_MP_ACCESS_TOKEN=APP_USR-xxx<br/>
                 VITE_MP_ENV=sandbox
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-app-faint">
                 Credenciales en{' '}
                 <a href="https://www.mercadopago.com.ar/developers/panel" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                   mercadopago.com/developers
                 </a>
               </p>
-              <div className="border-t border-surface-200 pt-3">
-                <p className="text-xs text-gray-500 mb-2">Activar Premium sin pago (testing):</p>
+              <div className="border-t border-app pt-3">
+                <p className="text-xs text-app-muted mb-2">Activar Premium sin pago (testing):</p>
                 <button
                   onClick={handleDevActivate}
                   disabled={loading}
@@ -269,7 +269,7 @@ export default function PremiumPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6 px-8 leading-relaxed">
+        <p className="text-center text-xs text-app-faint mt-6 px-8 leading-relaxed">
           Al suscribirte aceptás los Términos de Servicio. Podés cancelar en cualquier momento desde tu cuenta de MercadoPago.
         </p>
 

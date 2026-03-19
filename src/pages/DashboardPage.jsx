@@ -53,13 +53,13 @@ function StatCard({ label, value, sub, icon: Icon, color = 'green' }) {
   }
   const c = colors[color] || colors.green
   return (
-    <div className="card flex-1 min-w-0 dark:bg-gray-900 dark:border-gray-800">
+    <div className="card flex-1 min-w-0 dark:border-app">
       <div className={`w-8 h-8 rounded-xl flex items-center justify-center mb-2 ${c.bg}`}>
         <Icon size={15} className={c.icon} />
       </div>
-      <div className="text-base font-display font-bold text-gray-900 dark:text-gray-100 truncate leading-tight">{value}</div>
-      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5 leading-tight">{label}</div>
-      {sub && <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{sub}</div>}
+      <div className="text-base font-display font-bold text-app-primary  truncate leading-tight">{value}</div>
+      <div className="text-xs font-medium text-app-muted dark:text-app-faint mt-0.5 leading-tight">{label}</div>
+      {sub && <div className="text-[11px] text-app-faint dark:text-app-muted mt-0.5">{sub}</div>}
     </div>
   )
 }
@@ -116,10 +116,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
+    <div className="flex flex-col min-h-full bg-app ">
 
       {/* Header */}
-      <div className="bg-white dark:bg-gray-900 px-5 pt-safe border-b border-surface-200 dark:border-gray-800">
+      <div className="bg-white px-5 pt-safe border-b border-app dark:border-app">
         <div className="pt-4 pb-3 flex items-start justify-between">
           <div className="flex items-center gap-3">
             {/* Logo en header */}
@@ -134,8 +134,8 @@ export default function DashboardPage() {
               <span className="text-4xl">🍳</span>
             )}
             <div>
-              <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">{greeting} {emoji}</p>
-              <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-gray-100 mt-0.5 leading-tight">
+              <p className="text-sm text-app-faint dark:text-app-muted font-medium">{greeting} {emoji}</p>
+              <h1 className="text-2xl font-display font-bold text-app-primary  mt-0.5 leading-tight">
                 {settings.businessName}
               </h1>
             </div>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
               </button>
             ) : confirmCerrar ? (
               <div className="flex items-center gap-1.5">
-                <button onClick={() => setConfirmCerrar(false)} className="text-xs font-bold text-gray-500 bg-surface-100 px-2 py-2 rounded-xl">Cancelar</button>
+                <button onClick={() => setConfirmCerrar(false)} className="text-xs font-bold text-app-muted bg-surface-100 px-2 py-2 rounded-xl">Cancelar</button>
                 <button onClick={() => { cerrarJornada(); setConfirmCerrar(false) }} className="text-xs font-bold text-white bg-red-500 px-2 py-2 rounded-xl">Confirmar</button>
               </div>
             ) : (
@@ -191,8 +191,8 @@ export default function DashboardPage() {
         {showGuide && (
           <div className="rounded-2xl overflow-hidden border border-primary-200 bg-gradient-to-br from-primary-50 to-white">
             <div className="px-4 pt-4 pb-2">
-              <p className="text-lg font-display font-bold text-gray-900">¿Empezamos? 🍳</p>
-              <p className="text-xs text-gray-500 mt-0.5">Seguí estos pasos para sacarle el máximo a MiCuchina</p>
+              <p className="text-lg font-display font-bold text-app-primary">¿Empezamos? 🍳</p>
+              <p className="text-xs text-app-muted mt-0.5">Seguí estos pasos para sacarle el máximo a MiCuchina</p>
             </div>
             <div className="px-4 pb-4 space-y-2 mt-2">
               {[
@@ -203,14 +203,14 @@ export default function DashboardPage() {
                 <button
                   key={item.step}
                   onClick={() => navigate(item.path)}
-                  className="w-full flex items-center gap-3 bg-white rounded-xl px-3 py-3 border border-surface-200 active:scale-[0.99] transition-all text-left"
+                  className="w-full flex items-center gap-3 bg-white rounded-xl px-3 py-3 border border-app active:scale-[0.99] transition-all text-left"
                 >
                   <div className="w-7 h-7 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
                     {item.step}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900">{item.label}</p>
-                    <p className="text-xs text-gray-400">{item.desc}</p>
+                    <p className="text-sm font-semibold text-app-primary">{item.label}</p>
+                    <p className="text-xs text-app-faint">{item.desc}</p>
                   </div>
                   <ChevronRight size={15} className="text-gray-300 shrink-0" />
                 </button>
@@ -284,17 +284,17 @@ export default function DashboardPage() {
                 <p className={clsx('text-2xl font-display font-bold', profit.realProfit >= 0 ? 'text-primary-700' : 'text-red-600')}>
                   {formatCurrency(profit.realProfit, settings.currencySymbol)}
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-app-muted mt-0.5">
                   Ingresos {formatCurrency(stats.revenue, settings.currencySymbol)} − Gastos {formatCurrency(profit.expenseCost, settings.currencySymbol)}
                 </p>
               </div>
-              <ChevronRight size={16} className="text-gray-400 mb-1" />
+              <ChevronRight size={16} className="text-app-faint mb-1" />
             </div>
           </button>
         )}
 
         {/* Quick actions */}
-        <div className="card dark:bg-gray-900 dark:border-gray-800">
+        <div className="card dark:border-app">
           <p className="section-title">Acciones rápidas</p>
           <div className="grid grid-cols-4 gap-2">
             <QuickAction icon={Plus} label="Nueva comanda" onClick={() => navigate('/comandas/nueva')} color="green" />
@@ -324,7 +324,7 @@ export default function DashboardPage() {
         )}
 
         {/* Active orders */}
-        <div className="card dark:bg-gray-900 dark:border-gray-800">
+        <div className="card dark:border-app">
           <div className="flex items-center justify-between mb-3">
             <p className="section-title mb-0">Comandas activas</p>
             <button onClick={() => navigate('/comandas')} className="flex items-center gap-1 text-xs font-semibold text-primary-600">
@@ -336,8 +336,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mb-3">
                 <ClipboardList size={22} className="text-gray-300" />
               </div>
-              <p className="text-sm font-semibold text-gray-600">Sin comandas activas</p>
-              <p className="text-xs text-gray-400 mt-1">Las comandas aparecerán acá</p>
+              <p className="text-sm font-semibold text-app-muted">Sin comandas activas</p>
+              <p className="text-xs text-app-faint mt-1">Las comandas aparecerán acá</p>
               <button onClick={() => navigate('/comandas/nueva')} className="btn-primary mt-4 text-sm py-2.5 px-5">
                 + Nueva comanda
               </button>
@@ -351,12 +351,12 @@ export default function DashboardPage() {
                   <button
                     key={order.id}
                     onClick={() => navigate(`/comandas/${order.id}`)}
-                    className="w-full flex items-center gap-3 p-3 bg-surface-50 dark:bg-gray-800 rounded-xl active:bg-surface-100 dark:active:bg-gray-700 transition-colors text-left"
+                    className="w-full flex items-center gap-3 p-3 bg-app  rounded-xl active:bg-surface-100 dark:active:bg-gray-700 transition-colors text-left"
                   >
                     <div className={clsx('w-2 h-2 rounded-full shrink-0', sc?.dot)} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{order.clientName || 'Sin nombre'}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-sm font-semibold text-app-primary  truncate">{order.clientName || 'Sin nombre'}</p>
+                      <p className="text-xs text-app-muted dark:text-app-faint">
                         {sc?.label} · {pm?.icon} {pm?.label}
                         {order.deliveryTime && ` · ${order.deliveryTime}`}
                       </p>
@@ -378,7 +378,7 @@ export default function DashboardPage() {
 
         {/* Insights */}
         {!isLoading && (stats.topRecipe || stats.peakHour !== null || stats.unpaidTotal > 0) && (
-          <div className="card dark:bg-gray-900 dark:border-gray-800 space-y-2.5">
+          <div className="card  space-y-2.5">
             <p className="section-title mb-0">Datos del período</p>
             {stats.topRecipe && (
               <div className="flex items-center gap-3 p-3 bg-primary-50 rounded-xl">
@@ -386,8 +386,8 @@ export default function DashboardPage() {
                   <Star size={16} className="text-primary-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Más vendido</p>
-                  <p className="text-sm font-bold text-gray-900">{stats.topRecipe.name}</p>
+                  <p className="text-xs text-app-muted font-medium">Más vendido</p>
+                  <p className="text-sm font-bold text-app-primary">{stats.topRecipe.name}</p>
                   <p className="text-xs text-primary-600">{stats.topRecipeQty} unidades</p>
                 </div>
               </div>
@@ -398,8 +398,8 @@ export default function DashboardPage() {
                   <Clock size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Hora pico</p>
-                  <p className="text-sm font-bold text-gray-900">{formatPeakHour(stats.peakHour)}</p>
+                  <p className="text-xs text-app-muted font-medium">Hora pico</p>
+                  <p className="text-sm font-bold text-app-primary">{formatPeakHour(stats.peakHour)}</p>
                   <p className="text-xs text-blue-600">Más pedidos a esta hora</p>
                 </div>
               </div>
@@ -410,7 +410,7 @@ export default function DashboardPage() {
                   <CreditCard size={16} className="text-red-500" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">Entregados sin cobrar</p>
+                  <p className="text-xs text-app-muted font-medium">Entregados sin cobrar</p>
                   <p className="text-sm font-bold text-red-600">
                     {formatCurrency(stats.unpaidTotal, settings.currencySymbol)}
                   </p>

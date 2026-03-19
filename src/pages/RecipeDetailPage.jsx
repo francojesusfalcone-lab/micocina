@@ -22,7 +22,7 @@ export default function RecipeDetailPage() {
       <div className="flex flex-col min-h-full">
         <PageHeader title="Receta" back />
         <div className="flex items-center justify-center flex-1">
-          <p className="text-gray-400 text-sm">Cargando...</p>
+          <p className="text-app-faint text-sm">Cargando...</p>
         </div>
       </div>
     )
@@ -60,7 +60,7 @@ export default function RecipeDetailPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={recipe.name}
         subtitle={recipe.category}
@@ -68,7 +68,7 @@ export default function RecipeDetailPage() {
         action={
           <button
             onClick={() => navigate(`/productos/editar/${id}`)}
-            className="flex items-center gap-1.5 bg-surface-100 text-gray-700 text-sm font-semibold px-3 py-2 rounded-xl active:scale-95 transition-all"
+            className="flex items-center gap-1.5 bg-surface-100 text-app-secondary text-sm font-semibold px-3 py-2 rounded-xl active:scale-95 transition-all"
           >
             <Edit2 size={15} />
             Editar
@@ -82,17 +82,17 @@ export default function RecipeDetailPage() {
         <div className="card space-y-3">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-3xl font-display font-bold text-gray-900">
+              <p className="text-3xl font-display font-bold text-app-primary">
                 {formatCurrency(recipe.salePrice, settings.currencySymbol)}
               </p>
-              <p className="text-sm text-gray-500 mt-0.5">precio de venta</p>
+              <p className="text-sm text-app-muted mt-0.5">precio de venta</p>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={handleShare}
                 className="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-100 active:scale-95 transition-all"
               >
-                <Share2 size={18} className="text-gray-600" />
+                <Share2 size={18} className="text-app-muted" />
               </button>
               <button
                 onClick={handleToggleActive}
@@ -100,7 +100,7 @@ export default function RecipeDetailPage() {
               >
                 {recipe.isActive
                   ? <ToggleRight size={22} className="text-primary-600" />
-                  : <ToggleLeft  size={22} className="text-gray-400" />
+                  : <ToggleLeft  size={22} className="text-app-faint" />
                 }
               </button>
             </div>
@@ -116,19 +116,19 @@ export default function RecipeDetailPage() {
 
           <div className="grid grid-cols-3 gap-3 pt-2 border-t border-surface-100">
             <div className="text-center">
-              <p className="text-xs text-gray-500 mb-0.5">Costo</p>
-              <p className="text-sm font-bold text-gray-800">
+              <p className="text-xs text-app-muted mb-0.5">Costo</p>
+              <p className="text-sm font-bold text-app-secondary">
                 {formatCurrency(costPerPortion, settings.currencySymbol)}
               </p>
             </div>
-            <div className="text-center border-x border-surface-200">
-              <p className="text-xs text-gray-500 mb-0.5">Ganancia</p>
+            <div className="text-center border-x border-app">
+              <p className="text-xs text-app-muted mb-0.5">Ganancia</p>
               <p className={`text-sm font-bold ${profit >= 0 ? 'text-primary-600' : 'text-red-500'}`}>
                 {formatCurrency(profit, settings.currencySymbol)}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-xs text-gray-500 mb-0.5">Margen</p>
+              <p className="text-xs text-app-muted mb-0.5">Margen</p>
               <p className={`text-sm font-bold ${Number(margin) >= 30 ? 'text-primary-600' : 'text-amber-600'}`}>
                 {margin}%
               </p>
@@ -143,8 +143,8 @@ export default function RecipeDetailPage() {
               <span className="text-blue-600 font-bold text-sm">{recipe.portions}</span>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">Rinde {recipe.portions} porciones</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-semibold text-app-secondary">Rinde {recipe.portions} porciones</p>
+              <p className="text-xs text-app-muted">
                 Costo total receta: {formatCurrency(recipe.lastCalculatedCost, settings.currencySymbol)}
               </p>
             </div>
@@ -154,14 +154,14 @@ export default function RecipeDetailPage() {
         {/* ── Ingredients list ── */}
         <div className="card space-y-3">
           <div className="flex items-center gap-2">
-            <Package size={16} className="text-gray-600" />
-            <p className="text-sm font-bold text-gray-700">
+            <Package size={16} className="text-app-muted" />
+            <p className="text-sm font-bold text-app-secondary">
               Ingredientes ({recipeItems.length})
             </p>
           </div>
 
           {recipeItems.length === 0 ? (
-            <p className="text-sm text-gray-400">Sin ingredientes cargados.</p>
+            <p className="text-sm text-app-faint">Sin ingredientes cargados.</p>
           ) : (
             <div className="space-y-2">
               {recipeItems.map((item) => {
@@ -178,13 +178,13 @@ export default function RecipeDetailPage() {
                         <Package size={13} className="text-primary-500" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-800">{item.ingredient?.name}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm font-medium text-app-secondary">{item.ingredient?.name}</p>
+                        <p className="text-xs text-app-muted">
                           {item.quantity} {item.unit}
                         </p>
                       </div>
                     </div>
-                    <p className="text-sm font-semibold text-gray-700">
+                    <p className="text-sm font-semibold text-app-secondary">
                       {formatCurrency(itemCost, settings.currencySymbol)}
                     </p>
                   </div>
@@ -195,24 +195,24 @@ export default function RecipeDetailPage() {
         </div>
 
         {/* ── Cost breakdown ── */}
-        <div className="card bg-surface-50 border-surface-200 space-y-2">
+        <div className="card bg-app border-app space-y-2">
           <div className="flex items-center gap-2 mb-1">
-            <Calculator size={15} className="text-gray-500" />
-            <p className="text-sm font-bold text-gray-600">Desglose de costos</p>
+            <Calculator size={15} className="text-app-muted" />
+            <p className="text-sm font-bold text-app-muted">Desglose de costos</p>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Ingredientes</span>
+            <span className="text-app-muted">Ingredientes</span>
             <span className="font-medium">{formatCurrency(recipe.lastCalculatedCost, settings.currencySymbol)}</span>
           </div>
           {recipe.portions > 1 && (
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">÷ {recipe.portions} porciones</span>
+              <span className="text-app-muted">÷ {recipe.portions} porciones</span>
               <span className="font-medium">{formatCurrency(costPerPortion, settings.currencySymbol)}/u</span>
             </div>
           )}
-          <div className="flex justify-between text-sm border-t border-surface-200 pt-2">
-            <span className="text-gray-500">Precio de venta</span>
-            <span className="font-bold text-gray-900">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</span>
+          <div className="flex justify-between text-sm border-t border-app pt-2">
+            <span className="text-app-muted">Precio de venta</span>
+            <span className="font-bold text-app-primary">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className={profit >= 0 ? 'text-primary-600 font-bold' : 'text-red-500 font-bold'}>
@@ -227,8 +227,8 @@ export default function RecipeDetailPage() {
         {/* Description */}
         {recipe.description && (
           <div className="card">
-            <p className="text-xs font-bold text-gray-500 mb-1">Notas</p>
-            <p className="text-sm text-gray-700">{recipe.description}</p>
+            <p className="text-xs font-bold text-app-muted mb-1">Notas</p>
+            <p className="text-sm text-app-secondary">{recipe.description}</p>
           </div>
         )}
 

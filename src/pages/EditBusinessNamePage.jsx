@@ -28,7 +28,7 @@ export default function EditBusinessNamePage() {
   }
 
   return (
-    <div className="flex flex-col bg-surface-50">
+    <div className="flex flex-col bg-app">
       <PageHeader title="Nombre del negocio" back />
       <div className="px-4 py-6 space-y-4">
         <div className="card space-y-3">
@@ -36,7 +36,7 @@ export default function EditBusinessNamePage() {
             <div className="w-9 h-9 rounded-xl bg-primary-50 flex items-center justify-center">
               <Store size={18} className="text-primary-600" />
             </div>
-            <p className="text-sm font-semibold text-gray-700">¿Cómo se llama tu negocio?</p>
+            <p className="text-sm font-semibold text-app-secondary">¿Cómo se llama tu negocio?</p>
           </div>
           <input
             type="text"
@@ -47,7 +47,7 @@ export default function EditBusinessNamePage() {
             autoFocus
             maxLength={50}
           />
-          <p className="text-xs text-gray-400">Este nombre aparece en tu dashboard y en tus comandas.</p>
+          <p className="text-xs text-app-faint">Este nombre aparece en tu dashboard y en tus comandas.</p>
         </div>
 
         <button

@@ -29,17 +29,17 @@ export default function EditCapacityPage() {
   }
 
   return (
-    <div className="flex flex-col bg-surface-50">
+    <div className="flex flex-col bg-app">
       <PageHeader title="Capacidad de producción" back />
       <div className="px-4 py-6 space-y-4">
         <div className="card space-y-4">
           <div className="flex items-center gap-3 pb-2 border-b border-surface-100">
             <div className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center">
-              <Sliders size={18} className="text-gray-600" />
+              <Sliders size={18} className="text-app-muted" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-700">¿Cuántos platos podés preparar a la vez?</p>
-              <p className="text-xs text-gray-400 mt-0.5">Esto ayuda a organizar tus comandas activas.</p>
+              <p className="text-sm font-semibold text-app-secondary">¿Cuántos platos podés preparar a la vez?</p>
+              <p className="text-xs text-app-faint mt-0.5">Esto ayuda a organizar tus comandas activas.</p>
             </div>
           </div>
 
@@ -51,7 +51,7 @@ export default function EditCapacityPage() {
                 className={`py-3 rounded-xl text-sm font-bold border-2 transition-all active:scale-95 ${
                   capacity === opt
                     ? 'border-primary-500 bg-primary-50 text-primary-700'
-                    : 'border-surface-200 bg-white text-gray-600'
+                    : 'border-app bg-white text-gray-600'
                 }`}
               >
                 {opt}
@@ -72,8 +72,8 @@ export default function EditCapacityPage() {
             />
           </div>
 
-          <div className="bg-surface-50 rounded-xl px-3 py-2.5">
-            <p className="text-xs text-gray-500">
+          <div className="bg-app rounded-xl px-3 py-2.5">
+            <p className="text-xs text-app-muted">
               Capacidad actual: <strong>{capacity} plato{capacity !== 1 ? 's' : ''} simultáneo{capacity !== 1 ? 's' : ''}</strong>
             </p>
           </div>

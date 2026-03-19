@@ -71,15 +71,15 @@ export default function LoginPage() {
 
       {/* Sección blanca con login */}
       <div className="px-6 py-8 bg-white rounded-t-3xl shadow-2xl">
-        <h2 className="text-xl font-display font-bold text-gray-900 mb-1">¡Bienvenida! 👋</h2>
-        <p className="text-sm text-gray-500 mb-6">Ingresá con tu cuenta de Google para continuar</p>
+        <h2 className="text-xl font-display font-bold text-app-primary mb-1">¡Bienvenida! 👋</h2>
+        <p className="text-sm text-app-muted mb-6">Ingresá con tu cuenta de Google para continuar</p>
 
         {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
 
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-3 bg-white border-2 border-surface-200 rounded-2xl px-6 py-4 text-gray-700 font-semibold text-base active:scale-95 transition-all shadow-sm disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-3 bg-white border-2 border-app rounded-2xl px-6 py-4 text-app-secondary font-semibold text-base active:scale-95 transition-all shadow-sm disabled:opacity-50"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-gray-300 border-t-primary-600 rounded-full animate-spin" />
@@ -94,7 +94,7 @@ export default function LoginPage() {
           {loading ? 'Conectando...' : 'Continuar con Google'}
         </button>
 
-        <p className="text-xs text-gray-400 mt-5 text-center leading-relaxed">
+        <p className="text-xs text-app-faint mt-5 text-center leading-relaxed">
           Al continuar aceptás nuestros Términos de Servicio y Política de Privacidad
         </p>
       </div>

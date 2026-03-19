@@ -94,7 +94,7 @@ export default function StockReplenishPage() {
     : null
 
   return (
-    <div className="flex flex-col bg-surface-50 min-h-screen">
+    <div className="flex flex-col bg-app min-h-screen">
       <PageHeader title={`Reponer ${ingredient.name}`} back />
 
       <div className="px-4 py-4 space-y-4">
@@ -106,8 +106,8 @@ export default function StockReplenishPage() {
               <PackagePlus size={18} className="text-primary-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-700">¿Cuánto compraste?</p>
-              <p className="text-xs text-gray-400">Stock actual: {ingredient.stock || 0} {ingredient.unit}</p>
+              <p className="text-sm font-semibold text-app-secondary">¿Cuánto compraste?</p>
+              <p className="text-xs text-app-faint">Stock actual: {ingredient.stock || 0} {ingredient.unit}</p>
             </div>
           </div>
 
@@ -134,7 +134,7 @@ export default function StockReplenishPage() {
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ${
                   priceMode === 'unit'
                     ? 'border-primary-500 bg-primary-50 text-primary-700'
-                    : 'border-surface-200 bg-white text-gray-500'
+                    : 'border-app bg-white text-gray-500'
                 }`}
               >
                 Por {ingredient.unit}
@@ -144,7 +144,7 @@ export default function StockReplenishPage() {
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ${
                   priceMode === 'total'
                     ? 'border-primary-500 bg-primary-50 text-primary-700'
-                    : 'border-surface-200 bg-white text-gray-500'
+                    : 'border-app bg-white text-gray-500'
                 }`}
               >
                 Total pagado
@@ -158,7 +158,7 @@ export default function StockReplenishPage() {
               {priceMode === 'unit' ? `Precio por ${ingredient.unit} (${sym})` : `Total pagado (${sym})`}
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">{sym}</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-app-faint font-medium">{sym}</span>
               <input
                 type="text"
                 inputMode="decimal"
@@ -174,18 +174,18 @@ export default function StockReplenishPage() {
           {pricePerUnitPreview && quantity && (
             <div className="bg-primary-50 rounded-xl px-3 py-2.5 space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-gray-600">Precio por {ingredient.unit}</span>
+                <span className="text-app-muted">Precio por {ingredient.unit}</span>
                 <span className="font-bold text-primary-700">{formatCurrency(pricePerUnitPreview)}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-gray-600">Nuevo stock total</span>
-                <span className="font-semibold text-gray-700">
+                <span className="text-app-muted">Nuevo stock total</span>
+                <span className="font-semibold text-app-secondary">
                   {((ingredient.stock || 0) + parseFloat(quantity)).toFixed(2)} {ingredient.unit}
                 </span>
               </div>
               {ingredient.pricePerUnit && Math.abs(pricePerUnitPreview - ingredient.pricePerUnit) > 0.01 && (
                 <div className="flex justify-between text-xs pt-1 border-t border-primary-100">
-                  <span className="text-gray-500">Precio anterior</span>
+                  <span className="text-app-muted">Precio anterior</span>
                   <span className={`font-semibold ${pricePerUnitPreview > ingredient.pricePerUnit ? 'text-red-500' : 'text-green-600'}`}>
                     {formatCurrency(ingredient.pricePerUnit)} → {formatCurrency(pricePerUnitPreview)}
                     {pricePerUnitPreview > ingredient.pricePerUnit ? ' ↑' : ' ↓'}
@@ -199,19 +199,19 @@ export default function StockReplenishPage() {
         {/* Historial de reposiciones */}
         {history.length > 0 && (
           <div className="card space-y-2">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Últimas compras</p>
+            <p className="text-xs font-bold text-app-muted uppercase tracking-wide">Últimas compras</p>
             <div className="divide-y divide-surface-100">
               {history.map((h) => (
                 <div key={h.id} className="flex items-center justify-between py-2.5">
                   <div>
-                    <p className="text-sm font-semibold text-gray-800">
+                    <p className="text-sm font-semibold text-app-secondary">
                       +{h.quantity} {ingredient.unit}
                     </p>
-                    <p className="text-xs text-gray-400">{formatDate(h.date)}</p>
+                    <p className="text-xs text-app-faint">{formatDate(h.date)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-gray-700">{formatCurrency(h.pricePerUnit)}<span className="text-xs font-normal text-gray-400"> /{ingredient.unit}</span></p>
-                    <p className="text-xs text-gray-400">Total: {formatCurrency(h.totalPrice)}</p>
+                    <p className="text-sm font-bold text-app-secondary">{formatCurrency(h.pricePerUnit)}<span className="text-xs font-normal text-app-faint"> /{ingredient.unit}</span></p>
+                    <p className="text-xs text-app-faint">Total: {formatCurrency(h.totalPrice)}</p>
                   </div>
                 </div>
               ))}

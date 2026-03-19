@@ -21,7 +21,7 @@ export default function BottomNav() {
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-900 dark:border-t dark:border-gray-800 shadow-nav pb-safe max-w-md mx-auto">
+    <nav style={{backgroundColor: 'var(--bg-surface)', borderTop: '1px solid var(--border)'}} className="fixed bottom-0 left-0 right-0 z-40 shadow-nav pb-safe max-w-md mx-auto">
       <div className="flex items-center justify-around px-2 h-16">
         {NAV_ITEMS.map(({ id, label, icon: Icon, path, premium }) => {
           const isActive = location.pathname === path ||
@@ -32,7 +32,7 @@ export default function BottomNav() {
               onClick={() => navigate(path)}
               className={clsx(
                 'flex flex-col items-center justify-center gap-0.5 w-16 h-14 rounded-2xl transition-all duration-200 active:scale-95',
-                isActive ? 'text-primary-600' : 'text-gray-400 dark:text-gray-500'
+                isActive ? 'nav-item-active' : 'nav-item-inactive'
               )}
             >
               <div className={clsx(
@@ -49,7 +49,7 @@ export default function BottomNav() {
               </div>
               <span className={clsx(
                 'text-[10px] font-semibold transition-all duration-200',
-                isActive ? 'text-primary-600' : 'text-gray-400 dark:text-gray-500'
+                isActive ? 'nav-item-active' : 'nav-item-inactive'
               )}>
                 {label}
               </span>

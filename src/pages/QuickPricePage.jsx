@@ -54,7 +54,7 @@ export default function QuickPricePage() {
   )
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title="Precio rápido" subtitle="Sin guardar receta" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24 px-4 py-4 space-y-4">
@@ -70,7 +70,7 @@ export default function QuickPricePage() {
         {/* ── Ingredients ── */}
         <div className="card space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-bold text-gray-700">Ingredientes</p>
+            <p className="text-sm font-bold text-app-secondary">Ingredientes</p>
             <button
               onClick={() => setShowPicker(true)}
               className="flex items-center gap-1.5 text-sm font-bold text-primary-600 bg-primary-50 px-3 py-1.5 rounded-xl active:scale-95 transition-all"
@@ -83,7 +83,7 @@ export default function QuickPricePage() {
           {items.length === 0 ? (
             <button
               onClick={() => setShowPicker(true)}
-              className="w-full border-2 border-dashed border-surface-300 rounded-xl py-5 flex flex-col items-center gap-1.5 text-gray-400 active:bg-surface-50 transition-colors"
+              className="w-full border-2 border-dashed border-surface-300 rounded-xl py-5 flex flex-col items-center gap-1.5 text-app-faint active:bg-app transition-colors"
             >
               <Package size={22} />
               <p className="text-sm font-medium">Tocá para agregar ingredientes</p>
@@ -91,9 +91,9 @@ export default function QuickPricePage() {
           ) : (
             <div className="space-y-2">
               {items.map((item, idx) => (
-                <div key={item.ingredientId} className="bg-surface-50 rounded-xl p-3 space-y-2">
+                <div key={item.ingredientId} className="bg-app rounded-xl p-3 space-y-2">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-gray-800">{item.ingredient?.name}</p>
+                    <p className="text-sm font-semibold text-app-secondary">{item.ingredient?.name}</p>
                     <button
                       onClick={() => removeItem(idx)}
                       className="w-6 h-6 rounded-lg bg-red-50 flex items-center justify-center text-red-400 active:scale-95"
@@ -127,10 +127,10 @@ export default function QuickPricePage() {
 
         {/* ── Extra costs ── */}
         <div className="card space-y-2">
-          <p className="text-sm font-bold text-gray-700">Costos extra (opcional)</p>
-          <p className="text-xs text-gray-500">Packaging, delivery, mano de obra, etc.</p>
+          <p className="text-sm font-bold text-app-secondary">Costos extra (opcional)</p>
+          <p className="text-xs text-app-muted">Packaging, delivery, mano de obra, etc.</p>
           <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-muted font-semibold">
               {settings.currencySymbol}
             </span>
             <input
@@ -147,7 +147,7 @@ export default function QuickPricePage() {
 
         {/* ── Margin ── */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">Margen de ganancia</p>
+          <p className="text-sm font-bold text-app-secondary">Margen de ganancia</p>
           <div className="grid grid-cols-4 gap-2">
             {MARGINS.map((m) => (
               <button
@@ -156,7 +156,7 @@ export default function QuickPricePage() {
                 className={`py-2 rounded-xl text-sm font-bold border-2 transition-all active:scale-95 ${
                   margin === m
                     ? 'border-primary-500 bg-primary-50 text-primary-700'
-                    : 'border-surface-200 bg-white text-gray-600'
+                    : 'border-app bg-white text-gray-600'
                 }`}
               >
                 {m}%
@@ -205,7 +205,7 @@ export default function QuickPricePage() {
         onClose={() => { setShowPicker(false); setSearch('') }}
         title="Elegir ingrediente"
       >
-        <div className="px-4 py-3 border-b border-surface-200">
+        <div className="px-4 py-3 border-b border-app">
           <input
             type="text"
             placeholder="Buscar ingrediente..."
@@ -218,7 +218,7 @@ export default function QuickPricePage() {
         <div className="px-4 py-3 space-y-2 pb-8">
           {filtered.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-400 text-sm">
+              <p className="text-app-faint text-sm">
                 {allIngredients.length === 0 ? 'No tenés ingredientes cargados aún.' : 'Sin resultados.'}
               </p>
             </div>
@@ -227,16 +227,16 @@ export default function QuickPricePage() {
               <button
                 key={ing.id}
                 onClick={() => addIngredient(ing)}
-                className="w-full flex items-center gap-3 p-3 bg-surface-50 rounded-xl active:bg-surface-100 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-3 bg-app rounded-xl active:bg-surface-100 transition-colors text-left"
               >
                 <div className="w-9 h-9 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
                   <Package size={16} className="text-primary-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900">{ing.name}</p>
-                  <p className="text-xs text-gray-500">{ing.unit}</p>
+                  <p className="text-sm font-semibold text-app-primary">{ing.name}</p>
+                  <p className="text-xs text-app-muted">{ing.unit}</p>
                 </div>
-                <p className="text-sm font-bold text-gray-700 shrink-0">
+                <p className="text-sm font-bold text-app-secondary shrink-0">
                   {formatCurrency(ing.pricePerUnit, settings.currencySymbol)}/{ing.unit}
                 </p>
               </button>

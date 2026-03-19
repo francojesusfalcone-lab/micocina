@@ -21,7 +21,7 @@ export default function ProductsPage() {
     .filter((r) => r.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
+    <div className="flex flex-col min-h-full bg-app ">
       <PageHeader
         title="Productos"
         subtitle={`${allRecipes.length} producto${allRecipes.length !== 1 ? 's' : ''} cargado${allRecipes.length !== 1 ? 's' : ''}`}
@@ -39,9 +39,9 @@ export default function ProductsPage() {
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Search */}
-        <div className="px-4 py-3 bg-white dark:bg-gray-900 border-b border-surface-200 dark:border-gray-800">
+        <div className="px-4 py-3 bg-white border-b border-app dark:border-app">
           <div className="relative">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-faint" />
             <input
               type="text"
               placeholder="Buscar producto..."
@@ -63,7 +63,7 @@ export default function ProductsPage() {
                 className={`px-4 py-1.5 rounded-xl text-sm font-semibold transition-all active:scale-95 ${
                   tab === id
                     ? 'bg-primary-600 text-white'
-                    : 'bg-surface-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                    : 'bg-surface-100  text-app-muted '
                 }`}
               >
                 {label}
@@ -71,7 +71,7 @@ export default function ProductsPage() {
             ))}
             <button
               onClick={() => isPremium ? navigate('/combos') : navigate('/premium')}
-              className="px-4 py-1.5 rounded-xl text-sm font-semibold bg-surface-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 flex items-center gap-1.5"
+              className="px-4 py-1.5 rounded-xl text-sm font-semibold bg-surface-100  text-app-muted dark:text-app-faint flex items-center gap-1.5"
             >
               Combos
               {!isPremium && <PremiumBadge />}
@@ -124,19 +124,19 @@ export default function ProductsPage() {
               <button
                 key={recipe.id}
                 onClick={() => navigate(`/productos/${recipe.id}`)}
-                className="card-hover dark:bg-gray-900 dark:border-gray-800 w-full flex items-center gap-3 text-left"
+                className="card-hover  w-full flex items-center gap-3 text-left"
               >
-                <div className="w-14 h-14 rounded-xl bg-surface-100 dark:bg-gray-800 shrink-0 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-xl bg-surface-100  shrink-0 flex items-center justify-center">
                   <ShoppingBag size={20} className="text-gray-300" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">{recipe.name}</p>
+                    <p className="font-semibold text-app-primary  truncate">{recipe.name}</p>
                     {!recipe.isActive && (
-                      <span className="badge bg-gray-100 text-gray-500 text-[10px]">Pausado</span>
+                      <span className="badge bg-gray-100 text-app-muted text-[10px]">Pausado</span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                  <p className="text-sm text-app-muted dark:text-app-faint mt-0.5">
                     Costo: {formatCurrency(recipe.costPerPortion ?? recipe.lastCalculatedCost, settings.currencySymbol)}
                   </p>
                 </div>
@@ -144,7 +144,7 @@ export default function ProductsPage() {
                   <p className="font-bold text-gold-600">
                     {formatCurrency(recipe.salePrice, settings.currencySymbol)}
                   </p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">precio venta</p>
+                  <p className="text-xs text-app-faint dark:text-app-muted mt-0.5">precio venta</p>
                 </div>
               </button>
             ))

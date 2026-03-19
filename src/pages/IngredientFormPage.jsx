@@ -115,7 +115,7 @@ export default function IngredientFormPage() {
   const unitLabel = UNITS.find((u) => u.value === form.unit)?.label || form.unit
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={isEdit ? 'Editar ingrediente' : 'Nuevo ingrediente'}
         back
@@ -170,7 +170,7 @@ export default function IngredientFormPage() {
 
         {/* ── Precio ── */}
         <div className="card space-y-4">
-          <p className="text-sm font-bold text-gray-700">Precio y unidad</p>
+          <p className="text-sm font-bold text-app-secondary">Precio y unidad</p>
 
           <div>
             <label className="label">Unidad de medida *</label>
@@ -183,14 +183,14 @@ export default function IngredientFormPage() {
                   className={`py-2 px-1 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
                     form.unit === value
                       ? 'border-primary-500 bg-primary-50 text-primary-700'
-                      : 'border-surface-200 bg-white text-gray-600'
+                      : 'border-app bg-white text-gray-600'
                   }`}
                 >
                   {value}
                 </button>
               ))}
             </div>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-app-faint mt-2">
               Seleccionado: <strong>{unitLabel}</strong>
             </p>
           </div>
@@ -200,7 +200,7 @@ export default function IngredientFormPage() {
               Precio por {form.unit} ({settings.currencySymbol}) *
             </label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-muted font-semibold">
                 {settings.currencySymbol}
               </span>
               <input
@@ -218,28 +218,28 @@ export default function IngredientFormPage() {
 
             {/* Helper: precio por porción común */}
             {priceNum > 0 && (
-              <div className="mt-3 bg-surface-50 rounded-xl p-3 space-y-1">
-                <p className="text-xs font-bold text-gray-500 mb-2">Equivalencias rápidas</p>
+              <div className="mt-3 bg-app rounded-xl p-3 space-y-1">
+                <p className="text-xs font-bold text-app-muted mb-2">Equivalencias rápidas</p>
                 {form.unit === 'kg' && (
                   <>
-                    <p className="text-xs text-gray-600">100g → <strong>{settings.currencySymbol}{(priceNum / 10).toFixed(2)}</strong></p>
-                    <p className="text-xs text-gray-600">500g → <strong>{settings.currencySymbol}{(priceNum / 2).toFixed(2)}</strong></p>
+                    <p className="text-xs text-app-muted">100g → <strong>{settings.currencySymbol}{(priceNum / 10).toFixed(2)}</strong></p>
+                    <p className="text-xs text-app-muted">500g → <strong>{settings.currencySymbol}{(priceNum / 2).toFixed(2)}</strong></p>
                   </>
                 )}
                 {form.unit === 'g' && (
                   <>
-                    <p className="text-xs text-gray-600">100g → <strong>{settings.currencySymbol}{(priceNum * 100).toFixed(2)}</strong></p>
-                    <p className="text-xs text-gray-600">1kg  → <strong>{settings.currencySymbol}{(priceNum * 1000).toFixed(2)}</strong></p>
+                    <p className="text-xs text-app-muted">100g → <strong>{settings.currencySymbol}{(priceNum * 100).toFixed(2)}</strong></p>
+                    <p className="text-xs text-app-muted">1kg  → <strong>{settings.currencySymbol}{(priceNum * 1000).toFixed(2)}</strong></p>
                   </>
                 )}
                 {form.unit === 'l' && (
                   <>
-                    <p className="text-xs text-gray-600">100ml → <strong>{settings.currencySymbol}{(priceNum / 10).toFixed(2)}</strong></p>
-                    <p className="text-xs text-gray-600">500ml → <strong>{settings.currencySymbol}{(priceNum / 2).toFixed(2)}</strong></p>
+                    <p className="text-xs text-app-muted">100ml → <strong>{settings.currencySymbol}{(priceNum / 10).toFixed(2)}</strong></p>
+                    <p className="text-xs text-app-muted">500ml → <strong>{settings.currencySymbol}{(priceNum / 2).toFixed(2)}</strong></p>
                   </>
                 )}
                 {form.unit === 'u' && (
-                  <p className="text-xs text-gray-600">Precio unitario: <strong>{settings.currencySymbol}{priceNum.toFixed(2)}</strong></p>
+                  <p className="text-xs text-app-muted">Precio unitario: <strong>{settings.currencySymbol}{priceNum.toFixed(2)}</strong></p>
                 )}
               </div>
             )}
@@ -248,8 +248,8 @@ export default function IngredientFormPage() {
 
         {/* ── Stock ── */}
         <div className="card space-y-4">
-          <p className="text-sm font-bold text-gray-700">Stock actual (opcional)</p>
-          <p className="text-xs text-gray-500 -mt-2">
+          <p className="text-sm font-bold text-app-secondary">Stock actual (opcional)</p>
+          <p className="text-xs text-app-muted -mt-2">
             Si cargás el stock, la app lo descuenta automáticamente con cada venta.
           </p>
 
@@ -284,7 +284,7 @@ export default function IngredientFormPage() {
               min="0"
               step="0.01"
             />
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-app-faint mt-1">
               Cuando el stock baje de este número, aparece una alerta.
             </p>
           </div>
@@ -293,7 +293,7 @@ export default function IngredientFormPage() {
       </div>
 
       {/* ── Save button fixed at bottom ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         <button
           onClick={handleSave}
           disabled={saving}

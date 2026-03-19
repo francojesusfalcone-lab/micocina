@@ -88,7 +88,7 @@ function CancelSheet({ isOpen, onClose, onConfirm }) {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="¿Qué pasó con este pedido?">
       <div className="px-5 py-4 space-y-3">
-        <p className="text-sm text-gray-500">Elegí la opción correcta para actualizar el stock:</p>
+        <p className="text-sm text-app-muted">Elegí la opción correcta para actualizar el stock:</p>
 
         <button
           onClick={() => onConfirm('restore')}
@@ -139,7 +139,7 @@ export default function OrderDetailPage() {
       <div className="flex flex-col min-h-full">
         <PageHeader title="Comanda" back />
         <div className="flex items-center justify-center flex-1">
-          <p className="text-gray-400 text-sm">Cargando...</p>
+          <p className="text-app-faint text-sm">Cargando...</p>
         </div>
       </div>
     )
@@ -215,7 +215,7 @@ export default function OrderDetailPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={order.clientName || 'Pedido sin nombre'}
         subtitle={`${formatDate(order.createdAt)} · ${formatTime(order.createdAt)}`}
@@ -242,7 +242,7 @@ export default function OrderDetailPage() {
             {statusCfg.label}
           </span>
           {order.deliveryTime && (
-            <span className="flex items-center gap-1 text-xs text-gray-500 font-medium">
+            <span className="flex items-center gap-1 text-xs text-app-muted font-medium">
               <Clock size={12} />
               Entrega: {order.deliveryTime}
             </span>
@@ -252,7 +252,7 @@ export default function OrderDetailPage() {
         {/* ── Status stepper ── */}
         {!isCancelled && (
           <div className="card">
-            <p className="text-sm font-bold text-gray-700 mb-4">Estado del pedido</p>
+            <p className="text-sm font-bold text-app-secondary mb-4">Estado del pedido</p>
             <StatusStepper
               currentStatus={order.status}
               onAdvance={handleAdvance}
@@ -270,7 +270,7 @@ export default function OrderDetailPage() {
 
         {/* ── Order items ── */}
         <div className="card">
-          <p className="text-sm font-bold text-gray-700 mb-3">
+          <p className="text-sm font-bold text-app-secondary mb-3">
             Detalle del pedido ({items.length} producto{items.length !== 1 ? 's' : ''})
           </p>
           <div className="space-y-0">
@@ -280,9 +280,9 @@ export default function OrderDetailPage() {
                   <span className="text-sm font-bold text-primary-600 w-6 text-center">
                     {item.quantity}x
                   </span>
-                  <p className="text-sm font-semibold text-gray-900">{item.recipe?.name ?? '—'}</p>
+                  <p className="text-sm font-semibold text-app-primary">{item.recipe?.name ?? '—'}</p>
                 </div>
-                <p className="text-sm font-bold text-gray-700">
+                <p className="text-sm font-bold text-app-secondary">
                   {formatCurrency(item.unitPrice * item.quantity, settings.currencySymbol)}
                 </p>
               </div>
@@ -290,8 +290,8 @@ export default function OrderDetailPage() {
           </div>
 
           {/* Total */}
-          <div className="flex items-center justify-between pt-3 mt-1 border-t border-surface-200">
-            <p className="text-base font-bold text-gray-900">Total</p>
+          <div className="flex items-center justify-between pt-3 mt-1 border-t border-app">
+            <p className="text-base font-bold text-app-primary">Total</p>
             <p className="text-xl font-display font-bold text-primary-600">
               {formatCurrency(order.total, settings.currencySymbol)}
             </p>
@@ -300,19 +300,19 @@ export default function OrderDetailPage() {
 
         {/* ── Payment ── */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">Pago</p>
+          <p className="text-sm font-bold text-app-secondary">Pago</p>
 
           <div className="flex items-center gap-2">
             <span className="text-lg">{payIcon}</span>
-            <p className="text-sm font-semibold text-gray-700">{payLabel}</p>
+            <p className="text-sm font-semibold text-app-secondary">{payLabel}</p>
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-gray-700">
+              <p className="text-sm font-semibold text-app-secondary">
                 {order.isPaid ? '✅ Pagado' : '⏳ Pendiente de pago'}
               </p>
-              <p className="text-xs text-gray-400">Tocá para cambiar</p>
+              <p className="text-xs text-app-faint">Tocá para cambiar</p>
             </div>
             <button
               onClick={handleTogglePaid}
@@ -329,24 +329,24 @@ export default function OrderDetailPage() {
         {/* ── Client info ── */}
         {(order.clientPhone || order.clientAddress || order.notes) && (
           <div className="card space-y-2.5">
-            <p className="text-sm font-bold text-gray-700">Información del cliente</p>
+            <p className="text-sm font-bold text-app-secondary">Información del cliente</p>
             {order.clientPhone && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Phone size={14} className="text-gray-400 shrink-0" />
+              <div className="flex items-center gap-2 text-sm text-app-muted">
+                <Phone size={14} className="text-app-faint shrink-0" />
                 <a href={`tel:${order.clientPhone}`} className="font-medium underline">
                   {order.clientPhone}
                 </a>
               </div>
             )}
             {order.clientAddress && (
-              <div className="flex items-start gap-2 text-sm text-gray-600">
-                <MapPin size={14} className="text-gray-400 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-sm text-app-muted">
+                <MapPin size={14} className="text-app-faint shrink-0 mt-0.5" />
                 <p>{order.clientAddress}</p>
               </div>
             )}
             {order.notes && (
-              <div className="flex items-start gap-2 text-sm text-gray-600">
-                <MessageSquare size={14} className="text-gray-400 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-sm text-app-muted">
+                <MessageSquare size={14} className="text-app-faint shrink-0 mt-0.5" />
                 <p className="italic">{order.notes}</p>
               </div>
             )}
@@ -356,7 +356,7 @@ export default function OrderDetailPage() {
       </div>
 
       {/* ── Fixed footer ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         <button
           onClick={handleCopyWhatsApp}
           disabled={copying}

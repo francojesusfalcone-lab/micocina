@@ -49,11 +49,11 @@ export default function LowStockPage() {
           <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isLow ? 'bg-red-100' : 'bg-surface-100'}`}>
             {isLow
               ? <AlertTriangle size={16} className="text-red-500" />
-              : <Package size={16} className="text-gray-400" />
+              : <Package size={16} className="text-app-faint" />
             }
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-gray-900">{ing.name}</p>
+            <p className="text-sm font-bold text-app-primary">{ing.name}</p>
             <p className={`text-xs ${isLow ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
               Stock: {ing.stock} {ing.unit}
               {ing.lowStockAlert !== null && ` / Alarma: ${ing.lowStockAlert} ${ing.unit}`}
@@ -70,7 +70,7 @@ export default function LowStockPage() {
         {/* Editar alarma inline */}
         <button
           onClick={() => { setEditingId(editing ? null : ing.id); setNewAlert(ing.lowStockAlert?.toString() || '') }}
-          className="mt-2 flex items-center gap-1 text-xs text-gray-400 font-medium"
+          className="mt-2 flex items-center gap-1 text-xs text-app-faint font-medium"
         >
           <Bell size={11} />
           {editing ? 'Cancelar' : `Editar alarma`}
@@ -101,7 +101,7 @@ export default function LowStockPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title="Stock bajo" back />
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24 px-4 py-4">
 
@@ -110,8 +110,8 @@ export default function LowStockPage() {
             <div className="w-14 h-14 rounded-2xl bg-primary-50 flex items-center justify-center mb-3">
               <Package size={24} className="text-primary-600" />
             </div>
-            <p className="text-sm font-semibold text-gray-700">Todo el stock esta OK</p>
-            <p className="text-xs text-gray-400 mt-1">No hay ingredientes por debajo de su alarma</p>
+            <p className="text-sm font-semibold text-app-secondary">Todo el stock esta OK</p>
+            <p className="text-xs text-app-faint mt-1">No hay ingredientes por debajo de su alarma</p>
           </div>
         ) : (
           <>
@@ -124,20 +124,20 @@ export default function LowStockPage() {
 
         {normal.length > 0 && (
           <>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mt-4 mb-2">Stock OK</p>
+            <p className="text-xs font-bold text-app-faint uppercase tracking-wide mt-4 mb-2">Stock OK</p>
             {normal.map(ing => <IngredientRow key={ing.id} ing={ing} isLow={false} />)}
           </>
         )}
 
         {noAlert.length > 0 && (
           <>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mt-4 mb-2">Sin alarma configurada</p>
+            <p className="text-xs font-bold text-app-faint uppercase tracking-wide mt-4 mb-2">Sin alarma configurada</p>
             {noAlert.map(ing => (
-              <div key={ing.id} className="p-3 rounded-2xl border border-surface-200 bg-white mb-2 flex items-center gap-3">
+              <div key={ing.id} className="p-3 rounded-2xl border border-app bg-white mb-2 flex items-center gap-3">
                 <Package size={16} className="text-gray-300 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-700">{ing.name}</p>
-                  <p className="text-xs text-gray-400">Stock: {ing.stock ?? '—'} {ing.unit}</p>
+                  <p className="text-sm font-semibold text-app-secondary">{ing.name}</p>
+                  <p className="text-xs text-app-faint">Stock: {ing.stock ?? '—'} {ing.unit}</p>
                 </div>
                 <button onClick={() => navigate(`/stock/editar/${ing.id}`)} className="text-xs text-primary-600 font-bold">
                   Configurar

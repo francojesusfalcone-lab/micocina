@@ -2,7 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Sistema de tokens de color semánticos ────────────────────────────────── */
 @layer base {
+  :root {
+    /* Fondos */
+    --bg-app:        #fafafa;
+    --bg-surface:    #ffffff;
+    --bg-card:       #ffffff;
+    --bg-input:      #f4f4f5;
+    --bg-muted:      #f0fdf4;
+
+    /* Bordes */
+    --border:        #e4e4e7;
+    --border-strong: #d4d4d8;
+
+    /* Textos */
+    --text-primary:  #111827;   /* casi negro */
+    --text-secondary:#374151;   /* gris oscuro */
+    --text-muted:    #6b7280;   /* gris medio */
+    --text-faint:    #9ca3af;   /* gris claro */
+
+    /* Acento principal (verde) */
+    --accent:        #16a34a;
+    --accent-light:  #f0fdf4;
+    --accent-text:   #15803d;
+
+    /* Dinero/ganancias (dorado) */
+    --gold:          #f4b92a;
+    --gold-text:     #c97d0e;
+  }
+
+  .dark {
+    /* Fondos */
+    --bg-app:        #0a0a0a;
+    --bg-surface:    #111111;
+    --bg-card:       #1a1a1a;
+    --bg-input:      #222222;
+    --bg-muted:      #1a2a1a;
+
+    /* Bordes */
+    --border:        #2a2a2a;
+    --border-strong: #333333;
+
+    /* Textos — todos bien contrastados sobre fondos oscuros */
+    --text-primary:  #f9fafb;   /* casi blanco */
+    --text-secondary:#e5e7eb;   /* blanco suave */
+    --text-muted:    #9ca3af;   /* gris claro legible */
+    --text-faint:    #6b7280;   /* gris medio */
+
+    /* Acento principal */
+    --accent:        #22c55e;
+    --accent-light:  #052e16;
+    --accent-text:   #4ade80;
+
+    /* Dinero/ganancias */
+    --gold:          #f4b92a;
+    --gold-text:     #fbbf24;
+  }
+
   * {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -14,127 +71,100 @@
   }
 
   body {
-    @apply bg-white text-gray-900 font-sans;
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    @apply font-sans;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    transition: background-color 0.2s, color 0.2s;
   }
 
-  .dark body {
-    @apply bg-gray-950 text-gray-100;
-  }
-
-  .dark .card, .dark .card-hover {
-    @apply bg-gray-900 border-gray-800 text-gray-100;
-  }
-
-  /* Textos dentro de cards en dark mode */
-  .dark .card p, .dark .card-hover p,
-  .dark .card span, .dark .card-hover span {
-    color: inherit;
-  }
-
-  .dark .input-field {
-    @apply bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500;
-  }
-
-  .dark .btn-secondary {
-    @apply bg-gray-800 text-gray-200 hover:bg-gray-700;
-  }
-
-  .dark nav {
-    @apply bg-gray-900 border-gray-800;
-  }
-
-  .dark .page-header {
-    @apply bg-gray-950/90 border-gray-800;
-  }
-
-  .dark .section-title {
-    @apply text-gray-500;
-  }
-
-  /* Safe area support for notched phones */
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .pt-safe {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
+  /* Safe area support */
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 }
 
 @layer components {
+  /* ── Botones ─────────────────────────────────────────────── */
   .btn-primary {
-    @apply bg-primary-600 text-white font-semibold rounded-2xl px-5 py-3 
-           active:scale-95 transition-all duration-150 
+    @apply bg-primary-600 text-white font-semibold rounded-2xl px-5 py-3
+           active:scale-95 transition-all duration-150
            hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-surface-100 text-gray-700 font-semibold rounded-2xl px-5 py-3
-           active:scale-95 transition-all duration-150
-           hover:bg-surface-200 disabled:opacity-50;
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    @apply font-semibold rounded-2xl px-5 py-3
+           active:scale-95 transition-all duration-150 disabled:opacity-50;
   }
 
   .btn-ghost {
     @apply text-primary-600 font-semibold rounded-2xl px-5 py-3
-           active:scale-95 transition-all duration-150
-           hover:bg-primary-50;
+           active:scale-95 transition-all duration-150;
   }
+  .dark .btn-ghost { color: var(--accent-text); }
 
+  /* ── Cards ───────────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-2xl shadow-card border border-surface-200 p-4;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    @apply rounded-2xl shadow-card p-4;
   }
 
   .card-hover {
-    @apply card transition-shadow duration-200 hover:shadow-card-hover active:scale-[0.99];
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    @apply rounded-2xl shadow-card p-4 transition-shadow duration-200
+           hover:shadow-card-hover active:scale-[0.99];
   }
 
+  /* ── Inputs ──────────────────────────────────────────────── */
   .input-field {
-    @apply w-full bg-surface-50 border border-surface-200 rounded-xl px-4 py-3
-           text-gray-900 placeholder-gray-400 font-medium
+    background-color: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    @apply w-full rounded-xl px-4 py-3 font-medium
            focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
            transition-all duration-150;
   }
+  .input-field::placeholder { color: var(--text-faint); }
 
+  /* ── Labels ──────────────────────────────────────────────── */
   .label {
-    @apply text-sm font-semibold text-gray-600 mb-1.5 block;
+    color: var(--text-muted);
+    @apply text-sm font-semibold mb-1.5 block;
   }
 
+  /* ── Badges ──────────────────────────────────────────────── */
   .badge {
     @apply inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full;
   }
+  .badge-green  { @apply badge bg-primary-100 text-primary-700; }
+  .badge-gray   { background-color: var(--bg-input); color: var(--text-muted); @apply badge; }
+  .badge-amber  { @apply badge bg-amber-100 text-amber-700; }
 
-  .badge-green {
-    @apply badge bg-primary-100 text-primary-700;
-  }
-
-  .badge-gray {
-    @apply badge bg-surface-100 text-gray-600;
-  }
-
-  .badge-amber {
-    @apply badge bg-amber-100 text-amber-700;
-  }
-
+  /* ── Header de página ────────────────────────────────────── */
   .page-header {
-    @apply sticky top-0 z-10 bg-white/90 backdrop-blur-sm border-b border-surface-200 px-4 py-4;
+    background-color: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+    border-bottom: 1px solid var(--border);
+    @apply sticky top-0 z-10 backdrop-blur-sm px-4 py-4;
   }
 
   .page-title {
-    @apply text-xl font-display font-bold text-gray-900;
+    color: var(--text-primary);
+    @apply text-xl font-display font-bold;
   }
 
   .section-title {
-    @apply text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3;
+    color: var(--text-faint);
+    @apply text-sm font-semibold uppercase tracking-wider mb-3;
   }
 
-  /* Bottom nav active indicator */
-  .nav-item-active {
-    @apply text-primary-600;
-  }
-
-  .nav-item-inactive {
-    @apply text-gray-400;
-  }
+  /* ── Nav ─────────────────────────────────────────────────── */
+  .nav-item-active   { color: var(--accent); }
+  .nav-item-inactive { color: var(--text-faint); }
 }
 
 @layer utilities {
@@ -142,28 +172,32 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Smooth scroll for lists */
+  .scrollbar-none::-webkit-scrollbar { display: none; }
   .scroll-smooth-mobile {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
+
+  /* Utilidades semánticas para usar en componentes */
+  .text-app-primary   { color: var(--text-primary); }
+  .text-app-secondary { color: var(--text-secondary); }
+  .text-app-muted     { color: var(--text-muted); }
+  .text-app-faint     { color: var(--text-faint); }
+  .bg-app             { background-color: var(--bg-app); }
+  .bg-surface         { background-color: var(--bg-surface); }
+  .bg-card-color      { background-color: var(--bg-card); }
+  .border-app         { border-color: var(--border); }
 }
 
-/* Animations */
+/* ─── Animaciones ───────────────────────────────────────────────────────────── */
 @keyframes slide-up {
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
-
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
-
 @keyframes scale-in {
   from { transform: scale(0.95); opacity: 0; }
   to   { transform: scale(1);    opacity: 1; }

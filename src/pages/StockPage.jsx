@@ -25,7 +25,7 @@ export default function StockPage() {
   const ingredients = allIngredients // alias for subtitle count
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title="Ingredientes & Stock"
         subtitle={`${ingredients.length} ingredientes`}
@@ -43,9 +43,9 @@ export default function StockPage() {
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Search */}
-        <div className="px-4 py-3 bg-white border-b border-surface-200">
+        <div className="px-4 py-3 bg-surface border-b border-app">
           <div className="relative">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-faint" />
             <input
               type="text"
               placeholder="Buscar ingrediente..."
@@ -104,7 +104,7 @@ export default function StockPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="font-semibold text-gray-900 truncate">{ingredient.name}</p>
+                        <p className="font-semibold text-app-primary truncate">{ingredient.name}</p>
                         {isLow && (
                           <span className="badge bg-amber-100 text-amber-700">
                             <AlertTriangle size={10} />
@@ -112,15 +112,15 @@ export default function StockPage() {
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-500 mt-0.5">
+                      <p className="text-sm text-app-muted mt-0.5">
                         Stock: {ingredient.stock} {ingredient.unit}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="font-bold text-gray-800">
+                      <p className="font-bold text-app-secondary">
                         {formatCurrency(ingredient.pricePerUnit, settings.currencySymbol)}
                       </p>
-                      <p className="text-xs text-gray-400">por {ingredient.unit}</p>
+                      <p className="text-xs text-app-faint">por {ingredient.unit}</p>
                     </div>
                   </div>
                 </button>

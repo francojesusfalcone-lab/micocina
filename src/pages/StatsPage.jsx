@@ -107,7 +107,7 @@ export default function StatsPage() {
 
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title="Estadisticas" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24 px-4 py-4 space-y-4">
@@ -121,7 +121,7 @@ export default function StatsPage() {
                 key={id}
                 onClick={() => locked ? navigate('/premium') : setPeriod(id)}
                 className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all active:scale-95 ${
-                  period === id ? 'bg-primary-600 text-white' : 'bg-white text-gray-500 border border-surface-200'
+                  period === id ? 'bg-primary-600 text-white' : 'bg-white text-app-muted border border-surface-200'
                 } ${locked ? 'opacity-60' : ''}`}
               >
                 {label}
@@ -135,15 +135,15 @@ export default function StatsPage() {
         {data && (
           <div className="grid grid-cols-3 gap-3">
             <div className="card text-center">
-              <p className="text-xs text-gray-500 mb-1">Ingresos</p>
+              <p className="text-xs text-app-muted mb-1">Ingresos</p>
               <p className="text-base font-display font-bold text-primary-600">{formatCurrency(data.totalIngresos, settings.currencySymbol)}</p>
             </div>
             <div className="card text-center">
-              <p className="text-xs text-gray-500 mb-1">Ganancia neta</p>
+              <p className="text-xs text-app-muted mb-1">Ganancia neta</p>
               <p className="text-base font-display font-bold text-blue-600">{formatCurrency(data.totalNeto, settings.currencySymbol)}</p>
             </div>
             <div className="card text-center">
-              <p className="text-xs text-gray-500 mb-1">Gastos fijos</p>
+              <p className="text-xs text-app-muted mb-1">Gastos fijos</p>
               <p className="text-base font-display font-bold text-red-500">{formatCurrency(data.totalGastos, settings.currencySymbol)}</p>
             </div>
           </div>
@@ -151,11 +151,11 @@ export default function StatsPage() {
 
         {/* Grafica */}
         <div className="card">
-          <p className="text-sm font-bold text-gray-700 mb-4">Evolucion</p>
+          <p className="text-sm font-bold text-app-secondary mb-4">Evolucion</p>
           {!data || data.chart.length === 0 ? (
             <div className="flex flex-col items-center py-8 text-center">
-              <p className="text-sm text-gray-400">Sin datos para este periodo</p>
-              <p className="text-xs text-gray-400 mt-1">Registra comandas para ver tus estadisticas</p>
+              <p className="text-sm text-app-faint">Sin datos para este periodo</p>
+              <p className="text-xs text-app-faint mt-1">Registra comandas para ver tus estadisticas</p>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={220}>

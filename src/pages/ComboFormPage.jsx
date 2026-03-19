@@ -74,12 +74,12 @@ export default function ComboFormPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
-      <div className="bg-white border-b border-surface-200 px-4 py-4 flex items-center gap-3">
+    <div className="flex flex-col min-h-full bg-app">
+      <div className="bg-surface border-b border-app px-4 py-4 flex items-center gap-3">
         <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center">
           <ChevronLeft size={20} />
         </button>
-        <h1 className="text-lg font-display font-bold text-gray-900">
+        <h1 className="text-lg font-display font-bold text-app-primary">
           {isEdit ? 'Editar combo' : 'Nuevo combo'}
         </h1>
       </div>
@@ -88,7 +88,7 @@ export default function ComboFormPage() {
 
         {/* Nombre */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">Nombre del combo</p>
+          <p className="text-sm font-bold text-app-secondary">Nombre del combo</p>
           <input
             type="text"
             placeholder="Ej: Combo Familiar, Combo Ejecutivo..."
@@ -101,11 +101,11 @@ export default function ComboFormPage() {
         {/* Precio fijo */}
         <div className="card space-y-3">
           <div>
-            <p className="text-sm font-bold text-gray-700">Precio del combo</p>
-            <p className="text-xs text-gray-500 mt-0.5">Precio especial de oferta — no tiene que tener lógica de margen</p>
+            <p className="text-sm font-bold text-app-secondary">Precio del combo</p>
+            <p className="text-xs text-app-muted mt-0.5">Precio especial de oferta — no tiene que tener lógica de margen</p>
           </div>
           <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">{settings.currencySymbol}</span>
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-faint font-semibold">{settings.currencySymbol}</span>
             <input
               type="number"
               placeholder="0.00"
@@ -120,7 +120,7 @@ export default function ComboFormPage() {
 
         {/* Productos incluidos */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">Productos incluidos</p>
+          <p className="text-sm font-bold text-app-secondary">Productos incluidos</p>
 
           {/* Items ya agregados con selector de cantidad */}
           {selectedItems.length > 0 && (
@@ -156,9 +156,9 @@ export default function ComboFormPage() {
               })}
 
               {/* Total real */}
-              <div className="flex items-center justify-between px-3 py-2.5 bg-surface-100 rounded-xl border border-surface-200">
-                <p className="text-sm font-bold text-gray-700">Total precio real</p>
-                <p className="text-sm font-bold text-gray-900">
+              <div className="flex items-center justify-between px-3 py-2.5 bg-surface-100 rounded-xl border border-app">
+                <p className="text-sm font-bold text-app-secondary">Total precio real</p>
+                <p className="text-sm font-bold text-app-primary">
                   {formatCurrency(selectedItems.reduce((sum, item) => {
                     const recipe = allRecipes?.find(r => r.id === item.recipeId)
                     return sum + (recipe?.salePrice || 0) * item.qty
@@ -171,17 +171,17 @@ export default function ComboFormPage() {
           {/* Lista de productos para agregar */}
           {allRecipes?.filter(r => !selectedItems.find(i => i.recipeId === r.id)).length > 0 && (
             <>
-              <p className="text-xs text-gray-500 font-semibold">Tocá un producto para agregarlo:</p>
+              <p className="text-xs text-app-muted font-semibold">Tocá un producto para agregarlo:</p>
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {allRecipes?.filter(r => !selectedItems.find(i => i.recipeId === r.id)).map(recipe => (
                   <button
                     key={recipe.id}
                     onClick={() => addItem(recipe)}
-                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-surface-200 bg-white active:bg-surface-50 transition-colors text-left"
+                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-app bg-white active:bg-app transition-colors text-left"
                   >
-                    <Plus size={14} className="text-gray-400 shrink-0" />
-                    <p className="text-sm font-medium text-gray-700">{recipe.name}</p>
-                    <p className="text-xs text-gray-400 ml-auto">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</p>
+                    <Plus size={14} className="text-app-faint shrink-0" />
+                    <p className="text-sm font-medium text-app-secondary">{recipe.name}</p>
+                    <p className="text-xs text-app-faint ml-auto">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</p>
                   </button>
                 ))}
               </div>
@@ -189,7 +189,7 @@ export default function ComboFormPage() {
           )}
 
           {allRecipes?.length === 0 && (
-            <p className="text-xs text-gray-400 text-center py-4">Primero agregá productos en la sección Productos</p>
+            <p className="text-xs text-app-faint text-center py-4">Primero agregá productos en la sección Productos</p>
           )}
         </div>
 
@@ -197,7 +197,7 @@ export default function ComboFormPage() {
       </div>
 
       {/* Botón guardar — siempre visible */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         <button
           onClick={handleSave}
           disabled={saving}

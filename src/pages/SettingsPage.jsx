@@ -18,16 +18,16 @@ function SettingsRow({ icon: Icon, label, value, onClick, badge, color = 'gray' 
     red:   'bg-red-50 text-red-500',
   }
   return (
-    <button onClick={onClick} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white dark:bg-gray-900 active:bg-surface-50 dark:active:bg-gray-800 transition-colors">
+    <button onClick={onClick} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white active:bg-app dark:active:bg-gray-800 transition-colors">
       <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${iconColors[color]}`}>
         <Icon size={18} />
       </div>
       <div className="flex-1 text-left min-w-0">
-        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{label}</p>
-        {value && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">{value}</p>}
+        <p className="text-sm font-semibold text-app-primary ">{label}</p>
+        {value && <p className="text-xs text-app-muted dark:text-app-faint mt-0.5 truncate">{value}</p>}
       </div>
       {badge && badge}
-      <ChevronRight size={16} className="text-gray-400 shrink-0" />
+      <ChevronRight size={16} className="text-app-faint shrink-0" />
     </button>
   )
 }
@@ -67,12 +67,12 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
+    <div className="flex flex-col min-h-full bg-app ">
       <PageHeader title="Configuración" />
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Negocio */}
-        <div className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden border border-surface-200">
+        <div className="mx-4 mt-4 bg-card-color rounded-2xl overflow-hidden border border-app">
           <div className="px-4 py-3 border-b border-surface-100"><p className="section-title mb-0">Mi negocio</p></div>
           <SettingsRow icon={Store} label="Nombre del negocio" value={settings.businessName} onClick={() => navigate('/configuracion/negocio')} color="green" />
           <div className="border-t border-surface-100" />
@@ -92,7 +92,7 @@ export default function SettingsPage() {
         )}
 
         {/* Funciones */}
-        <div className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden border border-surface-200">
+        <div className="mx-4 mt-4 bg-card-color rounded-2xl overflow-hidden border border-app">
           <div className="px-4 py-3 border-b border-surface-100"><p className="section-title mb-0">Funciones</p></div>
           <SettingsRow icon={Wallet} label="Gastos fijos" value={isPremium ? 'Controlá tus costos fijos' : 'Premium'} onClick={() => navigate('/gastos')} color="red" badge={!isPremium ? <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg mr-1">PRO</span> : null} />
           <div className="border-t border-surface-100" />
@@ -100,13 +100,13 @@ export default function SettingsPage() {
           <div className="border-t border-surface-100" />
           <SettingsRow icon={Bell} label="Notificaciones y alarmas" value="Próximamente" onClick={() => {}} color="blue" />
           <div className="border-t border-surface-100" />
-          <button onClick={toggleDark} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white dark:bg-gray-900 active:bg-surface-50 transition-colors">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+          <button onClick={toggleDark} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white active:bg-app transition-colors">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gray-100  text-app-muted dark:text-gray-300">
               <Moon size={18} />
             </div>
             <div className="flex-1 text-left">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Modo oscuro</p>
-              <p className="text-xs text-gray-400 mt-0.5">{dark ? 'Activado' : 'Desactivado'}</p>
+              <p className="text-sm font-semibold text-app-primary ">Modo oscuro</p>
+              <p className="text-xs text-app-faint mt-0.5">{dark ? 'Activado' : 'Desactivado'}</p>
             </div>
             <div className={`w-11 h-6 rounded-full transition-colors duration-200 ${dark ? 'bg-primary-600' : 'bg-gray-200'}`}>
               <div className={`w-5 h-5 bg-white rounded-full shadow mt-0.5 transition-transform duration-200 ${dark ? 'translate-x-5 ml-0.5' : 'translate-x-0.5'}`} />
@@ -117,7 +117,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Cuenta */}
-        <div className="mx-4 mt-4 bg-white rounded-2xl overflow-hidden border border-surface-200">
+        <div className="mx-4 mt-4 bg-card-color rounded-2xl overflow-hidden border border-app">
           <div className="px-4 py-3 border-b border-surface-100"><p className="section-title mb-0">Cuenta y datos</p></div>
           <SettingsRow icon={Info} label="Versión de la app" value="0.1.0 — Beta" onClick={() => {}} color="gray" />
           <div className="border-t border-surface-100" />
@@ -131,13 +131,13 @@ export default function SettingsPage() {
             <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-red-50 text-red-500"><Trash2 size={18} /></div>
             <div className="flex-1 text-left min-w-0">
               <p className="text-sm font-semibold text-red-500">{confirmDelete ? '¿Confirmar? Tocá de nuevo para borrar' : 'Borrar todos los datos'}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{confirmDelete ? 'Esta acción no se puede deshacer' : 'Borra ingredientes, productos y comandas'}</p>
+              <p className="text-xs text-app-faint mt-0.5">{confirmDelete ? 'Esta acción no se puede deshacer' : 'Borra ingredientes, productos y comandas'}</p>
             </div>
             <ChevronRight size={16} className="text-red-300 shrink-0" />
           </button>
         </div>
 
-        <p onClick={handleDevTap} className="text-center text-xs text-gray-400 mt-6 mb-4 select-none">MiCuchina · Hecho con ❤️ para cocineras de Latinoamérica</p>
+        <p onClick={handleDevTap} className="text-center text-xs text-app-faint mt-6 mb-4 select-none">MiCuchina · Hecho con ❤️ para cocineras de Latinoamérica</p>
 
       </div>
     </div>

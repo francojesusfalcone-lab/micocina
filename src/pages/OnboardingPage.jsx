@@ -86,8 +86,8 @@ export default function OnboardingPage() {
 
         {step === 0 ? (
           <>
-            <h1 className="text-2xl font-display font-bold text-gray-900 mb-2">¡Bienvenida a MiCuchina!</h1>
-            <p className="text-gray-500 text-base leading-relaxed mb-8">Tu app para manejar tu negocio de comida casera.</p>
+            <h1 className="text-2xl font-display font-bold text-app-primary mb-2">¡Bienvenida a MiCuchina!</h1>
+            <p className="text-app-muted text-base leading-relaxed mb-8">Tu app para manejar tu negocio de comida casera.</p>
             <div className="flex flex-col gap-4">
               {[
                 { emoji: '💰', text: 'Sabé exactamente cuánto ganás con cada plato' },
@@ -95,17 +95,17 @@ export default function OnboardingPage() {
                 { emoji: '📋', text: 'Gestioná tus comandas del día fácilmente' },
                 { emoji: '📊', text: 'Ve tus estadísticas de ventas y ganancias' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 bg-surface-50 rounded-2xl px-4 py-3 border border-surface-200">
+                <div key={i} className="flex items-center gap-3 bg-app rounded-2xl px-4 py-3 border border-app">
                   <span className="text-2xl">{item.emoji}</span>
-                  <p className="text-sm font-medium text-gray-700">{item.text}</p>
+                  <p className="text-sm font-medium text-app-secondary">{item.text}</p>
                 </div>
               ))}
             </div>
           </>
         ) : (
           <>
-            <h1 className="text-2xl font-display font-bold text-gray-900 mb-2">Contanos sobre tu negocio</h1>
-            <p className="text-gray-500 text-sm text-gray-400 leading-relaxed mb-6">Con esto configuramos tu moneda y personalizamos la app.</p>
+            <h1 className="text-2xl font-display font-bold text-app-primary mb-2">Contanos sobre tu negocio</h1>
+            <p className="text-app-muted text-sm text-app-faint leading-relaxed mb-6">Con esto configuramos tu moneda y personalizamos la app.</p>
             <div className="flex flex-col gap-6">
               <div>
                 <label className="label">Nombre de tu negocio</label>
@@ -118,7 +118,7 @@ export default function OnboardingPage() {
                   autoFocus
                   className="input-field text-base"
                 />
-                <p className="text-xs text-gray-400 mt-1">Podés cambiarlo después en Configuración.</p>
+                <p className="text-xs text-app-faint mt-1">Podés cambiarlo después en Configuración.</p>
               </div>
               <div>
                 <label className="label mb-3">¿De qué país sos?</label>
@@ -130,13 +130,13 @@ export default function OnboardingPage() {
                       className={`flex items-center gap-2.5 px-3 py-3 rounded-xl text-left border-2 transition-all active:scale-95 ${
                         selectedCountry?.code === c.code
                           ? 'border-primary-500 bg-primary-50'
-                          : 'border-surface-200 bg-white'
+                          : 'border-app bg-white'
                       }`}
                     >
                       <span className="text-2xl shrink-0">{c.flag}</span>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
-                        <p className="text-xs text-gray-500">{c.currency} {c.symbol}</p>
+                        <p className="text-sm font-semibold text-app-primary truncate">{c.name}</p>
+                        <p className="text-xs text-app-muted">{c.currency} {c.symbol}</p>
                       </div>
                     </button>
                   ))}
@@ -157,7 +157,7 @@ export default function OnboardingPage() {
           {!isLastStep && !saving && <ChevronRight size={18} />}
         </button>
         {step > 0 && (
-          <button onClick={() => setStep(0)} className="w-full text-center text-sm text-gray-400 mt-3 py-2">
+          <button onClick={() => setStep(0)} className="w-full text-center text-sm text-app-faint mt-3 py-2">
             Volver
           </button>
         )}

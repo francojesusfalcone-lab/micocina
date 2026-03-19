@@ -31,10 +31,10 @@ export function PremiumGate({ children, feature = 'esta función' }) {
           <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center mb-3">
             <Lock size={20} className="text-amber-600" />
           </div>
-          <p className="text-sm font-semibold text-gray-700 mb-1">
+          <p className="text-sm font-semibold text-app-secondary mb-1">
             Función Premium
           </p>
-          <p className="text-xs text-gray-500 mb-4">
+          <p className="text-xs text-app-muted mb-4">
             Activá {feature} con Premium por solo $5/mes
           </p>
           <button className="btn-primary text-sm py-2 px-5 bg-amber-500 hover:bg-amber-600">

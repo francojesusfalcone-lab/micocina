@@ -19,15 +19,15 @@ export default function ToastContainer() {
           key={toast.id}
           className={clsx(
             'animate-fade-in pointer-events-auto',
-            'flex items-center gap-3 bg-white rounded-2xl shadow-card-hover border border-surface-200',
+            'flex items-center gap-3 bg-card-color rounded-2xl shadow-card-hover border border-surface-200',
             'px-4 py-3 max-w-sm mx-auto w-full'
           )}
         >
           {ICONS[toast.type || 'info']}
-          <span className="text-sm font-medium text-gray-800 flex-1">{toast.message}</span>
+          <span className="text-sm font-medium text-app-secondary flex-1">{toast.message}</span>
           <button
             onClick={() => removeToast(toast.id)}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-app-faint hover:text-app-muted transition-colors"
           >
             <X size={16} />
           </button>

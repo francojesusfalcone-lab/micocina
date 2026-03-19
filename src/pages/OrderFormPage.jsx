@@ -31,9 +31,9 @@ function ProductPicker({ isOpen, onClose, onSelect }) {
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} title="Agregar producto">
-      <div className="px-4 py-3 border-b border-surface-200">
+      <div className="px-4 py-3 border-b border-app">
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-faint" />
           <input
             type="text"
             placeholder="Buscar producto..."
@@ -47,12 +47,12 @@ function ProductPicker({ isOpen, onClose, onSelect }) {
 
       {activeRecipes.length === 0 && combos.length === 0 ? (
         <div className="px-6 py-12 text-center">
-          <p className="text-sm text-gray-500 font-medium">No tenés productos activos.</p>
-          <p className="text-xs text-gray-400 mt-1">Creá productos en la sección Productos.</p>
+          <p className="text-sm text-app-muted font-medium">No tenés productos activos.</p>
+          <p className="text-xs text-app-faint mt-1">Creá productos en la sección Productos.</p>
         </div>
       ) : filtered.length === 0 && filteredCombos.length === 0 ? (
         <div className="px-6 py-8 text-center">
-          <p className="text-sm text-gray-400">No se encontró "{search}"</p>
+          <p className="text-sm text-app-faint">No se encontró "{search}"</p>
         </div>
       ) : (
         <div className="divide-y divide-surface-100 pb-6">
@@ -66,14 +66,14 @@ function ProductPicker({ isOpen, onClose, onSelect }) {
                 <button
                   key={combo.id}
                   onClick={() => { onSelect(combo); onClose() }}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-surface-50 transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-app transition-colors text-left"
                 >
                   <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
                     <Tag size={18} className="text-amber-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{combo.name}</p>
-                    <p className="text-xs text-gray-500">{combo.comboItems?.length || 0} productos · precio especial</p>
+                    <p className="text-sm font-semibold text-app-primary truncate">{combo.name}</p>
+                    <p className="text-xs text-app-muted">{combo.comboItems?.length || 0} productos · precio especial</p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-bold text-amber-600">
@@ -88,22 +88,22 @@ function ProductPicker({ isOpen, onClose, onSelect }) {
           {filtered.length > 0 && (
             <>
               {filteredCombos.length > 0 && (
-                <div className="px-4 py-2 bg-surface-50">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Productos</p>
+                <div className="px-4 py-2 bg-app">
+                  <p className="text-xs font-bold text-app-muted uppercase tracking-wider">Productos</p>
                 </div>
               )}
               {filtered.map((recipe) => (
                 <button
                   key={recipe.id}
                   onClick={() => { onSelect(recipe); onClose() }}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-surface-50 transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-app transition-colors text-left"
                 >
                   <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
                     <ShoppingBag size={18} className="text-primary-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{recipe.name}</p>
-                    <p className="text-xs text-gray-500">{recipe.category}</p>
+                    <p className="text-sm font-semibold text-app-primary truncate">{recipe.name}</p>
+                    <p className="text-xs text-app-muted">{recipe.category}</p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-sm font-bold text-primary-600">
@@ -129,9 +129,9 @@ function OrderItemRow({ item, settings, onQtyChange, onRemove }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           {isCombo && <span className="text-xs bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded-md">Combo</span>}
-          <p className="text-sm font-semibold text-gray-900 truncate">{item.recipe?.name}</p>
+          <p className="text-sm font-semibold text-app-primary truncate">{item.recipe?.name}</p>
         </div>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-app-muted">
           {formatCurrency(item.recipe?.salePrice, settings.currencySymbol)} c/u
           {isCombo && ` · ${item.recipe?.comboItems?.length || 0} productos`}
         </p>
@@ -141,11 +141,11 @@ function OrderItemRow({ item, settings, onQtyChange, onRemove }) {
       <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={() => onQtyChange(Math.max(1, item.quantity - 1))}
-          className="w-8 h-8 rounded-xl bg-surface-100 flex items-center justify-center text-lg font-bold text-gray-600 active:scale-90 transition-all"
+          className="w-8 h-8 rounded-xl bg-surface-100 flex items-center justify-center text-lg font-bold text-app-muted active:scale-90 transition-all"
         >
           −
         </button>
-        <span className="w-8 text-center text-sm font-bold text-gray-900">{item.quantity}</span>
+        <span className="w-8 text-center text-sm font-bold text-app-primary">{item.quantity}</span>
         <button
           onClick={() => onQtyChange(item.quantity + 1)}
           className="w-8 h-8 rounded-xl bg-primary-50 flex items-center justify-center text-lg font-bold text-primary-600 active:scale-90 transition-all"
@@ -155,7 +155,7 @@ function OrderItemRow({ item, settings, onQtyChange, onRemove }) {
       </div>
 
       <div className="text-right w-16 shrink-0">
-        <p className="text-sm font-bold text-gray-800">
+        <p className="text-sm font-bold text-app-secondary">
           {formatCurrency(lineTotal, settings.currencySymbol)}
         </p>
       </div>
@@ -293,7 +293,7 @@ export default function OrderFormPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader title="Nueva comanda" back />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-36 px-4 py-4 space-y-4">
@@ -326,7 +326,7 @@ export default function OrderFormPage() {
         {/* ── Productos ── */}
         <div className="card space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-bold text-gray-700">Productos del pedido</p>
+            <p className="text-sm font-bold text-app-secondary">Productos del pedido</p>
             <button
               onClick={() => setPickerOpen(true)}
               disabled={atLimit}
@@ -347,7 +347,7 @@ export default function OrderFormPage() {
             <button
               onClick={() => setPickerOpen(true)}
               disabled={atLimit}
-              className="w-full py-8 border-2 border-dashed border-surface-300 rounded-2xl flex flex-col items-center gap-2 text-gray-400 active:bg-surface-50 transition-colors disabled:opacity-40"
+              className="w-full py-8 border-2 border-dashed border-surface-300 rounded-2xl flex flex-col items-center gap-2 text-app-faint active:bg-app transition-colors disabled:opacity-40"
             >
               <ShoppingBag size={24} />
               <p className="text-sm font-medium">Tocá para agregar productos</p>
@@ -376,7 +376,7 @@ export default function OrderFormPage() {
 
         {/* ── Cliente ── */}
         <div className="card space-y-3">
-          <p className="text-sm font-bold text-gray-700">Datos del cliente</p>
+          <p className="text-sm font-bold text-app-secondary">Datos del cliente</p>
           <div className="relative">
             <label className="label">Nombre</label>
             <input
@@ -396,12 +396,12 @@ export default function OrderFormPage() {
             )}
             {/* Suggestions dropdown */}
             {showSuggestions && clientSuggestions.length > 0 && (
-              <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-surface-200 rounded-2xl shadow-lg overflow-hidden">
+              <div className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-app rounded-2xl shadow-lg overflow-hidden">
                 {clientSuggestions.map((c) => (
                   <button
                     key={c.id}
                     onMouseDown={() => selectClientSuggestion(c)}
-                    className="w-full flex items-center gap-3 px-4 py-3 active:bg-surface-50 text-left border-b border-surface-100 last:border-0"
+                    className="w-full flex items-center gap-3 px-4 py-3 active:bg-app text-left border-b border-surface-100 last:border-0"
                   >
                     <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
                       <span className="text-xs font-bold text-primary-700">
@@ -409,8 +409,8 @@ export default function OrderFormPage() {
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
-                      {c.phone && <p className="text-xs text-gray-400">{c.phone}</p>}
+                      <p className="text-sm font-semibold text-app-primary truncate">{c.name}</p>
+                      {c.phone && <p className="text-xs text-app-faint">{c.phone}</p>}
                     </div>
                   </button>
                 ))}
@@ -421,7 +421,7 @@ export default function OrderFormPage() {
 
         {/* ── Pago y entrega ── */}
         <div className="card space-y-4">
-          <p className="text-sm font-bold text-gray-700">Pago y entrega</p>
+          <p className="text-sm font-bold text-app-secondary">Pago y entrega</p>
 
           {/* Payment method */}
           <div>
@@ -434,7 +434,7 @@ export default function OrderFormPage() {
                   className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-left transition-all active:scale-95 ${
                     paymentMethod === value
                       ? 'border-primary-500 bg-primary-50'
-                      : 'border-surface-200 bg-white'
+                      : 'border-app bg-white'
                   }`}
                 >
                   <span className="text-base">{icon}</span>
@@ -449,8 +449,8 @@ export default function OrderFormPage() {
           {/* Paid toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-gray-700">¿Ya pagó?</p>
-              <p className="text-xs text-gray-400">
+              <p className="text-sm font-semibold text-app-secondary">¿Ya pagó?</p>
+              <p className="text-xs text-app-faint">
                 {paymentMethod === 'debt' ? 'Marcado como debe' : 'Marcá si ya cobró'}
               </p>
             </div>
@@ -485,7 +485,7 @@ export default function OrderFormPage() {
         {/* ── Extra info (collapsible) ── */}
         <button
           onClick={() => setShowExtra(!showExtra)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-white rounded-2xl border border-surface-200 text-sm text-gray-500 active:bg-surface-50 transition-colors"
+          className="w-full flex items-center justify-between px-4 py-3 bg-card-color rounded-2xl border border-app text-sm text-app-muted active:bg-app transition-colors"
         >
           <span className="font-medium">Teléfono, dirección y notas (opcional)</span>
           {showExtra ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -530,10 +530,10 @@ export default function OrderFormPage() {
       </div>
 
       {/* ── Fixed footer ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-surface-200 px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
         {items.length > 0 && (
           <div className="flex items-center justify-between mb-3 px-1">
-            <p className="text-sm text-gray-500">{items.length} producto(s)</p>
+            <p className="text-sm text-app-muted">{items.length} producto(s)</p>
             <p className="text-lg font-display font-bold text-primary-600">
               {formatCurrency(total, settings.currencySymbol)}
             </p>

@@ -27,7 +27,7 @@ export default function OrdersPage() {
   })
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title="Comandas"
         subtitle={`${allOrders.filter(o => ['pending','preparing','ready'].includes(o.status)).length} activas`}
@@ -50,7 +50,7 @@ export default function OrdersPage() {
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Filter tabs */}
-        <div className="bg-white border-b border-surface-200 px-4 py-3 flex gap-2">
+        <div className="bg-surface border-b border-app px-4 py-3 flex gap-2">
           {[
             { id: 'active',    label: 'Activas' },
             { id: 'delivered', label: 'Entregadas' },
@@ -125,7 +125,7 @@ export default function OrdersPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-bold text-gray-900">
+                        <p className="font-bold text-app-primary">
                           {order.clientName || 'Sin nombre'}
                         </p>
                         <span className={clsx('badge', status.color)}>
@@ -136,11 +136,11 @@ export default function OrdersPage() {
                           <span className="badge badge-green text-[10px]">✓ Pagado</span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-app-muted mt-1">
                         {payMethod?.icon} {payMethod?.label ?? 'Efectivo'}
                       </p>
                       {order.deliveryTime && (
-                        <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
+                        <p className="text-xs text-app-faint mt-0.5 flex items-center gap-1">
                           <Clock size={11} />
                           Entrega: {order.deliveryTime}
                         </p>
@@ -150,7 +150,7 @@ export default function OrdersPage() {
                       <p className="font-bold text-gold-600">
                         {formatCurrency(order.total, settings.currencySymbol)}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-app-faint mt-0.5">
                         {new Date(order.createdAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
