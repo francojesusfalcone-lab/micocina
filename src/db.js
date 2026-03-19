@@ -1,7 +1,7 @@
 import Dexie from 'dexie'
 
 // ─── Base de datos local (funciona offline) ─────────────────────────────────
-export const db = new Dexie('MiCocinaDB')
+export const db = new Dexie('MiCuchinaDB')
 
 db.version(1).stores({
   ingredients: '++id, name, category, createdAt, updatedAt',
