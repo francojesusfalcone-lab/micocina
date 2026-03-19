@@ -18,8 +18,8 @@ export default function PageHeader({ title, subtitle, back, action, className })
             <ChevronLeft size={20} className="text-gray-600 dark:text-gray-300" />
           </button>
         ) : (
-          /* Logo pequeño en páginas principales */
-          <div className="w-8 h-8 shrink-0">
+          /* Logo en páginas principales */
+          <div className="w-12 h-12 shrink-0">
             {!imgError ? (
               <img
                 src="/logo-icon.png"
@@ -28,7 +28,7 @@ export default function PageHeader({ title, subtitle, back, action, className })
                 onError={() => setImgError(true)}
               />
             ) : (
-              <span className="text-2xl">🍳</span>
+              <span className="text-3xl">🍳</span>
             )}
           </div>
         )}
