@@ -2,10 +2,10 @@ import { create } from 'zustand'
 
 // ─── App Store ───────────────────────────────────────────────────────────────
 export const useAppStore = create((set, get) => ({
-  // Plan del usuario
-  plan: 'free', // 'free' | 'premium'
+  // Plan del usuario — TEST MODE: todos premium
+  plan: 'premium', // 'free' | 'premium'
   setPlan: (plan) => set((s) => s.plan === plan ? s : { plan }),
-  isPremium: () => get().plan === 'premium',
+  isPremium: () => true, // TEST MODE: siempre premium
 
   // Configuración del negocio
   settings: {
