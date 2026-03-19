@@ -127,7 +127,7 @@ export default function DashboardPage() {
               <img
                 src="/logo-icon.png"
                 alt="MiCuchina"
-                className="w-16 h-16 object-contain"
+                className="w-32 h-32 object-contain"
                 onError={() => setImgError(true)}
               />
             ) : (

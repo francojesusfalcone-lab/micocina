@@ -19,7 +19,7 @@ export default function PageHeader({ title, subtitle, back, action, className })
           </button>
         ) : (
           /* Logo en páginas principales */
-          <div className="w-14 h-14 shrink-0">
+          <div className="w-28 h-28 shrink-0">
             {!imgError ? (
               <img
                 src="/logo-icon.png"
