@@ -125,6 +125,7 @@ export default function ClientsPage() {
           {clients.length === 0 ? (
             <EmptyState
               icon={Users}
+              lottieUrl="https://assets1.lottiefiles.com/packages/lf20_ydo1amjm.json"
               title="Sin clientes aún"
               description="Los clientes se crean automáticamente cuando hacés una comanda, o podés agregarlos manualmente."
               action={

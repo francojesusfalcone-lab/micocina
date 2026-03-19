@@ -143,6 +143,7 @@ export default function ExpensesPage() {
         {expenses.length === 0 ? (
           <EmptyState
             icon={Wallet}
+            lottieUrl="https://assets5.lottiefiles.com/packages/lf20_vPnn3K.json"
             title="Sin gastos registrados"
             description="Registrá tus costos fijos para saber cuánto ganás realmente."
             action={

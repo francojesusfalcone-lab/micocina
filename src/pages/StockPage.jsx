@@ -74,6 +74,7 @@ export default function StockPage() {
           {filtered.length === 0 ? (
             <EmptyState
               icon={Package}
+              lottieUrl="https://assets3.lottiefiles.com/packages/lf20_qdas2lnb.json"
               title="Sin ingredientes aún"
               description="Cargá tus ingredientes con precios para calcular los costos reales de cada receta."
               action={
