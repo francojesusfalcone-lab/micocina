@@ -50,12 +50,17 @@ export default function SettingsPage() {
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
+  const [installTip, setInstallTip] = useState(false)
+
   async function handleInstall() {
-    if (!installPrompt) return
-    installPrompt.prompt()
-    const { outcome } = await installPrompt.userChoice
-    if (outcome === 'accepted') setInstalled(true)
-    setInstallPrompt(null)
+    if (installPrompt) {
+      installPrompt.prompt()
+      const { outcome } = await installPrompt.userChoice
+      if (outcome === 'accepted') setInstalled(true)
+      setInstallPrompt(null)
+    } else {
+      setInstallTip(true)
+    }
   }
 
   function handleDevTap() {
@@ -188,6 +193,28 @@ export default function SettingsPage() {
           MiCuchina · Hecho con ❤️ para cocineras de Latinoamérica
         </p>
       </div>
+
+      {/* Modal instrucciones instalación */}
+      {installTip && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center p-4" style={{backgroundColor:'rgba(0,0,0,0.6)'}}>
+          <div className="w-full max-w-md rounded-3xl p-6 space-y-4" style={{backgroundColor:'var(--bg-card)'}}>
+            <p className="text-base font-display font-bold text-app-primary text-center">Instalar MiCuchina</p>
+            <div className="space-y-3">
+              <div className="p-3 rounded-2xl" style={{backgroundColor:'var(--bg-input)'}}>
+                <p className="text-xs font-bold text-primary-600 mb-1">📱 En Android (Chrome)</p>
+                <p className="text-sm text-app-secondary">Tocá los 3 puntitos ⋮ arriba a la derecha → "Agregar a pantalla de inicio"</p>
+              </div>
+              <div className="p-3 rounded-2xl" style={{backgroundColor:'var(--bg-input)'}}>
+                <p className="text-xs font-bold text-primary-600 mb-1">🍎 En iPhone (Safari)</p>
+                <p className="text-sm text-app-secondary">Tocá el botón compartir □↑ abajo → "Agregar a pantalla de inicio"</p>
+              </div>
+            </div>
+            <button onClick={() => setInstallTip(false)} className="btn-primary w-full">
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
