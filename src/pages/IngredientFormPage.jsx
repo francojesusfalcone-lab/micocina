@@ -155,7 +155,7 @@ export default function IngredientFormPage() {
 
           <div>
             <label className="label">Categoría</label>
-            <select style={{backgroundColor:"var(--bg-input)",color:"var(--text-primary)",colorScheme:"dark"}} style={{backgroundColor:"var(--bg-input)",color:"var(--text-primary)",colorScheme:"dark"}}
+            <select style={{backgroundColor:"var(--bg-input)",color:"var(--text-primary)",colorScheme:"dark"}}
               value={form.category}
               onChange={(e) => set('category', e.target.value)}
               className="input-field"
