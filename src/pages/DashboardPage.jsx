@@ -10,6 +10,8 @@ import { PremiumBadge } from '../components/PremiumGate'
 import { useDashboardStats, useActiveOrders, useRealProfit } from '../hooks/useDashboard'
 import { useJornada, abrirJornada, cerrarJornada } from '../hooks/useJornada'
 import { STATUS_CONFIG, PAYMENT_METHODS } from '../hooks/useOrders'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { db } from '../db'
 import clsx from 'clsx'
 
 function HeroStatCard({ label, value, sub, change, marginPct }) {
@@ -96,6 +98,9 @@ export default function DashboardPage() {
   const jornada = useJornada()
   const [confirmCerrar, setConfirmCerrar] = useState(false)
 
+  const recipeCount = useLiveQuery(() => db.recipes.count(), [], null)
+  const showGuide = recipeCount === 0
+
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches'
   const emoji = hour < 12 ? '☀️' : hour < 19 ? '👋' : '🌙'
@@ -164,6 +169,38 @@ export default function DashboardPage() {
       )}
 
       <div className="flex-1 overflow-y-auto scrollbar-none px-4 py-4 pb-24 space-y-3">
+
+        {/* Guía primeros pasos */}
+        {showGuide && (
+          <div className="rounded-2xl overflow-hidden border border-primary-200 bg-gradient-to-br from-primary-50 to-white">
+            <div className="px-4 pt-4 pb-2">
+              <p className="text-lg font-display font-bold text-gray-900">¿Empezamos? 🍳</p>
+              <p className="text-xs text-gray-500 mt-0.5">Seguí estos pasos para sacarle el máximo a MiCuchina</p>
+            </div>
+            <div className="px-4 pb-4 space-y-2 mt-2">
+              {[
+                { step: 1, label: 'Cargá tus ingredientes', desc: 'Con precios y unidades reales', path: '/stock/nuevo', done: false },
+                { step: 2, label: 'Creá un producto', desc: 'Armá la receta con sus ingredientes', path: '/productos/nuevo', done: false },
+                { step: 3, label: 'Tomá tu primera comanda', desc: 'Registrá un pedido y controlá el estado', path: '/comandas/nueva', done: false },
+              ].map((item) => (
+                <button
+                  key={item.step}
+                  onClick={() => navigate(item.path)}
+                  className="w-full flex items-center gap-3 bg-white rounded-xl px-3 py-3 border border-surface-200 active:scale-[0.99] transition-all text-left"
+                >
+                  <div className="w-7 h-7 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                    {item.step}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900">{item.label}</p>
+                    <p className="text-xs text-gray-400">{item.desc}</p>
+                  </div>
+                  <ChevronRight size={15} className="text-gray-300 shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Hero + por hora */}
         {isLoading ? (
