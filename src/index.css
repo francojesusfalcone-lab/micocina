@@ -24,13 +24,13 @@
   }
 
   .dark {
-    --bg-app:        #111111;
+    --bg-app:        #0d0d0d;
     --bg-surface:    #1a1a1a;
     --bg-card:       #222222;
     --bg-input:      #2a2a2a;
-    --bg-muted:      #1e2a1e;
-    --border:        #333333;
-    --border-strong: #444444;
+    --bg-muted:      #1a2a1a;
+    --border:        #2a2a2a;
+    --border-strong: #383838;
     --text-primary:  #f0f0f0;
     --text-secondary:#d0d0d0;
     --text-muted:    #a0a0a0;
