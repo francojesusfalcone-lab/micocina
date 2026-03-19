@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Plus, Package, ChevronRight, Trash2, Tag } from 'lucide-react'
+import React from 'react'
+import { Plus, Tag, Lock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
@@ -10,13 +10,38 @@ import { db } from '../db'
 export default function CombosPage() {
   const navigate = useNavigate()
   const settings = useAppStore((s) => s.settings)
+  const isPremium = useAppStore((s) => s.isPremium())
 
   const combos = useLiveQuery(() =>
     db.recipes.where('isPremiumCombo').equals(1).toArray()
   , [], [])
 
+  // Gate Premium
+  if (!isPremium) {
+    return (
+      <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
+        <PageHeader title="Combos" back />
+        <div className="flex-1 flex flex-col items-center justify-center px-6 text-center pb-24">
+          <div className="w-20 h-20 rounded-3xl bg-amber-100 flex items-center justify-center mb-5">
+            <Lock size={32} className="text-amber-600" />
+          </div>
+          <h2 className="text-xl font-display font-bold text-gray-900 dark:text-gray-100 mb-2">Combos es Premium</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+            Creá combos con precio especial — Hamburguesa + papas + gaseosa a precio fijo — y vendelos en tus comandas con un solo toque.
+          </p>
+          <button
+            onClick={() => navigate('/premium')}
+            className="btn-primary px-8 py-3"
+          >
+            Ver Premium →
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
       <PageHeader
         title="Combos"
         subtitle={`${combos.length} combo${combos.length !== 1 ? 's' : ''}`}
@@ -50,7 +75,7 @@ export default function CombosPage() {
               <button
                 key={combo.id}
                 onClick={() => navigate(`/combos/${combo.id}`)}
-                className="card-hover w-full flex items-center gap-3 text-left"
+                className="card-hover dark:bg-gray-900 dark:border-gray-800 w-full flex items-center gap-3 text-left"
               >
                 <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
                   <Tag size={20} className="text-amber-600" />

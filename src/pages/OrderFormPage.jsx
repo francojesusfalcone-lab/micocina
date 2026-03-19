@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Save, Plus, X, Search, ShoppingBag,
-  Clock, AlertCircle, ChevronDown, ChevronUp
+  Clock, AlertCircle, ChevronDown, ChevronUp, Tag
 } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import BottomSheet from '../components/BottomSheet'
@@ -19,8 +19,13 @@ import {
 function ProductPicker({ isOpen, onClose, onSelect }) {
   const [search, setSearch] = useState('')
   const recipes = useRecipes()
-  const activeRecipes = recipes.filter((r) => r.isActive !== false)
+  const activeRecipes = recipes.filter((r) => r.isActive !== false && !r.isPremiumCombo)
+  const combos = recipes.filter((r) => r.isPremiumCombo === 1)
+
   const filtered = activeRecipes.filter((r) =>
+    r.name.toLowerCase().includes(search.toLowerCase())
+  )
+  const filteredCombos = combos.filter((r) =>
     r.name.toLowerCase().includes(search.toLowerCase())
   )
 
@@ -40,37 +45,75 @@ function ProductPicker({ isOpen, onClose, onSelect }) {
         </div>
       </div>
 
-      {activeRecipes.length === 0 ? (
+      {activeRecipes.length === 0 && combos.length === 0 ? (
         <div className="px-6 py-12 text-center">
           <p className="text-sm text-gray-500 font-medium">No tenés productos activos.</p>
           <p className="text-xs text-gray-400 mt-1">Creá productos en la sección Productos.</p>
         </div>
-      ) : filtered.length === 0 ? (
+      ) : filtered.length === 0 && filteredCombos.length === 0 ? (
         <div className="px-6 py-8 text-center">
           <p className="text-sm text-gray-400">No se encontró "{search}"</p>
         </div>
       ) : (
         <div className="divide-y divide-surface-100 pb-6">
-          {filtered.map((recipe) => (
-            <button
-              key={recipe.id}
-              onClick={() => { onSelect(recipe); onClose() }}
-              className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-surface-50 transition-colors text-left"
-            >
-              <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
-                <ShoppingBag size={18} className="text-primary-600" />
+          {/* Combos primero */}
+          {filteredCombos.length > 0 && (
+            <>
+              <div className="px-4 py-2 bg-amber-50">
+                <p className="text-xs font-bold text-amber-700 uppercase tracking-wider">🎁 Combos</p>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">{recipe.name}</p>
-                <p className="text-xs text-gray-500">{recipe.category}</p>
-              </div>
-              <div className="text-right shrink-0">
-                <p className="text-sm font-bold text-primary-600">
-                  {formatCurrency(recipe.salePrice, '$')}
-                </p>
-              </div>
-            </button>
-          ))}
+              {filteredCombos.map((combo) => (
+                <button
+                  key={combo.id}
+                  onClick={() => { onSelect(combo); onClose() }}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-surface-50 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+                    <Tag size={18} className="text-amber-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{combo.name}</p>
+                    <p className="text-xs text-gray-500">{combo.comboItems?.length || 0} productos · precio especial</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-bold text-amber-600">
+                      {formatCurrency(combo.salePrice, '$')}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </>
+          )}
+          {/* Productos normales */}
+          {filtered.length > 0 && (
+            <>
+              {filteredCombos.length > 0 && (
+                <div className="px-4 py-2 bg-surface-50">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Productos</p>
+                </div>
+              )}
+              {filtered.map((recipe) => (
+                <button
+                  key={recipe.id}
+                  onClick={() => { onSelect(recipe); onClose() }}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 active:bg-surface-50 transition-colors text-left"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
+                    <ShoppingBag size={18} className="text-primary-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{recipe.name}</p>
+                    <p className="text-xs text-gray-500">{recipe.category}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-bold text-primary-600">
+                      {formatCurrency(recipe.salePrice, '$')}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </>
+          )}
         </div>
       )}
     </BottomSheet>
@@ -80,12 +123,17 @@ function ProductPicker({ isOpen, onClose, onSelect }) {
 // ─── Order item row ───────────────────────────────────────────────────────────
 function OrderItemRow({ item, settings, onQtyChange, onRemove }) {
   const lineTotal = (item.recipe?.salePrice ?? 0) * item.quantity
+  const isCombo = !!item.recipe?.isPremiumCombo
   return (
     <div className="flex items-center gap-3 py-3 border-b border-surface-100 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-900 truncate">{item.recipe?.name}</p>
+        <div className="flex items-center gap-1.5">
+          {isCombo && <span className="text-xs bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded-md">Combo</span>}
+          <p className="text-sm font-semibold text-gray-900 truncate">{item.recipe?.name}</p>
+        </div>
         <p className="text-xs text-gray-500">
           {formatCurrency(item.recipe?.salePrice, settings.currencySymbol)} c/u
+          {isCombo && ` · ${item.recipe?.comboItems?.length || 0} productos`}
         </p>
       </div>
 

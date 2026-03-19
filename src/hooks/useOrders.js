@@ -140,11 +140,25 @@ export async function updateOrderStatus(id, status) {
   if (status === 'delivered' && !order.stockDeducted) {
     const items = await db.orderItems.where('orderId').equals(id).toArray()
     for (const item of items) {
-      const recipeItems = await db.recipeIngredients
-        .where('recipeId').equals(item.recipeId)
-        .toArray()
-      for (const ri of recipeItems) {
-        await deductStock(ri.ingredientId, ri.quantity * item.quantity)
+      const recipe = await db.recipes.get(item.recipeId)
+      if (recipe?.isPremiumCombo && recipe.comboItems?.length) {
+        // Es un combo: descontar stock de cada sub-producto × qty del combo
+        for (const comboItem of recipe.comboItems) {
+          const subRecipeItems = await db.recipeIngredients
+            .where('recipeId').equals(comboItem.recipeId)
+            .toArray()
+          for (const ri of subRecipeItems) {
+            await deductStock(ri.ingredientId, ri.quantity * comboItem.qty * item.quantity)
+          }
+        }
+      } else {
+        // Producto normal
+        const recipeItems = await db.recipeIngredients
+          .where('recipeId').equals(item.recipeId)
+          .toArray()
+        for (const ri of recipeItems) {
+          await deductStock(ri.ingredientId, ri.quantity * item.quantity)
+        }
       }
     }
     await db.orders.update(id, { stockDeducted: true, updatedAt: now })
@@ -160,14 +174,31 @@ export async function cancelOrder(id, mode = 'restore') {
   if (mode === 'restore' && order.stockDeducted) {
     const items = await db.orderItems.where('orderId').equals(id).toArray()
     for (const item of items) {
-      const recipeItems = await db.recipeIngredients.where('recipeId').equals(item.recipeId).toArray()
-      for (const ri of recipeItems) {
-        const ing = await db.ingredients.get(ri.ingredientId)
-        if (ing) {
-          await db.ingredients.update(ri.ingredientId, {
-            stock: (ing.stock || 0) + ri.quantity * item.quantity,
-            updatedAt: now,
-          })
+      const recipe = await db.recipes.get(item.recipeId)
+      if (recipe?.isPremiumCombo && recipe.comboItems?.length) {
+        // Combo: restaurar stock de cada sub-producto
+        for (const comboItem of recipe.comboItems) {
+          const subRecipeItems = await db.recipeIngredients.where('recipeId').equals(comboItem.recipeId).toArray()
+          for (const ri of subRecipeItems) {
+            const ing = await db.ingredients.get(ri.ingredientId)
+            if (ing) {
+              await db.ingredients.update(ri.ingredientId, {
+                stock: (ing.stock || 0) + ri.quantity * comboItem.qty * item.quantity,
+                updatedAt: now,
+              })
+            }
+          }
+        }
+      } else {
+        const recipeItems = await db.recipeIngredients.where('recipeId').equals(item.recipeId).toArray()
+        for (const ri of recipeItems) {
+          const ing = await db.ingredients.get(ri.ingredientId)
+          if (ing) {
+            await db.ingredients.update(ri.ingredientId, {
+              stock: (ing.stock || 0) + ri.quantity * item.quantity,
+              updatedAt: now,
+            })
+          }
         }
       }
     }
