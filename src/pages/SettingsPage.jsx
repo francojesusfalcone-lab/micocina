@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Store, Globe, Crown, ChevronRight, Wallet, Users, Bell, Moon, Info, LogOut, Shield, Trash2, Share2 } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Store, Globe, Crown, ChevronRight, Wallet, Users, Bell, Moon, Info, LogOut, Shield, Trash2, Share2, Download } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import { useAppStore } from '../store/appStore'
@@ -40,6 +40,23 @@ export default function SettingsPage() {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [devTaps, setDevTaps] = useState(0)
   const { dark, toggle: toggleDark } = useDarkMode()
+  const [installPrompt, setInstallPrompt] = useState(null)
+  const [installed, setInstalled] = useState(false)
+
+  useEffect(() => {
+    const handler = (e) => { e.preventDefault(); setInstallPrompt(e) }
+    window.addEventListener('beforeinstallprompt', handler)
+    window.addEventListener('appinstalled', () => setInstalled(true))
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  async function handleInstall() {
+    if (!installPrompt) return
+    installPrompt.prompt()
+    const { outcome } = await installPrompt.userChoice
+    if (outcome === 'accepted') setInstalled(true)
+    setInstallPrompt(null)
+  }
 
   function handleDevTap() {
     const next = devTaps + 1
@@ -127,6 +144,26 @@ export default function SettingsPage() {
         <Section title="Cuenta y datos">
           <SettingsRow icon={Info} label="Versión de la app" value="0.1.0 — Beta" onClick={() => {}} color="gray" />
           {divider}
+          {/* Instalar como app */}
+          {!installed && (
+            <>
+              <button
+                onClick={handleInstall}
+                style={{backgroundColor:'var(--bg-card)'}}
+                className="w-full flex items-center gap-3 px-4 py-3.5 active:opacity-70 transition-opacity"
+              >
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-primary-50 text-primary-600">
+                  <Download size={18} />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-sm font-semibold text-app-primary">Instalar como app</p>
+                  <p className="text-xs text-app-muted mt-0.5">Agregá MiCuchina a tu pantalla de inicio</p>
+                </div>
+                <ChevronRight size={16} className="text-app-faint shrink-0" />
+              </button>
+              {divider}
+            </>
+          )}
           <SettingsRow icon={Share2} label="Invitar amigos" value="Compartí MiCuchina" onClick={() => navigate('/invitar')} color="green" />
           {divider}
           <SettingsRow icon={Shield} label="Términos y condiciones" value="Privacidad y uso" onClick={() => navigate('/terminos')} color="gray" />
