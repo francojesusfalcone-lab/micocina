@@ -26,6 +26,12 @@
     @apply bg-gray-900 border-gray-800 text-gray-100;
   }
 
+  /* Textos dentro de cards en dark mode */
+  .dark .card p, .dark .card-hover p,
+  .dark .card span, .dark .card-hover span {
+    color: inherit;
+  }
+
   .dark .input-field {
     @apply bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500;
   }
