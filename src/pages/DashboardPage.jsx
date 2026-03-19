@@ -189,21 +189,22 @@ export default function DashboardPage() {
 
         {/* Guía primeros pasos */}
         {showGuide && (
-          <div className="rounded-2xl overflow-hidden border border-primary-200 bg-gradient-to-br from-primary-50 to-white">
+          <div className="rounded-2xl overflow-hidden border border-primary-200" style={{backgroundColor:'var(--bg-card)'}}>
             <div className="px-4 pt-4 pb-2">
               <p className="text-lg font-display font-bold text-app-primary">¿Empezamos? 🍳</p>
               <p className="text-xs text-app-muted mt-0.5">Seguí estos pasos para sacarle el máximo a MiCuchina</p>
             </div>
             <div className="px-4 pb-4 space-y-2 mt-2">
               {[
-                { step: 1, label: 'Cargá tus ingredientes', desc: 'Con precios y unidades reales', path: '/stock/nuevo', done: false },
-                { step: 2, label: 'Creá un producto', desc: 'Armá la receta con sus ingredientes', path: '/productos/nuevo', done: false },
-                { step: 3, label: 'Tomá tu primera comanda', desc: 'Registrá un pedido y controlá el estado', path: '/comandas/nueva', done: false },
+                { step: 1, label: 'Cargá tus ingredientes', desc: 'Con precios y unidades reales', path: '/stock/nuevo' },
+                { step: 2, label: 'Creá un producto', desc: 'Armá la receta con sus ingredientes', path: '/productos/nuevo' },
+                { step: 3, label: 'Tomá tu primera comanda', desc: 'Registrá un pedido y controlá el estado', path: '/comandas/nueva' },
               ].map((item) => (
                 <button
                   key={item.step}
                   onClick={() => navigate(item.path)}
-                  className="w-full flex items-center gap-3 bg-white rounded-xl px-3 py-3 border border-app active:scale-[0.99] transition-all text-left"
+                  className="w-full flex items-center gap-3 rounded-xl px-3 py-3 border border-app active:scale-[0.99] transition-all text-left"
+                  style={{backgroundColor:'var(--bg-input)'}}
                 >
                   <div className="w-7 h-7 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
                     {item.step}
@@ -212,7 +213,7 @@ export default function DashboardPage() {
                     <p className="text-sm font-semibold text-app-primary">{item.label}</p>
                     <p className="text-xs text-app-faint">{item.desc}</p>
                   </div>
-                  <ChevronRight size={15} className="text-gray-300 shrink-0" />
+                  <ChevronRight size={15} className="text-app-faint shrink-0" />
                 </button>
               ))}
             </div>
@@ -440,16 +441,16 @@ export default function DashboardPage() {
             </div>
           </button>
         ) : (
-          <div className="card border-amber-200 bg-amber-50/50">
+          <div className="card border-amber-200" style={{backgroundColor:'var(--bg-card)'}}>
             <div className="flex items-center gap-2 mb-2">
               <Zap size={16} className="text-amber-600" />
               <p className="text-sm font-bold text-amber-700">Sugerencias IA</p>
               <PremiumBadge />
             </div>
-            <p className="text-sm text-amber-600 leading-relaxed">
+            <p className="text-sm text-app-muted leading-relaxed">
               Con Premium, la IA analiza tus patrones y te sugiere qué preparar, cuándo comprar y cómo aumentar tus ganancias.
             </p>
-            <button onClick={() => navigate('/premium')} className="mt-3 text-sm font-bold text-amber-700 underline">
+            <button onClick={() => navigate('/premium')} className="mt-3 text-sm font-bold text-amber-600 underline">
               Activar Premium →
             </button>
           </div>
