@@ -141,7 +141,7 @@ export default function ProductsPage() {
                   </p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="font-bold text-primary-600">
+                  <p className="font-bold text-gold-600">
                     {formatCurrency(recipe.salePrice, settings.currencySymbol)}
                   </p>
                   <p className="text-xs text-gray-400 mt-0.5">precio venta</p>

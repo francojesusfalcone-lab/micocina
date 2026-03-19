@@ -15,14 +15,14 @@ import { db } from '../db'
 import clsx from 'clsx'
 
 function HeroStatCard({ label, value, sub, change, marginPct }) {
-  const marginColor = marginPct === null ? null : marginPct >= 30 ? 'text-primary-200' : marginPct >= 15 ? 'text-amber-300' : 'text-red-300'
+  const marginColor = marginPct === null ? null : marginPct >= 30 ? 'text-gold-300' : marginPct >= 15 ? 'text-amber-300' : 'text-red-300'
   return (
-    <div className="relative overflow-hidden bg-primary-600 rounded-2xl p-4 flex-1 min-w-0">
-      <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-primary-500/40" />
-      <div className="absolute -bottom-6 -right-8 w-28 h-28 rounded-full bg-primary-700/30" />
+    <div className="relative overflow-hidden bg-primary-700 rounded-2xl p-4 flex-1 min-w-0">
+      <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-primary-600/40" />
+      <div className="absolute -bottom-6 -right-8 w-28 h-28 rounded-full bg-primary-800/30" />
       <div className="relative z-10">
         <p className="text-primary-200 text-xs font-semibold uppercase tracking-wider">{label}</p>
-        <p className="text-white text-3xl font-display font-bold mt-1 leading-none">{value}</p>
+        <p className="text-gold-400 text-3xl font-display font-bold mt-1 leading-none">{value}</p>
         <p className="text-primary-300 text-xs mt-1.5">{sub}</p>
         {marginPct !== null && (
           <div className={clsx('text-xs font-bold mt-1', marginColor)}>
@@ -30,7 +30,7 @@ function HeroStatCard({ label, value, sub, change, marginPct }) {
           </div>
         )}
         {change !== null && change !== undefined && (
-          <div className={clsx('flex items-center gap-1 text-xs font-bold mt-1', change >= 0 ? 'text-primary-200' : 'text-red-300')}>
+          <div className={clsx('flex items-center gap-1 text-xs font-bold mt-1', change >= 0 ? 'text-gold-300' : 'text-red-300')}>
             {change >= 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
             {change >= 0 ? '+' : ''}{change.toFixed(0)}% vs anterior
           </div>
@@ -48,6 +48,7 @@ function StatCard({ label, value, sub, icon: Icon, color = 'green' }) {
     blue:   { bg: 'bg-blue-50',    icon: 'text-blue-600' },
     amber:  { bg: 'bg-amber-50',   icon: 'text-amber-600' },
     red:    { bg: 'bg-red-50',     icon: 'text-red-500' },
+    gold:   { bg: 'bg-gold-50',    icon: 'text-gold-600' },
   }
   const c = colors[color] || colors.green
   return (
@@ -230,7 +231,7 @@ export default function DashboardPage() {
               label="Ticket prom."
               value={formatCurrency(stats.avgOrder, settings.currencySymbol)}
               sub={`${stats.totalOrders} pedidos`}
-              icon={BarChart2} color="blue"
+              icon={BarChart2} color="gold"
             />
             <StatCard
               label="Activos"
@@ -242,7 +243,7 @@ export default function DashboardPage() {
               label="Por cobrar"
               value={formatCurrency(stats.totalDebt, settings.currencySymbol)}
               sub={stats.totalDebt > 0 ? 'pendiente' : 'Sin deudas ✓'}
-              icon={CreditCard} color={stats.totalDebt > 0 ? 'red' : 'green'}
+              icon={CreditCard} color={stats.totalDebt > 0 ? 'red' : 'gold'}
             />
           </div>
         )}
@@ -344,7 +345,7 @@ export default function DashboardPage() {
                         {order.deliveryTime && ` · ${order.deliveryTime}`}
                       </p>
                     </div>
-                    <p className="text-sm font-bold text-primary-600 shrink-0">
+                    <p className="text-sm font-bold text-gold-600 shrink-0">
                       {formatCurrency(order.total, settings.currencySymbol)}
                     </p>
                   </button>

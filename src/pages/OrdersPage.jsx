@@ -147,7 +147,7 @@ export default function OrdersPage() {
                       )}
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="font-bold text-primary-600">
+                      <p className="font-bold text-gold-600">
                         {formatCurrency(order.total, settings.currencySymbol)}
                       </p>
                       <p className="text-xs text-gray-400 mt-0.5">
