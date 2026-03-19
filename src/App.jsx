@@ -37,6 +37,7 @@ import CombosPage           from './pages/CombosPage'
 import ComboFormPage        from './pages/ComboFormPage'
 import InvitePage           from './pages/InvitePage'
 import TermsPage            from './pages/TermsPage'
+import SplashScreen         from './components/SplashScreen'
 import { useStockNotifications } from './hooks/useStockNotifications'
 
 function LoadingScreen() {
@@ -63,6 +64,10 @@ export default function App() {
   useStockNotifications()
   const [ready, setReady] = useState(false)
   const [hasSession, setHasSession] = useState(false)
+  // Splash solo una vez por sesión del browser
+  const [splashDone, setSplashDone] = useState(
+    () => sessionStorage.getItem('splashShown') === '1'
+  )
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
 
   useEffect(() => {
@@ -112,7 +117,12 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  if (!ready) return <LoadingScreen />
+  if (!ready || !splashDone) return (
+    <>
+      <LoadingScreen />
+      <SplashScreen onDone={() => { sessionStorage.setItem('splashShown', '1'); setSplashDone(true) }} />
+    </>
+  )
 
   if (!hasSession) {
     return (
