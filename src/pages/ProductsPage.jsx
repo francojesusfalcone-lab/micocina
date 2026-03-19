@@ -39,7 +39,7 @@ export default function ProductsPage() {
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Search */}
-        <div className="px-4 py-3 bg-white border-b border-app dark:border-app">
+        <div className="px-4 py-3 border-b border-app" style={{backgroundColor:'var(--bg-app)'}}>
           <div className="relative">
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-faint" />
             <input
@@ -63,15 +63,17 @@ export default function ProductsPage() {
                 className={`px-4 py-1.5 rounded-xl text-sm font-semibold transition-all active:scale-95 ${
                   tab === id
                     ? 'bg-primary-600 text-white'
-                    : 'bg-surface-100  text-app-muted '
+                    : 'text-app-muted'
                 }`}
+                style={tab !== id ? {backgroundColor:'var(--bg-input)'} : {}}
               >
                 {label}
               </button>
             ))}
             <button
               onClick={() => isPremium ? navigate('/combos') : navigate('/premium')}
-              className="px-4 py-1.5 rounded-xl text-sm font-semibold bg-surface-100  text-app-muted dark:text-app-faint flex items-center gap-1.5"
+              className="px-4 py-1.5 rounded-xl text-sm font-semibold text-app-muted flex items-center gap-1.5"
+              style={{backgroundColor:'var(--bg-input)'}}
             >
               Combos
               {!isPremium && <PremiumBadge />}
@@ -126,8 +128,9 @@ export default function ProductsPage() {
                 onClick={() => navigate(`/productos/${recipe.id}`)}
                 className="card-hover  w-full flex items-center gap-3 text-left"
               >
-                <div className="w-14 h-14 rounded-xl bg-surface-100  shrink-0 flex items-center justify-center">
-                  <ShoppingBag size={20} className="text-gray-300" />
+                {/* Avatar con inicial del producto */}
+                <div className="w-14 h-14 rounded-xl shrink-0 flex items-center justify-center bg-primary-600 text-white font-display font-bold text-xl select-none">
+                  {recipe.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">

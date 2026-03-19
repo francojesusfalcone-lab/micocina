@@ -54,6 +54,12 @@
     transition: background-color 0.2s, color 0.2s;
   }
 
+  .dark select, .dark select option {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    color-scheme: dark;
+  }
+
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 }

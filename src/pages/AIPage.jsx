@@ -183,7 +183,7 @@ export default function AIPage() {
             </div>
             <div className="w-full space-y-2 text-left text-sm text-app-muted">
               {['📊 Últimos 30 días de ventas','🏆 Platos más vendidos y rentables','⚠️ Stock bajo y compras urgentes','💸 Gastos fijos vs ganancias reales','🕐 Hora pico y patrones de pedidos'].map(item => (
-                <div key={item} className="bg-white rounded-xl px-3 py-2.5 border border-app">{item}</div>
+                <div key={item} className="bg-card-color rounded-xl px-3 py-2.5 border border-app">{item}</div>
               ))}
             </div>
           </div>

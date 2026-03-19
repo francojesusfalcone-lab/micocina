@@ -43,7 +43,7 @@ export default function StockPage() {
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Search */}
-        <div className="px-4 py-3 bg-surface border-b border-app">
+        <div className="px-4 py-3 border-b border-app" style={{backgroundColor:'var(--bg-app)'}}>
           <div className="relative">
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-faint" />
             <input

@@ -238,6 +238,7 @@ export default function RecipeFormPage() {
               value={form.category}
               onChange={(e) => setField('category', e.target.value)}
               className="input-field"
+              style={{backgroundColor:'var(--bg-input)', color:'var(--text-primary)', colorScheme:'dark'}}
             >
               <option value="">Seleccioná una categoría</option>
               {RECIPE_CATEGORIES.map((c) => (

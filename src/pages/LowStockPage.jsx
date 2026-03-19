@@ -44,9 +44,11 @@ export default function LowStockPage() {
   function IngredientRow({ ing, isLow }) {
     const editing = editingId === ing.id
     return (
-      <div className={`p-3 rounded-2xl border mb-2 ${isLow ? 'bg-red-50 border-red-200' : 'bg-white border-surface-200'}`}>
+      <div className={`p-3 rounded-2xl border mb-2 ${isLow ? 'bg-red-950/20 border-red-800' : 'border-app'}`}
+           style={!isLow ? {backgroundColor:'var(--bg-card)'} : {}}>
         <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isLow ? 'bg-red-100' : 'bg-surface-100'}`}>
+          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isLow ? 'bg-red-900/30' : ''}`}
+               style={!isLow ? {backgroundColor:'var(--bg-input)'} : {}}>
             {isLow
               ? <AlertTriangle size={16} className="text-red-500" />
               : <Package size={16} className="text-app-faint" />
@@ -54,7 +56,7 @@ export default function LowStockPage() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-app-primary">{ing.name}</p>
-            <p className={`text-xs ${isLow ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
+            <p className={`text-xs ${isLow ? 'text-red-400 font-semibold' : 'text-app-muted'}`}>
               Stock: {ing.stock} {ing.unit}
               {ing.lowStockAlert !== null && ` / Alarma: ${ing.lowStockAlert} ${ing.unit}`}
             </p>
@@ -133,7 +135,8 @@ export default function LowStockPage() {
           <>
             <p className="text-xs font-bold text-app-faint uppercase tracking-wide mt-4 mb-2">Sin alarma configurada</p>
             {noAlert.map(ing => (
-              <div key={ing.id} className="p-3 rounded-2xl border border-app bg-white mb-2 flex items-center gap-3">
+              <div key={ing.id} className="p-3 rounded-2xl border border-app mb-2 flex items-center gap-3"
+                   style={{backgroundColor:'var(--bg-card)'}}>
                 <Package size={16} className="text-gray-300 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-app-secondary">{ing.name}</p>
