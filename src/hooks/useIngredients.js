@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { useAppStore } from '../store/appStore'
+import { notifyIfLowStock } from './useStockNotifications'
 
 // ─── Unidades disponibles ────────────────────────────────────────────────────
 export const UNITS = [
@@ -133,4 +134,5 @@ export async function deductStock(ingredientId, amount) {
     stock: newStock,
     updatedAt: new Date().toISOString(),
   })
+  await notifyIfLowStock(ingredientId)
 }

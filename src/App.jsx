@@ -37,6 +37,7 @@ import CombosPage           from './pages/CombosPage'
 import ComboFormPage        from './pages/ComboFormPage'
 import InvitePage           from './pages/InvitePage'
 import TermsPage            from './pages/TermsPage'
+import { useStockNotifications } from './hooks/useStockNotifications'
 
 function LoadingScreen() {
   return (
@@ -59,6 +60,7 @@ function AppLayout({ children }) {
 }
 
 export default function App() {
+  useStockNotifications()
   const [ready, setReady] = useState(false)
   const [hasSession, setHasSession] = useState(false)
   const { onboardingDone, setOnboardingDone, updateSettings, setPlan } = useAppStore()
