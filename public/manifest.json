@@ -1,0 +1,14 @@
+{
+  "name": "MiCuchina",
+  "short_name": "MiCuchina",
+  "description": "Calculá el precio real de tu comida y controlá tus pedidos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#16a34a",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/logo-icon.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo-icon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
