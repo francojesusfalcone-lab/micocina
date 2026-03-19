@@ -46,7 +46,8 @@ export default function SplashScreen({ onDone }) {
             </h1>
           </div>
         )}
-        <p className="text-gray-500 text-base mt-6 animate-fade-in tracking-widest uppercase text-xs font-semibold">Tu cocina, tu negocio 🍳</p>
+        <p className="text-base mt-6 animate-fade-in tracking-widest uppercase text-xs font-semibold" style={{color:'#f4b92a'}}>Tu cocina, tu negocio 🍳</p>
+        <p className="text-xs mt-3 animate-fade-in font-semibold tracking-wide" style={{color:'#c97d0e'}}>Desarrollado por Franco Falcone</p>
       </div>
     </div>
   )
