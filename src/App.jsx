@@ -38,6 +38,7 @@ import ComboFormPage        from './pages/ComboFormPage'
 import InvitePage           from './pages/InvitePage'
 import TermsPage            from './pages/TermsPage'
 import SplashScreen         from './components/SplashScreen'
+import PageTransition       from './components/PageTransition'
 import { useStockNotifications } from './hooks/useStockNotifications'
 
 function LoadingScreen() {
@@ -54,7 +55,9 @@ function LoadingScreen() {
 function AppLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto relative">
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <BottomNav />
     </div>
   )
