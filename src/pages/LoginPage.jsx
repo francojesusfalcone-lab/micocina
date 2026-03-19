@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [imgError, setImgError] = useState(false)
 
   async function handleGoogleLogin() {
     setLoading(true)
@@ -16,28 +17,31 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      {/* Top verde con logo */}
-      <div className="flex-1 flex flex-col items-center justify-center bg-primary-700 px-8 pt-16 pb-12">
-        {/* Logo icon */}
-        <div className="w-28 h-28 mb-6">
-          <img
-            src="/logo-icon.png"
-            alt="MiCuchina"
-            className="w-full h-full object-contain drop-shadow-lg"
-            onError={(e) => {
-              e.target.style.display = 'none'
-              e.target.nextSibling.style.display = 'flex'
-            }}
-          />
-          {/* Fallback si no cargó el logo */}
-          <div style={{display:'none'}} className="w-28 h-28 rounded-3xl bg-primary-600 border-2 border-gold-400 items-center justify-center">
-            <span className="text-5xl">🍳</span>
-          </div>
+    <div className="flex flex-col min-h-screen bg-primary-700">
+      {/* Círculos decorativos */}
+      <div className="fixed top-0 left-0 w-72 h-72 rounded-full bg-primary-600/30 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="fixed top-0 right-0 w-48 h-48 rounded-full bg-primary-800/30 translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+      {/* Hero top — logo grande */}
+      <div className="flex-1 flex flex-col items-center justify-center px-8 pt-16 pb-8 relative">
+        {/* Logo muy grande */}
+        <div className="w-44 h-44 mb-5">
+          {!imgError ? (
+            <img
+              src="/logo-icon.png"
+              alt="MiCuchina"
+              className="w-full h-full object-contain drop-shadow-2xl"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="w-44 h-44 rounded-[2.5rem] bg-primary-600 border-4 border-gold-400/60 flex items-center justify-center shadow-2xl">
+              <span className="text-8xl">🍳</span>
+            </div>
+          )}
         </div>
 
         {/* Nombre */}
-        <h1 className="text-4xl font-display font-bold mb-1">
+        <h1 className="text-5xl font-display font-bold mb-1">
           <span className="text-white">Mi</span>
           <span className="text-gold-400">Cu</span>
           <span className="text-white">china</span>
@@ -47,27 +51,27 @@ export default function LoginPage() {
         </p>
 
         {/* Stats decorativas */}
-        <div className="flex gap-6 mt-10">
+        <div className="flex gap-8 mt-10 bg-primary-800/40 rounded-2xl px-8 py-4">
           <div className="text-center">
-            <p className="text-gold-400 text-xl font-display font-bold">$</p>
-            <p className="text-primary-200 text-xs mt-0.5">Ganancias</p>
+            <p className="text-gold-400 text-2xl font-display font-bold">💰</p>
+            <p className="text-primary-200 text-xs mt-1">Ganancias</p>
           </div>
           <div className="w-px bg-primary-600" />
           <div className="text-center">
-            <p className="text-white text-xl font-display font-bold">📦</p>
-            <p className="text-primary-200 text-xs mt-0.5">Stock</p>
+            <p className="text-white text-2xl font-display font-bold">📦</p>
+            <p className="text-primary-200 text-xs mt-1">Stock</p>
           </div>
           <div className="w-px bg-primary-600" />
           <div className="text-center">
-            <p className="text-white text-xl font-display font-bold">📋</p>
-            <p className="text-primary-200 text-xs mt-0.5">Comandas</p>
+            <p className="text-white text-2xl font-display font-bold">📋</p>
+            <p className="text-primary-200 text-xs mt-1">Comandas</p>
           </div>
         </div>
       </div>
 
       {/* Sección blanca con login */}
-      <div className="px-6 py-8 bg-white rounded-t-3xl -mt-4 shadow-lg">
-        <h2 className="text-xl font-display font-bold text-gray-900 mb-1">Bienvenida 👋</h2>
+      <div className="px-6 py-8 bg-white rounded-t-3xl shadow-2xl">
+        <h2 className="text-xl font-display font-bold text-gray-900 mb-1">¡Bienvenida! 👋</h2>
         <p className="text-sm text-gray-500 mb-6">Ingresá con tu cuenta de Google para continuar</p>
 
         {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}

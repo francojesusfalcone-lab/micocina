@@ -93,6 +93,7 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const settings = useAppStore((s) => s.settings)
   const isPremium = useAppStore((s) => s.isPremium())
+  const [imgError, setImgError] = useState(false)
 
   const stats = useDashboardStats('day')
   const activeOrders = useActiveOrders()
@@ -120,11 +121,24 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="bg-white dark:bg-gray-900 px-5 pt-safe border-b border-surface-200 dark:border-gray-800">
         <div className="pt-4 pb-3 flex items-start justify-between">
-          <div>
-            <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">{greeting} {emoji}</p>
-            <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-gray-100 mt-0.5 leading-tight">
-              {settings.businessName}
-            </h1>
+          <div className="flex items-center gap-3">
+            {/* Logo pequeño en header */}
+            {!imgError ? (
+              <img
+                src="/logo-icon.png"
+                alt="MiCuchina"
+                className="w-10 h-10 object-contain"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <span className="text-3xl">🍳</span>
+            )}
+            <div>
+              <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">{greeting} {emoji}</p>
+              <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-gray-100 mt-0.5 leading-tight">
+                {settings.businessName}
+              </h1>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <GlobalSearch />

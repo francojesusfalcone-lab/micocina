@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ChevronRight, ChefHat } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useAppStore } from '../store/appStore'
 import { db } from '../db'
 
@@ -25,6 +25,7 @@ export default function OnboardingPage() {
   const [businessName, setBusinessName] = useState('')
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [imgError, setImgError] = useState(false)
 
   const isLastStep = step === 1
   // país requerido, nombre es opcional
@@ -67,8 +68,20 @@ export default function OnboardingPage() {
       </div>
 
       <div className="flex-1 flex flex-col px-6 pt-8 pb-6 overflow-y-auto">
-        <div className="w-16 h-16 rounded-2xl bg-primary-50 flex items-center justify-center mb-6 self-start shrink-0">
-          <ChefHat size={28} className="text-primary-600" />
+        {/* Logo */}
+        <div className="self-start mb-6 shrink-0">
+          {!imgError ? (
+            <img
+              src="/logo-icon.png"
+              alt="MiCuchina"
+              className="w-20 h-20 object-contain drop-shadow-md"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-2xl bg-primary-50 flex items-center justify-center">
+              <span className="text-4xl">🍳</span>
+            </div>
+          )}
         </div>
 
         {step === 0 ? (
