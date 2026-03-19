@@ -43,12 +43,23 @@ import { useStockNotifications } from './hooks/useStockNotifications'
 import { useDarkMode } from './hooks/useDarkMode'
 
 function LoadingScreen() {
+  const [imgError, setImgError] = useState(false)
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <div className="w-16 h-16 rounded-2xl bg-primary-600 flex items-center justify-center mb-4 animate-pulse">
-        <span className="text-white text-2xl">🍳</span>
-      </div>
-      <p className="text-primary-600 font-semibold text-sm">Cargando MiCuchina...</p>
+    <div className="flex flex-col items-center justify-center min-h-screen"
+         style={{background:'radial-gradient(ellipse at 40% 35%, #2a2a2a 0%, #1a1a1a 30%, #0d0d0d 60%, #050505 100%)'}}>
+      {!imgError ? (
+        <img
+          src="/logo-full.png"
+          alt="MiCuchina"
+          className="w-72 object-contain mb-8 animate-scale-in"
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <span className="text-8xl mb-8">🍳</span>
+      )}
+      <p className="text-sm font-semibold tracking-widest uppercase animate-fade-in" style={{color:'#f4b92a'}}>
+        Cargando...
+      </p>
     </div>
   )
 }
