@@ -2,125 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Sistema de tokens de color semánticos ────────────────────────────────── */
+/* ─── Tokens de color semánticos ────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Fondos */
-    --bg-app:        #fafafa;
+    --bg-app:        #f2f2f2;
     --bg-surface:    #ffffff;
     --bg-card:       #ffffff;
     --bg-input:      #f4f4f5;
     --bg-muted:      #f0fdf4;
-
-    /* Bordes */
-    --border:        #e4e4e7;
+    --border:        #e2e2e2;
     --border-strong: #d4d4d8;
-
-    /* Textos */
-    --text-primary:  #111827;   /* casi negro */
-    --text-secondary:#374151;   /* gris oscuro */
-    --text-muted:    #6b7280;   /* gris medio */
-    --text-faint:    #9ca3af;   /* gris claro */
-
-    /* Acento principal (verde) */
+    --text-primary:  #111827;
+    --text-secondary:#374151;
+    --text-muted:    #6b7280;
+    --text-faint:    #9ca3af;
     --accent:        #16a34a;
     --accent-light:  #f0fdf4;
     --accent-text:   #15803d;
-
-    /* Dinero/ganancias (dorado) */
     --gold:          #f4b92a;
     --gold-text:     #c97d0e;
   }
 
   .dark {
-    /* Fondos */
-    --bg-app:        #0a0a0a;
-    --bg-surface:    #111111;
-    --bg-card:       #1a1a1a;
-    --bg-input:      #222222;
-    --bg-muted:      #1a2a1a;
-
-    /* Bordes */
-    --border:        #2a2a2a;
-    --border-strong: #333333;
-
-    /* Textos — todos bien contrastados sobre fondos oscuros */
-    --text-primary:  #f9fafb;   /* casi blanco */
-    --text-secondary:#e5e7eb;   /* blanco suave */
-    --text-muted:    #9ca3af;   /* gris claro legible */
-    --text-faint:    #6b7280;   /* gris medio */
-
-    /* Acento principal */
+    --bg-app:        #111111;
+    --bg-surface:    #1a1a1a;
+    --bg-card:       #222222;
+    --bg-input:      #2a2a2a;
+    --bg-muted:      #1e2a1e;
+    --border:        #333333;
+    --border-strong: #444444;
+    --text-primary:  #f0f0f0;
+    --text-secondary:#d0d0d0;
+    --text-muted:    #a0a0a0;
+    --text-faint:    #707070;
     --accent:        #22c55e;
-    --accent-light:  #052e16;
+    --accent-light:  #0d2010;
     --accent-text:   #4ade80;
-
-    /* Dinero/ganancias */
     --gold:          #f4b92a;
     --gold-text:     #fbbf24;
   }
 
-  * {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-  }
+  * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
 
-  html, body, #root {
-    height: 100%;
-    overscroll-behavior: none;
-  }
+  html, body, #root { height: 100%; overscroll-behavior: none; }
 
   body {
     background-color: var(--bg-app);
     color: var(--text-primary);
     @apply font-sans;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-feature-settings: 'cv02','cv03','cv04','cv11';
     transition: background-color 0.2s, color 0.2s;
   }
 
-  /* Safe area support */
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 }
 
 @layer components {
-  /* ── Botones ─────────────────────────────────────────────── */
   .btn-primary {
     @apply bg-primary-600 text-white font-semibold rounded-2xl px-5 py-3
            active:scale-95 transition-all duration-150
            hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed;
   }
-
   .btn-secondary {
     background-color: var(--bg-input);
     color: var(--text-secondary);
-    @apply font-semibold rounded-2xl px-5 py-3
-           active:scale-95 transition-all duration-150 disabled:opacity-50;
+    @apply font-semibold rounded-2xl px-5 py-3 active:scale-95 transition-all duration-150 disabled:opacity-50;
   }
-
   .btn-ghost {
-    @apply text-primary-600 font-semibold rounded-2xl px-5 py-3
-           active:scale-95 transition-all duration-150;
+    color: var(--accent);
+    @apply font-semibold rounded-2xl px-5 py-3 active:scale-95 transition-all duration-150;
   }
-  .dark .btn-ghost { color: var(--accent-text); }
 
-  /* ── Cards ───────────────────────────────────────────────── */
   .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     color: var(--text-primary);
     @apply rounded-2xl shadow-card p-4;
   }
-
   .card-hover {
     background-color: var(--bg-card);
     border: 1px solid var(--border);
     color: var(--text-primary);
-    @apply rounded-2xl shadow-card p-4 transition-shadow duration-200
+    @apply rounded-2xl shadow-card p-4 transition-all duration-200
            hover:shadow-card-hover active:scale-[0.99];
   }
 
-  /* ── Inputs ──────────────────────────────────────────────── */
   .input-field {
     background-color: var(--bg-input);
     border: 1px solid var(--border);
@@ -131,54 +98,32 @@
   }
   .input-field::placeholder { color: var(--text-faint); }
 
-  /* ── Labels ──────────────────────────────────────────────── */
-  .label {
-    color: var(--text-muted);
-    @apply text-sm font-semibold mb-1.5 block;
-  }
+  .label { color: var(--text-muted); @apply text-sm font-semibold mb-1.5 block; }
 
-  /* ── Badges ──────────────────────────────────────────────── */
-  .badge {
-    @apply inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full;
-  }
-  .badge-green  { @apply badge bg-primary-100 text-primary-700; }
-  .badge-gray   { background-color: var(--bg-input); color: var(--text-muted); @apply badge; }
-  .badge-amber  { @apply badge bg-amber-100 text-amber-700; }
+  .badge { @apply inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full; }
+  .badge-green { @apply badge bg-primary-100 text-primary-700; }
+  .badge-gray  { background-color: var(--bg-input); color: var(--text-muted); @apply badge; }
+  .badge-amber { @apply badge bg-amber-100 text-amber-700; }
 
-  /* ── Header de página ────────────────────────────────────── */
+  /* Header uniforme — mismo fondo que la app, NO verde */
   .page-header {
-    background-color: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+    background-color: var(--bg-app);
     border-bottom: 1px solid var(--border);
-    @apply sticky top-0 z-10 backdrop-blur-sm px-4 py-4;
+    @apply sticky top-0 z-10 px-4 py-4;
   }
+  .page-title { color: var(--text-primary); @apply text-xl font-display font-bold; }
+  .section-title { color: var(--text-faint); @apply text-sm font-semibold uppercase tracking-wider mb-3; }
 
-  .page-title {
-    color: var(--text-primary);
-    @apply text-xl font-display font-bold;
-  }
-
-  .section-title {
-    color: var(--text-faint);
-    @apply text-sm font-semibold uppercase tracking-wider mb-3;
-  }
-
-  /* ── Nav ─────────────────────────────────────────────────── */
   .nav-item-active   { color: var(--accent); }
   .nav-item-inactive { color: var(--text-faint); }
 }
 
 @layer utilities {
-  .scrollbar-none {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
+  .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
   .scrollbar-none::-webkit-scrollbar { display: none; }
-  .scroll-smooth-mobile {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
+  .scroll-smooth-mobile { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 
-  /* Utilidades semánticas para usar en componentes */
+  /* Clases semánticas */
   .text-app-primary   { color: var(--text-primary); }
   .text-app-secondary { color: var(--text-secondary); }
   .text-app-muted     { color: var(--text-muted); }
@@ -189,19 +134,10 @@
   .border-app         { border-color: var(--border); }
 }
 
-/* ─── Animaciones ───────────────────────────────────────────────────────────── */
-@keyframes slide-up {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0);   }
-}
-@keyframes scale-in {
-  from { transform: scale(0.95); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
-}
+/* Animaciones */
+@keyframes slide-up  { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fade-in   { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scale-in  { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
 .animate-slide-up  { animation: slide-up  0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
 .animate-fade-in   { animation: fade-in   0.25s ease forwards; }

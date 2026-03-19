@@ -118,8 +118,8 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col min-h-full bg-app ">
 
-      {/* Header */}
-      <div className="bg-white px-5 pt-safe border-b border-app dark:border-app">
+      {/* Header — fondo uniforme, sin verde */}
+      <div className="px-5 pt-safe" style={{backgroundColor:'var(--bg-app)', borderBottom:'1px solid var(--border))'}}>
         <div className="pt-4 pb-3 flex items-start justify-between">
           <div className="flex items-center gap-3">
             {/* Logo en header */}
