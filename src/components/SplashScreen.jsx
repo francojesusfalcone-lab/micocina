@@ -12,12 +12,18 @@ export default function SplashScreen({ onDone }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-primary-700 transition-opacity duration-400"
-      style={{ opacity: fadeOut ? 0 : 1, pointerEvents: 'none' }}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center transition-opacity duration-400"
+      style={{
+        opacity: fadeOut ? 0 : 1,
+        pointerEvents: 'none',
+        background: 'radial-gradient(ellipse at 40% 35%, #2a2a2a 0%, #1a1a1a 30%, #0d0d0d 60%, #050505 100%)',
+      }}
     >
-      {/* Círculos decorativos */}
-      <div className="absolute top-0 left-0 w-72 h-72 rounded-full bg-primary-600/40 -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-primary-800/40 translate-x-1/3 translate-y-1/3" />
+      {/* Reflejos metálicos */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none"
+           style={{background: 'radial-gradient(ellipse at 20% 15%, rgba(180,180,180,0.07) 0%, transparent 50%)'}} />
+      <div className="absolute bottom-0 right-0 w-full h-full pointer-events-none"
+           style={{background: 'radial-gradient(ellipse at 80% 85%, rgba(100,100,100,0.05) 0%, transparent 50%)'}} />
 
       <div className="relative flex flex-col items-center px-8">
         {/* Logo-full: ícono + nombre MiCuchina — ocupa el protagonismo */}
@@ -40,7 +46,7 @@ export default function SplashScreen({ onDone }) {
             </h1>
           </div>
         )}
-        <p className="text-primary-200 text-base mt-6 animate-fade-in">Tu cocina, tu negocio 🍳</p>
+        <p className="text-gray-500 text-base mt-6 animate-fade-in tracking-widest uppercase text-xs font-semibold">Tu cocina, tu negocio 🍳</p>
       </div>
     </div>
   )
