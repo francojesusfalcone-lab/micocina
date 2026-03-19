@@ -12,6 +12,7 @@ import { useJornada, abrirJornada, cerrarJornada } from '../hooks/useJornada'
 import { STATUS_CONFIG, PAYMENT_METHODS } from '../hooks/useOrders'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
+import GlobalSearch from '../components/GlobalSearch'
 import clsx from 'clsx'
 
 function HeroStatCard({ label, value, sub, change, marginPct }) {
@@ -126,6 +127,7 @@ export default function DashboardPage() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
+            <GlobalSearch />
             {/* Botón jornada */}
             {!jornada.abierto ? (
               <button
