@@ -40,6 +40,7 @@ import TermsPage            from './pages/TermsPage'
 import SplashScreen         from './components/SplashScreen'
 import PageTransition       from './components/PageTransition'
 import { useStockNotifications } from './hooks/useStockNotifications'
+import { useDarkMode } from './hooks/useDarkMode'
 
 function LoadingScreen() {
   return (
@@ -65,6 +66,7 @@ function AppLayout({ children }) {
 
 export default function App() {
   useStockNotifications()
+  useDarkMode()
   const [ready, setReady] = useState(false)
   const [hasSession, setHasSession] = useState(false)
   // Splash solo una vez por sesión del browser

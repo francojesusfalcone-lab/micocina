@@ -18,6 +18,34 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
+  .dark body {
+    @apply bg-gray-950 text-gray-100;
+  }
+
+  .dark .card, .dark .card-hover {
+    @apply bg-gray-900 border-gray-800 text-gray-100;
+  }
+
+  .dark .input-field {
+    @apply bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500;
+  }
+
+  .dark .btn-secondary {
+    @apply bg-gray-800 text-gray-200 hover:bg-gray-700;
+  }
+
+  .dark nav {
+    @apply bg-gray-900 border-gray-800;
+  }
+
+  .dark .page-header {
+    @apply bg-gray-950/90 border-gray-800;
+  }
+
+  .dark .section-title {
+    @apply text-gray-500;
+  }
+
   /* Safe area support for notched phones */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom, 0px);

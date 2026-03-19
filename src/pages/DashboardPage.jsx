@@ -53,13 +53,13 @@ function StatCard({ label, value, sub, icon: Icon, color = 'green' }) {
   }
   const c = colors[color] || colors.green
   return (
-    <div className="card flex-1 min-w-0">
+    <div className="card flex-1 min-w-0 dark:bg-gray-900 dark:border-gray-800">
       <div className={`w-8 h-8 rounded-xl flex items-center justify-center mb-2 ${c.bg}`}>
         <Icon size={15} className={c.icon} />
       </div>
-      <div className="text-base font-display font-bold text-gray-900 truncate leading-tight">{value}</div>
-      <div className="text-xs font-medium text-gray-500 mt-0.5 leading-tight">{label}</div>
-      {sub && <div className="text-[11px] text-gray-400 mt-0.5">{sub}</div>}
+      <div className="text-base font-display font-bold text-gray-900 dark:text-gray-100 truncate leading-tight">{value}</div>
+      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5 leading-tight">{label}</div>
+      {sub && <div className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{sub}</div>}
     </div>
   )
 }
@@ -115,14 +115,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
 
       {/* Header */}
-      <div className="bg-white px-5 pt-safe border-b border-surface-200">
+      <div className="bg-white dark:bg-gray-900 px-5 pt-safe border-b border-surface-200 dark:border-gray-800">
         <div className="pt-4 pb-3 flex items-start justify-between">
           <div>
-            <p className="text-sm text-gray-400 font-medium">{greeting} {emoji}</p>
-            <h1 className="text-2xl font-display font-bold text-gray-900 mt-0.5 leading-tight">
+            <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">{greeting} {emoji}</p>
+            <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-gray-100 mt-0.5 leading-tight">
               {settings.businessName}
             </h1>
           </div>
@@ -280,7 +280,7 @@ export default function DashboardPage() {
         )}
 
         {/* Quick actions */}
-        <div className="card">
+        <div className="card dark:bg-gray-900 dark:border-gray-800">
           <p className="section-title">Acciones rápidas</p>
           <div className="grid grid-cols-4 gap-2">
             <QuickAction icon={Plus} label="Nueva comanda" onClick={() => navigate('/comandas/nueva')} color="green" />
@@ -310,7 +310,7 @@ export default function DashboardPage() {
         )}
 
         {/* Active orders */}
-        <div className="card">
+        <div className="card dark:bg-gray-900 dark:border-gray-800">
           <div className="flex items-center justify-between mb-3">
             <p className="section-title mb-0">Comandas activas</p>
             <button onClick={() => navigate('/comandas')} className="flex items-center gap-1 text-xs font-semibold text-primary-600">
@@ -337,12 +337,12 @@ export default function DashboardPage() {
                   <button
                     key={order.id}
                     onClick={() => navigate(`/comandas/${order.id}`)}
-                    className="w-full flex items-center gap-3 p-3 bg-surface-50 rounded-xl active:bg-surface-100 transition-colors text-left"
+                    className="w-full flex items-center gap-3 p-3 bg-surface-50 dark:bg-gray-800 rounded-xl active:bg-surface-100 dark:active:bg-gray-700 transition-colors text-left"
                   >
                     <div className={clsx('w-2 h-2 rounded-full shrink-0', sc?.dot)} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{order.clientName || 'Sin nombre'}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{order.clientName || 'Sin nombre'}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {sc?.label} · {pm?.icon} {pm?.label}
                         {order.deliveryTime && ` · ${order.deliveryTime}`}
                       </p>
@@ -364,7 +364,7 @@ export default function DashboardPage() {
 
         {/* Insights */}
         {!isLoading && (stats.topRecipe || stats.peakHour !== null || stats.unpaidTotal > 0) && (
-          <div className="card space-y-2.5">
+          <div className="card dark:bg-gray-900 dark:border-gray-800 space-y-2.5">
             <p className="section-title mb-0">Datos del período</p>
             {stats.topRecipe && (
               <div className="flex items-center gap-3 p-3 bg-primary-50 rounded-xl">

@@ -8,6 +8,7 @@ import PageHeader from '../components/PageHeader'
 import { useAppStore } from '../store/appStore'
 import { supabase } from '../lib/supabase'
 import { db } from '../db'
+import { useDarkMode } from '../hooks/useDarkMode'
 
 function SettingsRow({ icon: Icon, label, value, onClick, badge, color = 'gray' }) {
   const iconColors = {
@@ -17,13 +18,13 @@ function SettingsRow({ icon: Icon, label, value, onClick, badge, color = 'gray' 
     red:   'bg-red-50 text-red-500',
   }
   return (
-    <button onClick={onClick} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white active:bg-surface-50 transition-colors">
+    <button onClick={onClick} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white dark:bg-gray-900 active:bg-surface-50 dark:active:bg-gray-800 transition-colors">
       <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${iconColors[color]}`}>
         <Icon size={18} />
       </div>
       <div className="flex-1 text-left min-w-0">
-        <p className="text-sm font-semibold text-gray-900">{label}</p>
-        {value && <p className="text-xs text-gray-500 mt-0.5 truncate">{value}</p>}
+        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{label}</p>
+        {value && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">{value}</p>}
       </div>
       {badge && badge}
       <ChevronRight size={16} className="text-gray-400 shrink-0" />
@@ -38,6 +39,7 @@ export default function SettingsPage() {
   const setPlan = useAppStore((s) => s.setPlan)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [devTaps, setDevTaps] = useState(0)
+  const { dark, toggle: toggleDark } = useDarkMode()
 
   function handleDevTap() {
     const next = devTaps + 1
@@ -65,7 +67,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-surface-50">
+    <div className="flex flex-col min-h-full bg-surface-50 dark:bg-gray-950">
       <PageHeader title="Configuración" />
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
@@ -98,7 +100,18 @@ export default function SettingsPage() {
           <div className="border-t border-surface-100" />
           <SettingsRow icon={Bell} label="Notificaciones y alarmas" value="Próximamente" onClick={() => {}} color="blue" />
           <div className="border-t border-surface-100" />
-          <SettingsRow icon={Moon} label="Modo oscuro" value="Próximamente" onClick={() => {}} color="gray" />
+          <button onClick={toggleDark} className="w-full flex items-center gap-3 px-4 py-3.5 bg-white dark:bg-gray-900 active:bg-surface-50 transition-colors">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+              <Moon size={18} />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">Modo oscuro</p>
+              <p className="text-xs text-gray-400 mt-0.5">{dark ? 'Activado' : 'Desactivado'}</p>
+            </div>
+            <div className={`w-11 h-6 rounded-full transition-colors duration-200 ${dark ? 'bg-primary-600' : 'bg-gray-200'}`}>
+              <div className={`w-5 h-5 bg-white rounded-full shadow mt-0.5 transition-transform duration-200 ${dark ? 'translate-x-5 ml-0.5' : 'translate-x-0.5'}`} />
+            </div>
+          </button>
           <div className="border-t border-surface-100" />
           <SettingsRow icon={Shield} label="Privacidad y datos" value="Próximamente" onClick={() => {}} color="gray" />
         </div>
