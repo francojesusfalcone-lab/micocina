@@ -122,16 +122,16 @@ export default function DashboardPage() {
       <div className="bg-white dark:bg-gray-900 px-5 pt-safe border-b border-surface-200 dark:border-gray-800">
         <div className="pt-4 pb-3 flex items-start justify-between">
           <div className="flex items-center gap-3">
-            {/* Logo pequeño en header */}
+            {/* Logo en header */}
             {!imgError ? (
               <img
                 src="/logo-icon.png"
                 alt="MiCuchina"
-                className="w-10 h-10 object-contain"
+                className="w-16 h-16 object-contain"
                 onError={() => setImgError(true)}
               />
             ) : (
-              <span className="text-3xl">🍳</span>
+              <span className="text-4xl">🍳</span>
             )}
             <div>
               <p className="text-sm text-gray-400 dark:text-gray-500 font-medium">{greeting} {emoji}</p>
