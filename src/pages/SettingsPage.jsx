@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Store, Globe, Crown, ChevronRight, Wallet, Users, Bell, Moon, Info, LogOut, Shield, Trash2, Share2, Download } from 'lucide-react'
+import { Store, Globe, Crown, ChevronRight, Wallet, Users, Bell, Moon, Info, LogOut, Shield, Trash2, Share2, Download, HelpCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import { useAppStore } from '../store/appStore'
@@ -147,6 +147,8 @@ export default function SettingsPage() {
         </Section>
 
         <Section title="Cuenta y datos">
+          <SettingsRow icon={HelpCircle} label="¿Cómo funciona MiCuchina?" value="Guía de uso paso a paso" onClick={() => navigate('/como-funciona')} color="green" />
+          {divider}
           <SettingsRow icon={Info} label="Versión de la app" value="0.1.0 — Beta" onClick={() => {}} color="gray" />
           {divider}
           {/* Instalar como app */}

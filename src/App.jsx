@@ -35,6 +35,7 @@ import EditBusinessNamePage from './pages/EditBusinessNamePage'
 import EditCountryPage      from './pages/EditCountryPage'
 import CombosPage           from './pages/CombosPage'
 import ComboFormPage        from './pages/ComboFormPage'
+import HowItWorksPage      from './pages/HowItWorksPage'
 import InvitePage           from './pages/InvitePage'
 import TermsPage            from './pages/TermsPage'
 import SplashScreen         from './components/SplashScreen'
@@ -190,7 +191,8 @@ export default function App() {
               <Route path="/combos"                   element={<CombosPage />} />
               <Route path="/combos/nuevo"             element={<ComboFormPage />} />
               <Route path="/combos/:id"               element={<ComboFormPage />} />
-              <Route path="/invitar"                  element={<InvitePage />} />
+              <Route path="/como-funciona"             element={<HowItWorksPage />} />
+              <Route path="/invitar"                   element={<InvitePage />} />
               <Route path="/terminos"                 element={<TermsPage />} />
               <Route path="/ia"                       element={<AIPage />} />
               <Route path="/premium/success"          element={<Navigate to="/premium?status=approved" replace />} />
