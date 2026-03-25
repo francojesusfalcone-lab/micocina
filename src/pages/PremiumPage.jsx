@@ -10,16 +10,14 @@ import { db } from '../db'
 import { createMPPreference, activatePlanLocally, getPlanPrice } from '../lib/mercadopago'
 
 const FEATURES = [
-  { label: 'Comandas por día',             free: 'Hasta 15',    premium: 'Ilimitadas' },
-  { label: 'Recetas y productos',          free: 'Ilimitadas',  premium: 'Ilimitadas' },
-  { label: 'Stock e ingredientes',         free: 'Ilimitados',  premium: 'Ilimitados' },
-  { label: 'Combos',                       free: false,         premium: true },
-  { label: 'CRM de clientes',              free: false,         premium: true },
-  { label: 'Gastos fijos',                 free: false,         premium: true },
-  { label: 'Análisis IA de tu negocio',    free: false,         premium: true },
-  { label: 'Historial de precios',         free: false,         premium: true },
-  { label: 'Reportes semanales/mensuales', free: false,         premium: true },
-  { label: 'Soporte prioritario',          free: false,         premium: true },
+  { label: 'Comandas por día',                     free: 'Hasta 15',   premium: 'Ilimitadas' },
+  { label: 'Recetas y productos',                  free: 'Hasta 8',    premium: 'Ilimitadas' },
+  { label: 'Stock e ingredientes',                 free: 'Ilimitados', premium: 'Ilimitados' },
+  { label: 'Combos',                               free: false,        premium: true },
+  { label: 'Historial de clientes y pedidos',      free: false,        premium: true },
+  { label: 'Gastos fijos',                         free: false,        premium: true },
+  { label: 'Análisis IA diario de tu negocio',     free: false,        premium: true },
+  { label: 'Historial de precios de ingredientes', free: false,        premium: true },
 ]
 
 function FeatureValue({ val }) {

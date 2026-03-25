@@ -22,6 +22,7 @@ export const PAYMENT_METHODS = [
 ]
 
 export const FREE_DAILY_LIMIT = 15
+export const FREE_RECIPE_LIMIT = 8
 
 // ─── Hooks de lectura ─────────────────────────────────────────────────────────
 export function useOrders() {

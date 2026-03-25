@@ -6,6 +6,7 @@ import EmptyState from '../components/EmptyState'
 import { PremiumBadge } from '../components/PremiumGate'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { useRecipes } from '../hooks/useRecipes'
+import { FREE_RECIPE_LIMIT } from '../hooks/useOrders'
 
 export default function ProductsPage() {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ export default function ProductsPage() {
   const [tab, setTab] = useState('recipes')
 
   const allRecipes = useRecipes()
+  const atLimit = !isPremium && allRecipes.length >= FREE_RECIPE_LIMIT
 
   const filtered = allRecipes
     .filter((r) => tab === 'recipes' ? !r.isSimple : !!r.isSimple)
@@ -27,8 +29,8 @@ export default function ProductsPage() {
         subtitle={`${allRecipes.length} producto${allRecipes.length !== 1 ? 's' : ''} cargado${allRecipes.length !== 1 ? 's' : ''}`}
         action={
           <button
-            onClick={() => navigate('/productos/nuevo')}
-            className="flex items-center gap-1.5 btn-primary text-sm py-2 px-4"
+            onClick={() => atLimit ? navigate('/premium') : navigate('/productos/nuevo')}
+            className={`flex items-center gap-1.5 text-sm py-2 px-4 rounded-2xl font-semibold transition-all active:scale-95 ${atLimit ? 'bg-amber-100 text-amber-700' : 'btn-primary'}`}
           >
             <Plus size={16} />
             Agregar
@@ -82,6 +84,22 @@ export default function ProductsPage() {
         </div>
 
         {/* Plan limit banner — solo comandas, recetas son ilimitadas */}
+
+        {/* Banner límite free */}
+        {!isPremium && (
+          <div className={`mx-4 mt-3 px-4 py-3 rounded-2xl border flex items-center gap-2 ${atLimit ? 'bg-amber-50 border-amber-200' : 'bg-blue-50 border-blue-100'}`}>
+            <ShoppingBag size={16} className={atLimit ? 'text-amber-500 shrink-0' : 'text-blue-500 shrink-0'} />
+            <p className={`text-xs font-medium flex-1 ${atLimit ? 'text-amber-700' : 'text-blue-600'}`}>
+              Plan Gratis: <strong>{allRecipes.length}/{FREE_RECIPE_LIMIT}</strong> productos.
+              {atLimit && ' ¡Límite alcanzado!'}
+            </p>
+            {atLimit && (
+              <button onClick={() => navigate('/premium')} className="text-xs font-bold underline text-amber-700 shrink-0">
+                Mejorar
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Quick price generator shortcut */}
         <button
