@@ -6,7 +6,7 @@ export default function EmptyState({ icon: Icon, title, description, action, cla
       {image ? (
         <img src={image} alt={title} className="w-80 h-80 object-contain mb-4" />
       ) : Icon ? (
-        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-surface-100 mb-4">
+        <div className="flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{backgroundColor:'var(--bg-card)'}}>
           <Icon size={28} className="text-app-faint" />
         </div>
       ) : null}

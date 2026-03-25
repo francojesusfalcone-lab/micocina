@@ -121,8 +121,9 @@ export default function StatsPage() {
                 key={id}
                 onClick={() => locked ? navigate('/premium') : setPeriod(id)}
                 className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all active:scale-95 ${
-                  period === id ? 'bg-primary-600 text-white' : 'bg-white text-app-muted border border-surface-200'
+                  period === id ? 'bg-primary-600 text-white' : 'text-app-muted border border-app'
                 } ${locked ? 'opacity-60' : ''}`}
+                style={period !== id ? {backgroundColor:'var(--bg-input)'} : {}}
               >
                 {label}
                 {locked && <Crown size={11} className="text-amber-500" />}

@@ -194,7 +194,7 @@ export default function ExpensesPage() {
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => navigate(`/gastos/editar/${expense.id}`)}
-                          className="w-8 h-8 rounded-xl bg-surface-100 flex items-center justify-center active:scale-90 transition-all"
+                          className="w-8 h-8 rounded-xl  flex items-center justify-center active:scale-90 transition-all"
                         >
                           <ChevronRight size={14} className="text-app-muted" />
                         </button>

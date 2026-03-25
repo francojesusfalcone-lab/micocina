@@ -156,7 +156,7 @@ export default function QuickPricePage() {
                 className={`py-2 rounded-xl text-sm font-bold border-2 transition-all active:scale-95 ${
                   margin === m
                     ? 'border-primary-500 bg-primary-50 text-primary-700'
-                    : 'border-app bg-white text-gray-600'
+                    : 'border-app text-app-secondary'
                 }`}
               >
                 {m}%
