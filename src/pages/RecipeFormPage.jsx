@@ -382,7 +382,7 @@ export default function RecipeFormPage() {
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
                 priceMode === 'margin'
                   ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-app bg-white text-gray-500'
+                  : 'border-app text-app-muted'
               }`}
             >
               Por margen %
@@ -392,7 +392,7 @@ export default function RecipeFormPage() {
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 ${
                 priceMode === 'manual'
                   ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-app bg-white text-gray-500'
+                  : 'border-app text-app-muted'
               }`}
             >
               Precio fijo
@@ -411,7 +411,7 @@ export default function RecipeFormPage() {
                     className={`py-2 rounded-xl text-xs font-bold border-2 transition-all active:scale-95 ${
                       form.marginPercent === m
                         ? 'border-primary-500 bg-primary-50 text-primary-700'
-                        : 'border-app bg-white text-gray-600'
+                        : 'border-app text-app-secondary'
                     }`}
                   >
                     {m}%
@@ -479,7 +479,7 @@ export default function RecipeFormPage() {
       </div>
 
       {/* ── Save button ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto border-t border-app px-4 py-3 z-30" style={{backgroundColor:'var(--bg-app)'}}>
         <button
           onClick={handleSave}
           disabled={saving}

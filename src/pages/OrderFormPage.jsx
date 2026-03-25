@@ -434,7 +434,7 @@ export default function OrderFormPage() {
                   className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-left transition-all active:scale-95 ${
                     paymentMethod === value
                       ? 'border-primary-500 bg-primary-50'
-                      : 'border-app bg-white'
+                      : 'border-app'
                   }`}
                 >
                   <span className="text-base">{icon}</span>
@@ -530,7 +530,7 @@ export default function OrderFormPage() {
       </div>
 
       {/* ── Fixed footer ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto border-t border-app px-4 py-3 z-30" style={{backgroundColor:"var(--bg-app)"}}>
         {items.length > 0 && (
           <div className="flex items-center justify-between mb-3 px-1">
             <p className="text-sm text-app-muted">{items.length} producto(s)</p>
