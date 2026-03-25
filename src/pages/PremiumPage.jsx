@@ -10,7 +10,7 @@ import { db } from '../db'
 import { createMPPreference, activatePlanLocally, getPlanPrice } from '../lib/mercadopago'
 
 const FEATURES = [
-  { label: 'Comandas por día',                     free: 'Hasta 15',   premium: 'Ilimitadas' },
+  { label: 'Comandas por día',                     free: 'Hasta 10',   premium: 'Ilimitadas' },
   { label: 'Recetas y productos',                  free: 'Hasta 8',    premium: 'Ilimitadas' },
   { label: 'Stock e ingredientes',                 free: 'Ilimitados', premium: 'Ilimitados' },
   { label: 'Combos',                               free: false,        premium: true },
