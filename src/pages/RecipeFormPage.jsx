@@ -56,7 +56,7 @@ export default function RecipeFormPage() {
         description:   existingRecipe.description || '',
         salePrice:     existingRecipe.salePrice?.toString() || '',
         marginPercent: existingRecipe.marginPercent || 50,
-        portions:      existingRecipe.portions || 1,
+        portions:      1,
         isActive:      existingRecipe.isActive !== false,
       })
       if (existingRecipe.priceMode) setPriceMode(existingRecipe.priceMode)
@@ -79,7 +79,7 @@ export default function RecipeFormPage() {
     items.map((i) => ({ ...i, quantity: Number(i.quantity) || 0 }))
   ), [items])
 
-  const costPerPortion = form.portions > 1 ? totalCost / Number(form.portions) : totalCost
+  const costPerPortion = totalCost
 
   const suggestedPrice = priceMode === 'margin'
     ? calcSalePrice(costPerPortion, form.marginPercent)
@@ -258,30 +258,7 @@ export default function RecipeFormPage() {
             />
           </div>
 
-          <div>
-            <label className="label">¿Cuántas porciones rinde esta receta?</label>
-            <div className="flex gap-2">
-              {[1,2,4,6,8,10,12].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setField('portions', n)}
-                  className={`w-10 h-10 rounded-xl text-sm font-bold border-2 transition-all active:scale-95 ${
-                    form.portions === n
-                      ? 'border-primary-500 bg-primary-50 text-primary-700'
-                      : 'border-app bg-white text-gray-600'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-            {form.portions > 1 && (
-              <p className="text-xs text-app-faint mt-1.5">
-                El precio y el costo se calculan por porción individual.
-              </p>
-            )}
-          </div>
+
         </div>
 
         {/* ── Ingredientes ── */}
