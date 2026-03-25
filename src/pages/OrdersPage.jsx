@@ -3,6 +3,7 @@ import { Plus, ClipboardList, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
+import UpgradeWall from '../components/UpgradeWall'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import {
   useOrders, useTodayOrderCount,
@@ -47,6 +48,10 @@ export default function OrdersPage() {
         }
       />
 
+      {/* Upgrade wall cuando llega al límite */}
+      {atLimit ? (
+        <UpgradeWall type="comandas" />
+      ) : (
       <div className="flex-1 overflow-y-auto scrollbar-none pb-24">
 
         {/* Filter tabs */}
@@ -161,6 +166,7 @@ export default function OrdersPage() {
           )}
         </div>
       </div>
+      )}
     </div>
   )
 }

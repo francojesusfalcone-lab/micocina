@@ -3,6 +3,7 @@ import { Plus, Search, ShoppingBag, ChevronRight, Flame } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
+import UpgradeWall from '../components/UpgradeWall'
 import { PremiumBadge } from '../components/PremiumGate'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { useRecipes } from '../hooks/useRecipes'
@@ -120,7 +121,9 @@ export default function ProductsPage() {
 
         {/* Product list */}
         <div className="px-4 mt-4 space-y-3">
-          {filtered.length === 0 ? (
+          {atLimit ? (
+            <UpgradeWall type="recetas" />
+          ) : filtered.length === 0 ? (
             <EmptyState
               icon={ShoppingBag}
               title="Sin productos aún"
@@ -130,46 +133,36 @@ export default function ProductsPage() {
                   : 'Los productos simples son bebidas o extras sin receta.'
               }
               action={
-                <button
-                  onClick={() => navigate('/productos/nuevo')}
-                  className="btn-primary text-sm py-2.5 px-6"
-                >
+                <button onClick={() => navigate('/productos/nuevo')} className="btn-primary text-sm py-2.5 px-6">
                   + Agregar producto
                 </button>
               }
               image="/empty-productos.png"
             />
-          ) : (
-            filtered.map((recipe) => (
-              <button
-                key={recipe.id}
-                onClick={() => navigate(`/productos/${recipe.id}`)}
-                className="card-hover  w-full flex items-center gap-3 text-left"
-              >
-                {/* Avatar con inicial del producto */}
-                <div className="w-14 h-14 rounded-xl shrink-0 flex items-center justify-center bg-primary-600 text-white font-display font-bold text-xl select-none">
-                  {recipe.name.charAt(0).toUpperCase()}
+          ) : filtered.map((recipe) => (
+            <button
+              key={recipe.id}
+              onClick={() => navigate(`/productos/${recipe.id}`)}
+              className="card-hover w-full flex items-center gap-3 text-left"
+            >
+              <div className="w-14 h-14 rounded-xl shrink-0 flex items-center justify-center bg-primary-600 text-white font-display font-bold text-xl select-none">
+                {recipe.name.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-app-primary truncate">{recipe.name}</p>
+                  {!recipe.isActive && <span className="badge bg-gray-100 text-app-muted text-[10px]">Pausado</span>}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-app-primary  truncate">{recipe.name}</p>
-                    {!recipe.isActive && (
-                      <span className="badge bg-gray-100 text-app-muted text-[10px]">Pausado</span>
-                    )}
-                  </div>
-                  <p className="text-sm text-app-muted dark:text-app-faint mt-0.5">
-                    Costo: {formatCurrency(recipe.costPerPortion ?? recipe.lastCalculatedCost, settings.currencySymbol)}
-                  </p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="font-bold text-gold-600">
-                    {formatCurrency(recipe.salePrice, settings.currencySymbol)}
-                  </p>
-                  <p className="text-xs text-app-faint dark:text-app-muted mt-0.5">precio venta</p>
-                </div>
-              </button>
-            ))
-          )}
+                <p className="text-sm text-app-muted mt-0.5">
+                  Costo: {formatCurrency(recipe.costPerPortion ?? recipe.lastCalculatedCost, settings.currencySymbol)}
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="font-bold text-gold-600">{formatCurrency(recipe.salePrice, settings.currencySymbol)}</p>
+                <p className="text-xs text-app-faint mt-0.5">precio venta</p>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </div>
