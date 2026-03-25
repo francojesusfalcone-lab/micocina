@@ -7,18 +7,28 @@ import {
   useIngredient,
   saveIngredient,
   deleteIngredient,
-  UNITS,
   CATEGORIES,
 } from '../hooks/useIngredients'
+
+// Unidades reales de compra — sin cucharadas/tazas
+const UNITS = [
+  { value: 'g',      label: 'Gramos (g)',      type: 'peso' },
+  { value: 'kg',     label: 'Kilogramos (kg)', type: 'peso' },
+  { value: 'ml',     label: 'Mililitros (ml)', type: 'volumen' },
+  { value: 'l',      label: 'Litros (l)',       type: 'volumen' },
+  { value: 'u',      label: 'Unidades',         type: 'cantidad' },
+  { value: 'docena', label: 'Docena (12u)',      type: 'cantidad' },
+  { value: 'paquete',label: 'Paquete',           type: 'cantidad' },
+]
 
 const EMPTY_FORM = {
   name: '',
   category: '',
   unit: 'g',
-  pricePerUnit: '',
+  purchaseQty: '',    // cantidad comprada
+  purchasePrice: '',  // precio total pagado
   stock: '',
   lowStockAlert: '',
-  lowStockAlertPercent: 20,
 }
 
 export default function IngredientFormPage() {
@@ -27,26 +37,25 @@ export default function IngredientFormPage() {
   const isEdit = !!id
   const settings = useAppStore((s) => s.settings)
   const addToast = useAppStore((s) => s.addToast)
-
   const existing = useIngredient(id ? Number(id) : null)
 
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
-  const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [errors, setErrors] = useState({})
 
-  // Load existing data when editing
   useEffect(() => {
     if (existing) {
+      // Al editar reconstruimos purchaseQty=1 y purchasePrice=pricePerUnit
+      // para no romper la lógica inversa
       setForm({
-        name:                existing.name || '',
-        category:            existing.category || '',
-        unit:                existing.unit || 'g',
-        pricePerUnit:        existing.pricePerUnit?.toString() || '',
-        stock:               existing.stock?.toString() || '',
-        lowStockAlert:       existing.lowStockAlert?.toString() || '',
-        lowStockAlertPercent:existing.lowStockAlertPercent || 20,
+        name:          existing.name || '',
+        category:      existing.category || '',
+        unit:          existing.unit || 'g',
+        purchaseQty:   '1',
+        purchasePrice: existing.pricePerUnit?.toString() || '',
+        stock:         existing.stock?.toString() || '',
+        lowStockAlert: existing.lowStockAlert?.toString() || '',
       })
     }
   }, [existing])
@@ -56,11 +65,26 @@ export default function IngredientFormPage() {
     if (errors[field]) setErrors((e) => ({ ...e, [field]: null }))
   }
 
+  // Precio por unidad calculado automáticamente
+  const qty = Number(form.purchaseQty)
+  const price = Number(form.purchasePrice)
+
+  // Si la unidad es docena, 1 docena = 12 unidades → precio por unidad
+  function calcPricePerUnit() {
+    if (!qty || !price || qty <= 0) return null
+    if (form.unit === 'docena') return price / (qty * 12)
+    return price / qty
+  }
+
+  const pricePerUnit = calcPricePerUnit()
+  const unitLabel = UNITS.find((u) => u.value === form.unit)?.label || form.unit
+  const displayUnit = form.unit === 'docena' ? 'u' : form.unit
+
   function validate() {
     const e = {}
-    if (!form.name.trim())          e.name = 'El nombre es obligatorio'
-    if (!form.pricePerUnit || isNaN(Number(form.pricePerUnit)) || Number(form.pricePerUnit) < 0)
-      e.pricePerUnit = 'Ingresá un precio válido'
+    if (!form.name.trim()) e.name = 'El nombre es obligatorio'
+    if (!form.purchaseQty || qty <= 0) e.purchaseQty = 'Ingresá la cantidad'
+    if (!form.purchasePrice || price <= 0) e.purchasePrice = 'Ingresá el precio total'
     if (form.stock !== '' && (isNaN(Number(form.stock)) || Number(form.stock) < 0))
       e.stock = 'Stock inválido'
     return e
@@ -69,24 +93,19 @@ export default function IngredientFormPage() {
   async function handleSave() {
     const e = validate()
     if (Object.keys(e).length > 0) { setErrors(e); return }
-
     setSaving(true)
     try {
+      const ppu = calcPricePerUnit()
       const data = {
-        name:                form.name.trim(),
-        category:            form.category || 'Otros',
-        unit:                form.unit,
-        pricePerUnit:        Number(form.pricePerUnit),
-        stock:               form.stock !== '' ? Number(form.stock) : null,
-        lowStockAlert:       form.lowStockAlert !== '' ? Number(form.lowStockAlert) : null,
-        lowStockAlertPercent:Number(form.lowStockAlertPercent),
+        name:          form.name.trim(),
+        category:      form.category || 'Otros',
+        unit:          form.unit === 'docena' ? 'u' : form.unit,
+        pricePerUnit:  ppu,
+        stock:         form.stock !== '' ? Number(form.stock) : null,
+        lowStockAlert: form.lowStockAlert !== '' ? Number(form.lowStockAlert) : null,
       }
-
       await saveIngredient(data, isEdit ? Number(id) : null)
-      addToast({
-        type: 'success',
-        message: isEdit ? 'Ingrediente actualizado ✓' : 'Ingrediente agregado ✓',
-      })
+      addToast({ type: 'success', message: isEdit ? 'Ingrediente actualizado ✓' : 'Ingrediente agregado ✓' })
       navigate('/stock')
     } catch (err) {
       addToast({ type: 'error', message: err.message })
@@ -97,7 +116,6 @@ export default function IngredientFormPage() {
 
   async function handleDelete() {
     if (!confirmDelete) { setConfirmDelete(true); return }
-    setDeleting(true)
     try {
       await deleteIngredient(Number(id))
       addToast({ type: 'success', message: 'Ingrediente eliminado' })
@@ -105,46 +123,34 @@ export default function IngredientFormPage() {
     } catch (err) {
       addToast({ type: 'error', message: err.message })
       setConfirmDelete(false)
-    } finally {
-      setDeleting(false)
     }
   }
-
-  // ─── Precio por porción helper ────────────────────────────────────────────
-  const priceNum = Number(form.pricePerUnit)
-  const unitLabel = UNITS.find((u) => u.value === form.unit)?.label || form.unit
 
   return (
     <div className="flex flex-col min-h-full bg-app">
       <PageHeader
         title={isEdit ? 'Editar ingrediente' : 'Nuevo ingrediente'}
         back
-        action={
-          isEdit && (
-            <button
-              onClick={handleDelete}
-              className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-2 rounded-xl transition-all active:scale-95 ${
-                confirmDelete
-                  ? 'bg-red-500 text-white'
-                  : 'bg-red-50 text-red-500'
-              }`}
-            >
-              <Trash2 size={15} />
-              {confirmDelete ? '¿Confirmar?' : 'Eliminar'}
-            </button>
-          )
-        }
+        action={isEdit && (
+          <button
+            onClick={handleDelete}
+            className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-2 rounded-xl transition-all active:scale-95 ${confirmDelete ? 'bg-red-500 text-white' : 'bg-red-50 text-red-500'}`}
+          >
+            <Trash2 size={15} />
+            {confirmDelete ? '¿Confirmar?' : 'Eliminar'}
+          </button>
+        )}
       />
 
       <div className="flex-1 overflow-y-auto scrollbar-none pb-32 px-4 py-4 space-y-4">
 
-        {/* ── Nombre ── */}
+        {/* Nombre y categoría */}
         <div className="card space-y-4">
           <div>
             <label className="label">Nombre del ingrediente *</label>
             <input
               type="text"
-              placeholder="Ej: Harina 000, Queso mozzarella..."
+              placeholder="Ej: Harina 000, Huevos, Aceite..."
               value={form.name}
               onChange={(e) => set('name', e.target.value)}
               className="input-field"
@@ -152,148 +158,139 @@ export default function IngredientFormPage() {
             />
             {errors.name && <p className="text-xs text-red-500 mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.name}</p>}
           </div>
-
           <div>
             <label className="label">Categoría</label>
-            <select style={{backgroundColor:"var(--bg-input)",color:"var(--text-primary)",colorScheme:"dark"}}
+            <select
+              style={{backgroundColor:'var(--bg-input)',color:'var(--text-primary)',colorScheme:'dark'}}
               value={form.category}
               onChange={(e) => set('category', e.target.value)}
               className="input-field"
             >
               <option value="">Seleccioná una categoría</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
         </div>
 
-        {/* ── Precio ── */}
+        {/* Cómo lo compraste */}
         <div className="card space-y-4">
-          <p className="text-sm font-bold text-app-secondary">Precio y unidad</p>
+          <div>
+            <p className="text-sm font-bold text-app-secondary">¿Cómo lo compraste?</p>
+            <p className="text-xs text-app-muted mt-0.5">La app calcula el precio por unidad automáticamente.</p>
+          </div>
 
+          {/* Unidad */}
           <div>
             <label className="label">Unidad de medida *</label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {UNITS.map(({ value, label }) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => set('unit', value)}
-                  className={`py-2 px-1 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
+                  className={`py-2.5 px-3 rounded-xl text-sm font-semibold border-2 transition-all active:scale-95 text-left ${
                     form.unit === value
                       ? 'border-primary-500 bg-primary-50 text-primary-700'
-                      : 'border-app bg-white text-gray-600'
+                      : 'border-app text-app-secondary'
                   }`}
+                  style={form.unit !== value ? {backgroundColor:'var(--bg-input)'} : {}}
                 >
-                  {value}
+                  {label}
                 </button>
               ))}
             </div>
-            <p className="text-xs text-app-faint mt-2">
-              Seleccionado: <strong>{unitLabel}</strong>
-            </p>
           </div>
 
-          <div>
-            <label className="label">
-              Precio por {form.unit} ({settings.currencySymbol}) *
-            </label>
-            <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-muted font-semibold">
-                {settings.currencySymbol}
-              </span>
+          {/* Cantidad + Precio */}
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <label className="label">Cantidad comprada *</label>
               <input
                 type="number"
                 inputMode="decimal"
-                placeholder="0.00"
-                value={form.pricePerUnit}
-                onChange={(e) => set('pricePerUnit', e.target.value)}
-                className="input-field pl-8"
+                placeholder={form.unit === 'kg' ? 'Ej: 1' : form.unit === 'g' ? 'Ej: 500' : 'Ej: 1'}
+                value={form.purchaseQty}
+                onChange={(e) => set('purchaseQty', e.target.value)}
+                className="input-field"
                 min="0"
                 step="0.01"
               />
+              {errors.purchaseQty && <p className="text-xs text-red-500 mt-1">{errors.purchaseQty}</p>}
             </div>
-            {errors.pricePerUnit && <p className="text-xs text-red-500 mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.pricePerUnit}</p>}
-
-            {/* Helper: precio por porción común */}
-            {priceNum > 0 && (
-              <div className="mt-3 bg-app rounded-xl p-3 space-y-1">
-                <p className="text-xs font-bold text-app-muted mb-2">Equivalencias rápidas</p>
-                {form.unit === 'kg' && (
-                  <>
-                    <p className="text-xs text-app-muted">100g → <strong>{settings.currencySymbol}{(priceNum / 10).toFixed(2)}</strong></p>
-                    <p className="text-xs text-app-muted">500g → <strong>{settings.currencySymbol}{(priceNum / 2).toFixed(2)}</strong></p>
-                  </>
-                )}
-                {form.unit === 'g' && (
-                  <>
-                    <p className="text-xs text-app-muted">100g → <strong>{settings.currencySymbol}{(priceNum * 100).toFixed(2)}</strong></p>
-                    <p className="text-xs text-app-muted">1kg  → <strong>{settings.currencySymbol}{(priceNum * 1000).toFixed(2)}</strong></p>
-                  </>
-                )}
-                {form.unit === 'l' && (
-                  <>
-                    <p className="text-xs text-app-muted">100ml → <strong>{settings.currencySymbol}{(priceNum / 10).toFixed(2)}</strong></p>
-                    <p className="text-xs text-app-muted">500ml → <strong>{settings.currencySymbol}{(priceNum / 2).toFixed(2)}</strong></p>
-                  </>
-                )}
-                {form.unit === 'u' && (
-                  <p className="text-xs text-app-muted">Precio unitario: <strong>{settings.currencySymbol}{priceNum.toFixed(2)}</strong></p>
-                )}
+            <div className="flex-1">
+              <label className="label">Precio total pagado *</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-app-muted font-semibold text-sm">{settings.currencySymbol}</span>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="0.00"
+                  value={form.purchasePrice}
+                  onChange={(e) => set('purchasePrice', e.target.value)}
+                  className="input-field pl-7"
+                  min="0"
+                  step="0.01"
+                />
               </div>
-            )}
+              {errors.purchasePrice && <p className="text-xs text-red-500 mt-1">{errors.purchasePrice}</p>}
+            </div>
           </div>
+
+          {/* Resultado calculado */}
+          {pricePerUnit !== null && pricePerUnit > 0 && (
+            <div className="rounded-xl p-3 bg-primary-50 border border-primary-200">
+              <p className="text-xs font-bold text-primary-700">Precio calculado automáticamente:</p>
+              <p className="text-lg font-display font-bold text-primary-700 mt-0.5">
+                {settings.currencySymbol}{pricePerUnit.toFixed(2)} por {displayUnit}
+              </p>
+              {form.unit === 'docena' && (
+                <p className="text-xs text-primary-500 mt-0.5">({qty} docena{qty !== 1 ? 's' : ''} = {qty * 12} unidades)</p>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* ── Stock ── */}
+        {/* Stock */}
         <div className="card space-y-4">
-          <p className="text-sm font-bold text-app-secondary">Stock actual (opcional)</p>
-          <p className="text-xs text-app-muted -mt-2">
-            Si cargás el stock, la app lo descuenta automáticamente con cada venta.
-          </p>
-
           <div>
-            <label className="label">
-              Cantidad en stock ({form.unit})
-            </label>
+            <p className="text-sm font-bold text-app-secondary">Stock actual (opcional)</p>
+            <p className="text-xs text-app-muted mt-0.5">La app descuenta automáticamente con cada venta.</p>
+          </div>
+          <div>
+            <label className="label">Cantidad en stock ({form.unit === 'docena' ? 'u' : form.unit})</label>
             <input
               type="number"
               inputMode="decimal"
-              placeholder="Ej: 2.5"
+              placeholder="Ej: 500"
               value={form.stock}
               onChange={(e) => set('stock', e.target.value)}
               className="input-field"
               min="0"
               step="0.01"
             />
-            {errors.stock && <p className="text-xs text-red-500 mt-1 flex items-center gap-1"><AlertCircle size={12}/>{errors.stock}</p>}
+            {errors.stock && <p className="text-xs text-red-500 mt-1">{errors.stock}</p>}
           </div>
-
           <div>
-            <label className="label">
-              Alarma de stock bajo ({form.unit})
-            </label>
+            <label className="label">Alarma de stock bajo ({form.unit === 'docena' ? 'u' : form.unit})</label>
             <input
               type="number"
               inputMode="decimal"
-              placeholder="Ej: 0.5 — te avisamos cuando quede menos"
+              placeholder="Ej: 100 — te avisamos cuando quede menos"
               value={form.lowStockAlert}
               onChange={(e) => set('lowStockAlert', e.target.value)}
               className="input-field"
               min="0"
               step="0.01"
             />
-            <p className="text-xs text-app-faint mt-1">
-              Cuando el stock baje de este número, aparece una alerta.
-            </p>
+            <p className="text-xs text-app-faint mt-1">Cuando el stock baje de este número aparece una alerta.</p>
           </div>
         </div>
 
       </div>
 
-      {/* ── Save button fixed at bottom ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
+      {/* Botón guardar */}
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto border-t border-app px-4 py-3 z-30"
+           style={{backgroundColor:'var(--bg-app)'}}>
         <button
           onClick={handleSave}
           disabled={saving}
