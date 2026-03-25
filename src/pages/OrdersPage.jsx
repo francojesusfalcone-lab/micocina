@@ -94,7 +94,7 @@ export default function OrdersPage() {
           {filtered.length === 0 ? (
             <EmptyState
               icon={ClipboardList}
-              lottieUrl="https://assets9.lottiefiles.com/packages/lf20_uu0x8lqv.json"
+              image="/empty-comandas.png"
               title="Sin comandas"
               description={
                 filter === 'active'

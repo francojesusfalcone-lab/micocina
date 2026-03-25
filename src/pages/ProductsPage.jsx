@@ -105,7 +105,6 @@ export default function ProductsPage() {
           {filtered.length === 0 ? (
             <EmptyState
               icon={ShoppingBag}
-              lottieUrl="https://assets4.lottiefiles.com/packages/lf20_jcikwtux.json"
               title="Sin productos aún"
               description={
                 tab === 'recipes'
@@ -120,6 +119,7 @@ export default function ProductsPage() {
                   + Agregar producto
                 </button>
               }
+              image="/empty-productos.png"
             />
           ) : (
             filtered.map((recipe) => (
