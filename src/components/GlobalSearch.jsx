@@ -45,9 +45,9 @@ export default function GlobalSearch() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-white">
+        <div className="fixed inset-0 z-50 flex flex-col" style={{backgroundColor:'var(--bg-app)'}}>
           {/* Header */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-app">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-app" style={{backgroundColor:'var(--bg-surface)'}}>
             <Search size={18} className="text-app-faint shrink-0" />
             <input
               ref={inputRef}
@@ -55,6 +55,7 @@ export default function GlobalSearch() {
               onChange={e => setQuery(e.target.value)}
               placeholder="Buscar productos, ingredientes, comandas..."
               className="flex-1 text-sm font-medium outline-none text-app-primary placeholder:text-app-faint"
+              style={{backgroundColor:'transparent'}}
             />
             <button onClick={() => setOpen(false)} className="text-app-faint active:scale-95">
               <X size={20} />
@@ -73,7 +74,8 @@ export default function GlobalSearch() {
                 <div className="space-y-2">
                   {results.recipes.map(r => (
                     <button key={r.id} onClick={() => go(`/productos/${r.id}`)}
-                      className="w-full flex items-center gap-3 p-3 bg-app rounded-xl text-left active:bg-surface-100">
+                      className="w-full flex items-center gap-3 p-3 rounded-xl text-left active:opacity-70 transition-opacity border border-app"
+                      style={{backgroundColor:'var(--bg-card)'}}>
                       <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
                         <ShoppingBag size={14} className="text-primary-600" />
                       </div>
@@ -95,7 +97,8 @@ export default function GlobalSearch() {
                 <div className="space-y-2">
                   {results.ingredients.map(i => (
                     <button key={i.id} onClick={() => go(`/stock/${i.id}`)}
-                      className="w-full flex items-center gap-3 p-3 bg-app rounded-xl text-left active:bg-surface-100">
+                      className="w-full flex items-center gap-3 p-3 rounded-xl text-left active:opacity-70 transition-opacity border border-app"
+                      style={{backgroundColor:'var(--bg-card)'}}>
                       <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
                         <Package size={14} className="text-primary-600" />
                       </div>
@@ -118,7 +121,8 @@ export default function GlobalSearch() {
                 <div className="space-y-2">
                   {results.orders.map(o => (
                     <button key={o.id} onClick={() => go(`/comandas/${o.id}`)}
-                      className="w-full flex items-center gap-3 p-3 bg-app rounded-xl text-left active:bg-surface-100">
+                      className="w-full flex items-center gap-3 p-3 rounded-xl text-left active:opacity-70 transition-opacity border border-app"
+                      style={{backgroundColor:'var(--bg-card)'}}>
                       <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
                         <ClipboardList size={14} className="text-primary-600" />
                       </div>
