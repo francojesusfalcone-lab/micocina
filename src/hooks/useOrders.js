@@ -21,7 +21,7 @@ export const PAYMENT_METHODS = [
   { value: 'debt',        label: 'Debe',           icon: '📋' },
 ]
 
-export const FREE_DAILY_LIMIT = 20
+export const FREE_DAILY_LIMIT = 15
 
 // ─── Hooks de lectura ─────────────────────────────────────────────────────────
 export function useOrders() {

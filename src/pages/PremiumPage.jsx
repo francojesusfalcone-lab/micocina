@@ -10,15 +10,16 @@ import { db } from '../db'
 import { createMPPreference, activatePlanLocally, getPlanPrice } from '../lib/mercadopago'
 
 const FEATURES = [
-  { icon: ShoppingBag, label: 'Recetas',                    free: 'Ilimitadas',  premium: 'Ilimitadas' },
-  { icon: null,        label: 'Comandas por dia',            free: 'Hasta 20',    premium: 'Ilimitadas' },
-  { icon: Sparkles,    label: 'Analisis IA de costos',       free: false,         premium: true },
-  { icon: BarChart2,   label: 'Sugerencia de precio optimo', free: false,         premium: true },
-  { icon: null,        label: 'Reportes semanales/mensuales',free: false,         premium: true },
-  { icon: Users,       label: 'CRM de clientes',             free: false,         premium: true },
-  { icon: null,        label: 'Historial de costos',         free: false,         premium: true },
-  { icon: Wallet,      label: 'Gastos fijos',                free: false,         premium: true },
-  { icon: Shield,      label: 'Soporte prioritario',         free: false,         premium: true },
+  { label: 'Comandas por día',             free: 'Hasta 15',    premium: 'Ilimitadas' },
+  { label: 'Recetas y productos',          free: 'Ilimitadas',  premium: 'Ilimitadas' },
+  { label: 'Stock e ingredientes',         free: 'Ilimitados',  premium: 'Ilimitados' },
+  { label: 'Combos',                       free: false,         premium: true },
+  { label: 'CRM de clientes',              free: false,         premium: true },
+  { label: 'Gastos fijos',                 free: false,         premium: true },
+  { label: 'Análisis IA de tu negocio',    free: false,         premium: true },
+  { label: 'Historial de precios',         free: false,         premium: true },
+  { label: 'Reportes semanales/mensuales', free: false,         premium: true },
+  { label: 'Soporte prioritario',          free: false,         premium: true },
 ]
 
 function FeatureValue({ val }) {
@@ -180,10 +181,11 @@ export default function PremiumPage() {
           <p className="text-amber-100 text-sm mb-5">Sabe exactamente cuanto ganas con cada plato. La IA te sugiere el precio ideal.</p>
           <div className="bg-white/20 rounded-2xl px-6 py-4 inline-block">
             <div className="flex items-end justify-center gap-2">
-              <span className="text-4xl font-display font-bold text-white">USD 5</span>
+              <span className="text-4xl font-display font-bold text-white">USD 9.99</span>
               <span className="text-amber-100 text-sm mb-1">/mes</span>
             </div>
-            <p className="text-amber-200 text-xs mt-1">MercadoPago convierte a tu moneda local · Cancelás cuando querés</p>
+            <p className="text-amber-200 text-xs mt-1">o USD 89.99/año — 25% de descuento</p>
+            <p className="text-amber-200 text-xs mt-0.5">MercadoPago · Cancelás cuando querés</p>
           </div>
         </div>
 
@@ -231,7 +233,7 @@ export default function PremiumPage() {
           </button>
           <div className="flex items-center gap-2 justify-center">
             <Shield size={12} className="text-app-faint" />
-            <p className="text-xs text-app-faint">Pago 100% seguro via MercadoPago · USD 5/mes</p>
+            <p className="text-xs text-app-faint">Pago 100% seguro via MercadoPago · USD 9.99/mes</p>
           </div>
         </div>
 
