@@ -235,35 +235,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Secondary stats — 3 columnas */}
-        {isLoading ? (
-          <div className="flex gap-3">
-            <Skeleton className="flex-1 h-24" />
-            <Skeleton className="flex-1 h-24" />
-            <Skeleton className="flex-1 h-24" />
-          </div>
-        ) : (
-          <div className="flex gap-3">
-            <StatCard
-              label="Ticket prom."
-              value={formatCurrency(stats.avgOrder, settings.currencySymbol)}
-              sub={`${stats.totalOrders} pedidos`}
-              icon={BarChart2} color="gold"
-            />
-            <StatCard
-              label="Activos"
-              value={stats.activeOrders}
-              sub={stats.activeOrders > 0 ? 'en curso' : 'Al día ✓'}
-              icon={ClipboardList} color={stats.activeOrders > 0 ? 'amber' : 'green'}
-            />
-            <StatCard
-              label="Por cobrar"
-              value={formatCurrency(stats.totalDebt, settings.currencySymbol)}
-              sub={stats.totalDebt > 0 ? 'pendiente' : 'Sin deudas ✓'}
-              icon={CreditCard} color={stats.totalDebt > 0 ? 'red' : 'gold'}
-            />
-          </div>
-        )}
+
 
         {/* Real profit (Premium) */}
         {!isLoading && isPremium && profit && profit.hasExpenses && (
