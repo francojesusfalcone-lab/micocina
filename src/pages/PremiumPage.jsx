@@ -29,7 +29,7 @@ function FeatureValue({ val }) {
 function SuccessScreen({ navigate }) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-8 text-center gap-5 py-16">
-      <div className="w-20 h-20 rounded-3xl bg-primary-50 border-2 border-primary-200 flex items-center justify-center">
+      <div className="w-20 h-20 rounded-3xl border-2 border-app flex items-center justify-center" style={{backgroundColor:"var(--bg-card)"}}>
         <Crown size={36} className="text-primary-600" />
       </div>
       <h2 className="text-2xl font-display font-bold text-app-primary">¡Bienvenida a Premium! 🎉</h2>
@@ -103,7 +103,7 @@ export default function PremiumPage() {
           <h1 className="page-title">Premium activo</h1>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5 pb-24">
-          <div className="w-20 h-20 rounded-3xl bg-primary-50 border-2 border-primary-200 flex items-center justify-center">
+          <div className="w-20 h-20 rounded-3xl border-2 border-app flex items-center justify-center" style={{backgroundColor:"var(--bg-card)"}}>
             <Crown size={36} className="text-primary-600" />
           </div>
           <div>

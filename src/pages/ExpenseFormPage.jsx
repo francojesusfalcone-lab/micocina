@@ -116,7 +116,7 @@ export default function ExpenseFormPage() {
                   'flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-left transition-all active:scale-95',
                   form.category === value
                     ? 'border-primary-500 bg-primary-50'
-                    : 'border-app bg-white'
+                    : 'border-app'
                 )}
               >
                 <span className="text-lg">{icon}</span>
@@ -140,7 +140,7 @@ export default function ExpenseFormPage() {
                   'w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all active:scale-[0.99]',
                   form.frequency === value
                     ? 'border-primary-500 bg-primary-50'
-                    : 'border-app bg-white'
+                    : 'border-app'
                 )}
               >
                 <span className={clsx('text-sm font-semibold', form.frequency === value ? 'text-primary-700' : 'text-gray-700')}>
@@ -222,7 +222,7 @@ export default function ExpenseFormPage() {
       </div>
 
       {/* ── Fixed footer ── */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
+      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto border-t border-app px-4 py-3 z-30" style={{backgroundColor:"var(--bg-app)"}}>
         <button
           onClick={handleSave}
           disabled={saving}
