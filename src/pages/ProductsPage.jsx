@@ -137,7 +137,7 @@ export default function ProductsPage() {
                   + Agregar producto
                 </button>
               }
-              image="/empty-productos.png"
+              image="/empty-productos.webp"
             />
           ) : filtered.map((recipe) => (
             <button

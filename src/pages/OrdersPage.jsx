@@ -99,7 +99,7 @@ export default function OrdersPage() {
           {filtered.length === 0 ? (
             <EmptyState
               icon={ClipboardList}
-              image="/empty-comandas.png"
+              image="/empty-comandas.webp"
               title="Sin comandas"
               description={
                 filter === 'active'
