@@ -73,7 +73,14 @@ export default function SettingsPage() {
     }
   }
 
-  async function handleSignOut() { await supabase.auth.signOut() }
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    // Limpiar cualquier sesión residual del localStorage
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('sb-')) localStorage.removeItem(key)
+    })
+    window.location.replace('/')
+  }
 
   async function handleDeleteAllData() {
     if (!confirmDelete) { setConfirmDelete(true); return }
