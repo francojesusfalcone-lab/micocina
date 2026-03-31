@@ -130,15 +130,10 @@ export default function App() {
     supabase.auth.getSession()
       .then(async ({ data, error }) => {
         if (error || !data?.session) {
-          Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
           init(null)
           return
         }
-        // Siempre forzar re-auth: invalidar token en servidor y limpiar local
-        // Esto evita que Supabase renueve el token silenciosamente via Google session
-        try { await supabase.auth.signOut({ scope: 'global' }) } catch (_) {}
-        Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
-        init(null)
+        init(data.session)
       })
       .catch(() => init(null))
 
