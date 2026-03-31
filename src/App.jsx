@@ -129,19 +129,20 @@ export default function App() {
 
     supabase.auth.getSession()
       .then(async ({ data, error }) => {
-        // Si hay token guardado pero la sesión no es válida, limpiar y forzar login
         if (error || !data?.session) {
           Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
           init(null)
+          return
+        }
+        // Verificar que el usuario realmente existe en Supabase auth
+        const { data: userData, error: userError } = await supabase.auth.getUser()
+        if (userError || !userData?.user) {
+          // Usuario no existe o token inválido — forzar login
+          await supabase.auth.signOut()
+          Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
+          init(null)
         } else {
-          // Verificar que el token siga siendo válido con un refresh
-          const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession()
-          if (refreshError || !refreshed?.session) {
-            Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
-            init(null)
-          } else {
-            init(refreshed.session)
-          }
+          init(data.session)
         }
       })
       .catch(() => init(null))
