@@ -134,16 +134,11 @@ export default function App() {
           init(null)
           return
         }
-        // Verificar que el usuario realmente existe en Supabase auth
-        const { data: userData, error: userError } = await supabase.auth.getUser()
-        if (userError || !userData?.user) {
-          // Usuario no existe o token inválido — forzar login
-          await supabase.auth.signOut()
-          Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
-          init(null)
-        } else {
-          init(data.session)
-        }
+        // Siempre forzar re-auth: invalidar token en servidor y limpiar local
+        // Esto evita que Supabase renueve el token silenciosamente via Google session
+        try { await supabase.auth.signOut({ scope: 'global' }) } catch (_) {}
+        Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-')) localStorage.removeItem(k) })
+        init(null)
       })
       .catch(() => init(null))
 
