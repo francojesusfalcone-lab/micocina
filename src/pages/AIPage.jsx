@@ -102,7 +102,7 @@ export default function AIPage() {
             ))}
           </div>
           <button onClick={() => navigate('/premium')} className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-2xl active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-base shadow-md">
-            <Star size={18} /> Activar Premium — $5/mes
+            <Star size={18} /> Activar Premium — USD 9.99/mes
           </button>
         </div>
       </div>
