@@ -29,15 +29,19 @@ function FeatureValue({ val }) {
 
 function SuccessScreen({ navigate }) {
   return (
-    <div className="flex flex-col items-center justify-center flex-1 px-8 text-center gap-5 py-16">
-      <div className="w-20 h-20 rounded-3xl border-2 border-app flex items-center justify-center" style={{backgroundColor:"var(--bg-card)"}}>
-        <Crown size={36} className="text-primary-600" />
+    <div className="flex flex-col min-h-full bg-app pt-safe">
+      <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-6 py-16">
+        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-xl">
+          <Crown size={44} className="text-white" />
+        </div>
+        <div>
+          <h2 className="text-2xl font-display font-bold text-app-primary">¡Bienvenida a Premium! 🎉</h2>
+          <p className="text-sm text-app-muted mt-2 leading-relaxed">Tu pago fue aprobado. Ya tenés acceso a todas las funciones Premium.</p>
+        </div>
+        <button onClick={() => navigate('/', { replace: true })} className="w-full btn-primary py-4 text-base">
+          Ir al dashboard
+        </button>
       </div>
-      <h2 className="text-2xl font-display font-bold text-app-primary">¡Bienvenida a Premium! 🎉</h2>
-      <p className="text-sm text-app-muted leading-relaxed">Tu pago fue aprobado. Ya tenés acceso a todas las funciones Premium.</p>
-      <button onClick={() => navigate('/', { replace: true })} className="w-full btn-primary py-4 text-base">
-        Ir al dashboard
-      </button>
     </div>
   )
 }
@@ -82,17 +86,12 @@ export default function PremiumPage() {
   if (mpStatus === 'approved' || collection === 'approved') {
     const planType = new URLSearchParams(window.location.search).get('plan') || 'monthly'
     activatePlanLocally(db, planType).then(() => { setPlan('premium') })
-    return (
-      <div className="flex flex-col min-h-full bg-white pt-safe">
-        <div className="px-4 py-4 border-b border-app"><h1 className="page-title">Premium</h1></div>
-        <SuccessScreen navigate={navigate} />
-      </div>
-    )
+    return <SuccessScreen navigate={navigate} />
   }
 
   if (mpStatus === 'pending') {
     return (
-      <div className="flex flex-col min-h-full bg-white pt-safe">
+      <div className="flex flex-col min-h-full bg-app pt-safe">
         <div className="flex items-center gap-3 px-4 py-4 border-b border-app">
           <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95"><ChevronLeft size={20} className="text-app-muted" /></button>
           <h1 className="page-title">Premium</h1>
@@ -202,7 +201,7 @@ export default function PremiumPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white pt-safe pb-safe">
+    <div className="flex flex-col min-h-screen bg-app pt-safe pb-safe">
 
       <div className="flex items-center gap-3 px-4 py-4 border-b border-app">
         <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95 transition-all">
