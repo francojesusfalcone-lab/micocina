@@ -119,6 +119,22 @@ export default function PremiumPage() {
             <p className="text-sm text-app-muted">Tenés acceso a todas las funciones. Gracias por apoyar MiCuchina.</p>
           </div>
 
+          {/* Features incluidas */}
+          <div className="w-full bg-app rounded-2xl overflow-hidden border border-app">
+            <div className="grid grid-cols-3 bg-surface-100">
+              <div className="px-3 py-3 text-xs font-bold text-app-muted uppercase tracking-wide">Función</div>
+              <div className="px-3 py-3 text-xs font-bold text-app-muted uppercase tracking-wide text-center">Gratis</div>
+              <div className="px-3 py-3 text-xs font-bold text-amber-700 uppercase tracking-wide text-center bg-amber-50">Premium ✓</div>
+            </div>
+            {FEATURES.map((f, i) => (
+              <div key={i} className={`grid grid-cols-3 border-t border-app ${i % 2 === 0 ? 'bg-card-color' : 'bg-surface-50/50'}`}>
+                <div className="px-3 py-3 text-sm text-app-secondary font-medium flex items-center">{f.label}</div>
+                <div className="px-3 py-3 text-center flex items-center justify-center"><FeatureValue val={f.free} /></div>
+                <div className="px-3 py-3 text-center flex items-center justify-center bg-amber-50/30"><FeatureValue val={f.premium} /></div>
+              </div>
+            ))}
+          </div>
+
           {/* Renovar plan */}
           <div className="w-full bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left space-y-3">
             <p className="text-sm font-bold text-amber-800">Renovar plan</p>
@@ -213,7 +229,7 @@ export default function PremiumPage() {
           <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-4">
             <Crown size={26} className="text-white" />
           </div>
-          <h2 className="text-2xl font-display font-bold text-white mb-2">MiCocina Premium</h2>
+          <h2 className="text-2xl font-display font-bold text-white mb-2">MiCuchina Premium</h2>
           <p className="text-amber-100 text-sm mb-5">Sabe exactamente cuanto ganas con cada plato. La IA te sugiere el precio ideal.</p>
           <div className="bg-white/20 rounded-2xl px-6 py-4 inline-block">
             <div className="flex items-end justify-center gap-2">
