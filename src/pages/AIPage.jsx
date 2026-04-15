@@ -119,7 +119,7 @@ export default function AIPage() {
     setResult(null)
     try {
       const context = await buildAIContext(settings)
-      const hasData = context.recipes?.length > 0 || context.orders?.length > 0 || context.ingredients?.length > 0
+      const hasData = context.ingredients?.length > 0 || context.recipes?.length > 0 || context.orders?.length > 0
       if (!hasData) {
         setError('sin_datos')
         setLoading(false)
@@ -198,7 +198,7 @@ export default function AIPage() {
               <AlertTriangle size={18} className="text-amber-500 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-bold text-amber-700">No hay datos suficientes</p>
-                <p className="text-xs text-amber-600 mt-1">Necesitás al menos un ingrediente, un producto y una comanda entregada.</p>
+                <p className="text-xs text-amber-600 mt-1">Necesitás al menos un ingrediente o producto cargado para analizar.</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -260,7 +260,7 @@ export default function AIPage() {
 
       {/* Botón CTA — solo visible si puede analizar */}
       {!loading && canAnalyze && (
-        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-app px-4 py-3 z-30">
+        <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto border-t border-app px-4 py-3 z-30" style={{backgroundColor:'var(--bg-card)'}}>
           <button onClick={runAnalysis} className="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold py-4 rounded-2xl active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-base shadow-sm">
             <Sparkles size={20} /> Analizar mi negocio
           </button>
