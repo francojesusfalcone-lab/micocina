@@ -1,88 +1,57 @@
-export const config = { runtime: 'edge' }
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 })
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const ACCESS_TOKEN = process.env.VITE_MP_ACCESS_TOKEN
-  if (!ACCESS_TOKEN) {
-    return new Response(JSON.stringify({ error: 'MP token no configurado' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  let body
-  try {
-    body = await req.json()
-  } catch {
-    return new Response(JSON.stringify({ error: 'Body inválido' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  const origin = req.headers.get('origin') || 'https://micocina-eta.vercel.app'
+  const { businessName, country } = req.body || {}
 
   const preference = {
     items: [
       {
-        id:          'micocina-premium-monthly',
-        title:       'MiCocina Premium — Suscripción mensual',
+        id:          'micuchina-premium-monthly',
+        title:       'MiCuchina Premium — Suscripción mensual',
         description: 'Comandas ilimitadas, CRM, IA, gastos fijos y más',
         quantity:    1,
-        unit_price:  5,
+        unit_price:  9.99,
         currency_id: 'USD',
       },
     ],
     payer: {
-      name: body.businessName || 'Usuario',
+      name: businessName || 'Usuario',
     },
     back_urls: {
-      success: `${origin}/premium?status=approved`,
-      failure: `${origin}/premium?status=failure`,
-      pending: `${origin}/premium?status=pending`,
+      success: 'https://www.micuchina.com/premium/success',
+      failure: 'https://www.micuchina.com/premium/failure',
+      pending: 'https://www.micuchina.com/premium/pending',
     },
     auto_return:          'approved',
-    statement_descriptor: 'MICOCINA',
-    external_reference:   `micocina_${Date.now()}`,
-    metadata: {
-      businessName: body.businessName,
-      country:      body.country,
-    },
+    statement_descriptor: 'MICUCHINA',
+    external_reference:   `micuchina_${Date.now()}`,
+    metadata: { businessName, country },
   }
 
-  const mpRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
-    method: 'POST',
-    headers: {
-      'Content-Type':  'application/json',
-      'Authorization': `Bearer ${ACCESS_TOKEN}`,
-    },
-    body: JSON.stringify(preference),
-  })
-
-  const data = await mpRes.json()
-
-  if (!mpRes.ok) {
-    return new Response(JSON.stringify({ error: data.message || 'Error MP' }), {
-      status: mpRes.status,
-      headers: { 'Content-Type': 'application/json' },
+  try {
+    const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify(preference),
     })
-  }
 
-  return new Response(
-    JSON.stringify({
+    if (!response.ok) {
+      const err = await response.json()
+      return res.status(500).json({ error: err.message || 'Error MP' })
+    }
+
+    const data = await response.json()
+    return res.status(200).json({
       id:        data.id,
       initPoint: data.init_point,
       sandbox:   data.sandbox_init_point,
-    }),
-    {
-      status: 200,
-      headers: {
-        'Content-Type':                'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    }
-  )
+    })
+  } catch (err) {
+    return res.status(500).json({ error: err.message })
+  }
 }
