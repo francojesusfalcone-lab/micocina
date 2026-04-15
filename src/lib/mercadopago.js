@@ -22,7 +22,7 @@ export function getPlanPrice(_countryCode) {
 
 // ─── Crea una preferencia de pago en MP ──────────────────────────────────────
 // En producción esto debe hacerse desde tu backend para proteger el ACCESS_TOKEN
-export async function createMPPreference(settings, plan = 'monthly') {
+export async function createMPPreference(settings, plan = 'monthly', userId = null) {
   const response = await fetch('/api/create-preference', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -30,6 +30,7 @@ export async function createMPPreference(settings, plan = 'monthly') {
       businessName: settings.businessName,
       country:      settings.country,
       plan,
+      userId,
     }),
   })
 

@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { businessName, country, plan = 'monthly' } = req.body || {}
+  const { businessName, country, plan = 'monthly', userId } = req.body || {}
 
   const isAnnual = plan === 'annual'
   const price    = isAnnual ? 89.99 : 9.99
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     auto_return:          'approved',
     statement_descriptor: 'MICUCHINA',
     external_reference:   `micuchina_${plan}_${Date.now()}`,
-    metadata: { businessName, country, plan },
+    metadata: { businessName, country, plan, userId },
   }
 
   try {

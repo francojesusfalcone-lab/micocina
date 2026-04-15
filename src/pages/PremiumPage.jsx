@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Crown, Check, X, ChevronLeft, Zap, Users,
   Wallet, ShoppingBag, BarChart2, Shield,
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../store/appStore'
 import { db } from '../db'
 import { createMPPreference, activatePlanLocally, getPlanPrice } from '../lib/mercadopago'
+import { supabase } from '../lib/supabase'
 
 const FEATURES = [
   { label: 'Comandas por día',                     free: 'Hasta 10',   premium: 'Ilimitadas' },
@@ -60,6 +61,13 @@ export default function PremiumPage() {
   const isPremium = useAppStore((s) => s.isPremium())
   const setPlan   = useAppStore((s) => s.setPlan)
   const addToast  = useAppStore((s) => s.addToast)
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user?.id) setUserId(data.user.id)
+    })
+  }, [])
 
   const [loading,      setLoading]      = useState(false)
   const [showDevPanel, setShowDevPanel] = useState(false)
@@ -162,7 +170,7 @@ export default function PremiumPage() {
     setLoading(true)
     setMpError(null)
     try {
-      const pref = await createMPPreference(settings, plan)
+      const pref = await createMPPreference(settings, plan, userId)
       const url  = pref.initPoint
       if (url) {
         window.location.href = url
