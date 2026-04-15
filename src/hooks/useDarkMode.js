@@ -2,17 +2,17 @@ import { useEffect, useState } from 'react'
 import { db } from '../db'
 
 export function useDarkMode() {
-  const [dark, setDark] = useState(true)
+  const [dark, setDark] = useState(false)
 
   useEffect(() => {
     db.settings.get('darkMode').then(r => {
-      // Si nunca se guardó preferencia, default es oscuro
-      const val = r === undefined ? true : r?.value === true
+      // Si nunca se guardó preferencia, default es claro
+      const val = r === undefined ? false : r?.value === true
       setDark(val)
       document.documentElement.classList.toggle('dark', val)
     }).catch(() => {
-      setDark(true)
-      document.documentElement.classList.add('dark')
+      setDark(false)
+      document.documentElement.classList.remove('dark')
     })
   }, [])
 
