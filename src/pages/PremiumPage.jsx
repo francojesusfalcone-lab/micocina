@@ -165,17 +165,6 @@ export default function PremiumPage() {
           </div>
 
           <button onClick={() => navigate('/')} className="w-full btn-primary py-4">Ir al dashboard</button>
-          <button
-            onClick={async () => {
-              await db.user.put({ key: 'plan', value: 'free' })
-              setPlan('free')
-              addToast({ type: 'success', message: 'Plan cambiado a Free (testing)' })
-              navigate('/')
-            }}
-            className="text-xs text-gray-300"
-          >
-            [dev] Volver a Free
-          </button>
         </div>
       </div>
     )
@@ -305,40 +294,6 @@ export default function PremiumPage() {
             <Shield size={12} className="text-app-faint" />
             <p className="text-xs text-app-faint">Pago 100% seguro via MercadoPago</p>
           </div>
-        </div>
-
-        {/* Dev panel */}
-        <div className="px-4 mt-8">
-          <button onClick={() => setShowDevPanel(!showDevPanel)} className="text-xs text-gray-300 underline w-full text-center">
-            [Opciones de desarrollo]
-          </button>
-          {showDevPanel && (
-            <div className="mt-3 p-4 bg-app rounded-2xl border border-app space-y-3">
-              <p className="text-xs font-bold text-app-muted uppercase tracking-wide">Dev Mode</p>
-              <p className="text-xs text-app-muted">Configurá tu archivo <code className="bg-surface-200 px-1 rounded">.env</code>:</p>
-              <div className="bg-gray-900 text-green-400 text-xs font-mono p-3 rounded-xl leading-relaxed">
-                VITE_MP_PUBLIC_KEY=APP_USR-xxx<br/>
-                VITE_MP_ACCESS_TOKEN=APP_USR-xxx<br/>
-                VITE_MP_ENV=sandbox
-              </div>
-              <p className="text-xs text-app-faint">
-                Credenciales en{' '}
-                <a href="https://www.mercadopago.com.ar/developers/panel" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
-                  mercadopago.com/developers
-                </a>
-              </p>
-              <div className="border-t border-app pt-3">
-                <p className="text-xs text-app-muted mb-2">Activar Premium sin pago (testing):</p>
-                <button
-                  onClick={handleDevActivate}
-                  disabled={loading}
-                  className="w-full bg-primary-600 text-white text-sm font-bold py-2.5 rounded-xl active:scale-95 transition-all disabled:opacity-50"
-                >
-                  ✅ Activar Premium (sin pago real)
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
         <p className="text-center text-xs text-app-faint mt-6 px-8 leading-relaxed">
