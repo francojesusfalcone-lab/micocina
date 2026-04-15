@@ -120,12 +120,18 @@ export default function SettingsPage() {
               <Crown size={18} className="text-white" />
               <p className="font-display font-bold text-white">Activar Premium</p>
             </div>
-            <p className="text-sm text-amber-100">Comandas ilimitadas, CRM, historial de precios, IA y más — por solo $5/mes.</p>
+            <p className="text-sm text-amber-100">Comandas ilimitadas, CRM, historial de precios, IA y más — por solo USD 9.99/mes.</p>
             <div className="mt-3 inline-flex items-center bg-white/20 text-white text-sm font-bold px-4 py-1.5 rounded-xl">Ver beneficios →</div>
           </button>
         )}
 
         <Section title="Funciones">
+          {isPremium && (
+            <>
+              <SettingsRow icon={Crown} label="Mi plan Premium ⭐" value="Renovar o gestionar tu suscripción" onClick={() => navigate('/premium')} color="green" />
+              {divider}
+            </>
+          )}
           <SettingsRow icon={Wallet} label="Gastos fijos" value={isPremium ? 'Controlá tus costos fijos' : 'Premium'} onClick={() => navigate('/gastos')} color="red" badge={!isPremium ? <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg mr-1">PRO</span> : null} />
           {divider}
           <SettingsRow icon={Users} label="CRM Clientes" value={isPremium ? 'Historial y deudas por cliente' : 'Premium'} onClick={() => navigate('/clientes')} color="blue" badge={!isPremium ? <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg mr-1">PRO</span> : null} />
