@@ -22,13 +22,14 @@ export function getPlanPrice(_countryCode) {
 
 // ─── Crea una preferencia de pago en MP ──────────────────────────────────────
 // En producción esto debe hacerse desde tu backend para proteger el ACCESS_TOKEN
-export async function createMPPreference(settings) {
+export async function createMPPreference(settings, plan = 'monthly') {
   const response = await fetch('/api/create-preference', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       businessName: settings.businessName,
       country:      settings.country,
+      plan,
     }),
   })
 
@@ -42,14 +43,19 @@ export async function createMPPreference(settings) {
 
 // ─── Simula activación del plan (para testing sin backend) ───────────────────
 // En producción: el backend valida el webhook de MP y activa el plan en DB
-export async function activatePlanLocally(db) {
+export async function activatePlanLocally(db, plan = 'monthly') {
   const now = new Date().toISOString()
   const expiresAt = new Date()
-  expiresAt.setMonth(expiresAt.getMonth() + 1)
+  if (plan === 'annual') {
+    expiresAt.setFullYear(expiresAt.getFullYear() + 1)
+  } else {
+    expiresAt.setMonth(expiresAt.getMonth() + 1)
+  }
 
   await db.user.bulkPut([
-    { key: 'plan',       value: 'premium' },
-    { key: 'planSince',  value: now },
+    { key: 'plan',        value: 'premium' },
+    { key: 'planType',    value: plan },
+    { key: 'planSince',   value: now },
     { key: 'planExpires', value: expiresAt.toISOString() },
   ])
 }

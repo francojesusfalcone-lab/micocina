@@ -3,22 +3,26 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { businessName, country } = req.body || {}
+  const { businessName, country, plan = 'monthly' } = req.body || {}
+
+  const isAnnual = plan === 'annual'
+  const price    = isAnnual ? 89.99 : 9.99
+  const title    = isAnnual
+    ? 'MiCuchina Premium — Suscripción anual'
+    : 'MiCuchina Premium — Suscripción mensual'
 
   const preference = {
     items: [
       {
-        id:          'micuchina-premium-monthly',
-        title:       'MiCuchina Premium — Suscripción mensual',
+        id:          `micuchina-premium-${plan}`,
+        title,
         description: 'Comandas ilimitadas, CRM, IA, gastos fijos y más',
         quantity:    1,
-        unit_price:  9.99,
+        unit_price:  price,
         currency_id: 'USD',
       },
     ],
-    payer: {
-      name: businessName || 'Usuario',
-    },
+    payer: { name: businessName || 'Usuario' },
     back_urls: {
       success: 'https://www.micuchina.com/premium/success',
       failure: 'https://www.micuchina.com/premium/failure',
@@ -26,8 +30,8 @@ export default async function handler(req, res) {
     },
     auto_return:          'approved',
     statement_descriptor: 'MICUCHINA',
-    external_reference:   `micuchina_${Date.now()}`,
-    metadata: { businessName, country },
+    external_reference:   `micuchina_${plan}_${Date.now()}`,
+    metadata: { businessName, country, plan },
   }
 
   try {

@@ -64,8 +64,7 @@ export default function PremiumPage() {
   const [loading,      setLoading]      = useState(false)
   const [showDevPanel, setShowDevPanel] = useState(false)
   const [mpError,      setMpError]      = useState(null)
-
-  const price = getPlanPrice(settings.country)
+  const [selectedPlan, setSelectedPlan] = useState('monthly') // 'monthly' | 'annual'
 
   // Retorno desde MP
   const urlParams  = new URLSearchParams(window.location.search)
@@ -73,7 +72,8 @@ export default function PremiumPage() {
   const collection = urlParams.get('collection_status')
 
   if (mpStatus === 'approved' || collection === 'approved') {
-    activatePlanLocally(db).then(() => { setPlan('premium') })
+    const planType = new URLSearchParams(window.location.search).get('plan') || 'monthly'
+    activatePlanLocally(db, planType).then(() => { setPlan('premium') })
     return (
       <div className="flex flex-col min-h-full bg-white pt-safe">
         <div className="px-4 py-4 border-b border-app"><h1 className="page-title">Premium</h1></div>
@@ -102,14 +102,44 @@ export default function PremiumPage() {
           <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center active:scale-95"><ChevronLeft size={20} className="text-app-muted" /></button>
           <h1 className="page-title">Premium activo</h1>
         </div>
-        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-5 pb-24">
+        <div className="flex-1 flex flex-col items-center px-8 text-center gap-5 py-10 pb-24">
           <div className="w-20 h-20 rounded-3xl border-2 border-app flex items-center justify-center" style={{backgroundColor:"var(--bg-card)"}}>
             <Crown size={36} className="text-primary-600" />
           </div>
           <div>
             <h2 className="text-xl font-display font-bold text-app-primary mb-2">¡Ya sos Premium! ⭐</h2>
-            <p className="text-sm text-app-muted">Tenés acceso a todas las funciones. Gracias por apoyar MiCocina.</p>
+            <p className="text-sm text-app-muted">Tenés acceso a todas las funciones. Gracias por apoyar MiCuchina.</p>
           </div>
+
+          {/* Renovar plan */}
+          <div className="w-full bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left space-y-3">
+            <p className="text-sm font-bold text-amber-800">Renovar plan</p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setSelectedPlan('monthly')}
+                className={`rounded-xl p-3 border-2 text-center transition-all ${selectedPlan === 'monthly' ? 'border-amber-500 bg-amber-100' : 'border-amber-200 bg-white'}`}
+              >
+                <p className="text-sm font-bold text-amber-800">Mensual</p>
+                <p className="text-lg font-display font-bold text-amber-600">USD 9.99</p>
+              </button>
+              <button
+                onClick={() => setSelectedPlan('annual')}
+                className={`rounded-xl p-3 border-2 text-center transition-all relative ${selectedPlan === 'annual' ? 'border-amber-500 bg-amber-100' : 'border-amber-200 bg-white'}`}
+              >
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">-25%</span>
+                <p className="text-sm font-bold text-amber-800">Anual</p>
+                <p className="text-lg font-display font-bold text-amber-600">USD 89.99</p>
+              </button>
+            </div>
+            <button
+              onClick={() => handleCheckout(selectedPlan)}
+              disabled={loading}
+              className="w-full bg-[#009EE3] text-white font-bold py-3 rounded-xl active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              {loading ? <span className="animate-pulse">Conectando...</span> : <><span>💙</span> Renovar con MercadoPago</>}
+            </button>
+          </div>
+
           <button onClick={() => navigate('/')} className="w-full btn-primary py-4">Ir al dashboard</button>
           <button
             onClick={async () => {
@@ -128,12 +158,12 @@ export default function PremiumPage() {
   }
 
   // Checkout
-  async function handleCheckout() {
+  async function handleCheckout(plan = selectedPlan) {
     setLoading(true)
     setMpError(null)
     try {
-      const pref = await createMPPreference(settings)
-      const url  = import.meta.env.VITE_MP_ENV === 'production' ? pref.initPoint : pref.sandbox
+      const pref = await createMPPreference(settings, plan)
+      const url  = pref.initPoint
       if (url) {
         window.location.href = url
       } else {
@@ -222,8 +252,26 @@ export default function PremiumPage() {
 
         {/* CTA */}
         <div className="px-4 mt-6 space-y-3">
+          {/* Selector de plan */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setSelectedPlan('monthly')}
+              className={`rounded-2xl p-4 border-2 text-center transition-all ${selectedPlan === 'monthly' ? 'border-amber-500 bg-amber-50' : 'border-app bg-white'}`}
+            >
+              <p className="text-sm font-bold text-app-secondary">Mensual</p>
+              <p className="text-2xl font-display font-bold text-amber-600">USD 9.99</p>
+            </button>
+            <button
+              onClick={() => setSelectedPlan('annual')}
+              className={`rounded-2xl p-4 border-2 text-center transition-all relative ${selectedPlan === 'annual' ? 'border-amber-500 bg-amber-50' : 'border-app bg-white'}`}
+            >
+              <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">-25%</span>
+              <p className="text-sm font-bold text-app-secondary">Anual</p>
+              <p className="text-2xl font-display font-bold text-amber-600">USD 89.99</p>
+            </button>
+          </div>
           <button
-            onClick={handleCheckout}
+            onClick={() => handleCheckout(selectedPlan)}
             disabled={loading}
             className="w-full bg-[#009EE3] text-white font-display font-bold text-lg py-4 rounded-2xl active:scale-[0.99] transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-60"
           >
@@ -231,7 +279,7 @@ export default function PremiumPage() {
           </button>
           <div className="flex items-center gap-2 justify-center">
             <Shield size={12} className="text-app-faint" />
-            <p className="text-xs text-app-faint">Pago 100% seguro via MercadoPago · USD 9.99/mes</p>
+            <p className="text-xs text-app-faint">Pago 100% seguro via MercadoPago</p>
           </div>
         </div>
 
