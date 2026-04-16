@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { deductStock } from './useIngredients'
 import { pushRecord, pushDelete } from '../lib/sync'
-import { scheduleOneOrder, cancelOrderNotification } from './useStockNotifications'
+import { scheduleOneOrder, cancelOrderNotification, notifyUnpaidDelivery } from './useStockNotifications'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 export const STATUS_CONFIG = {
@@ -151,6 +151,11 @@ export async function updateOrderStatus(id, status) {
   pushRecord('orders', updated)
   if (['delivered','cancelled','cancelled_wasted'].includes(status)) {
     cancelOrderNotification(id)
+  }
+  // Notificar si se entregó sin cobrar
+  if (status === 'delivered') {
+    const latest = await db.orders.get(id)
+    if (latest) notifyUnpaidDelivery(latest)
   }
 }
 

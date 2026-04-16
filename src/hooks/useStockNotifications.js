@@ -13,10 +13,12 @@ export function useStockNotifications() {
       Notification.requestPermission().then(() => {
         checkAllLowStock()
         scheduleOrderNotifications()
+        scheduleDailySummary()
       })
     } else {
       checkAllLowStock()
       scheduleOrderNotifications()
+      scheduleDailySummary()
     }
   }, [])
 }
@@ -108,4 +110,49 @@ export function cancelOrderNotification(orderId) {
     clearTimeout(activeTimers.get(orderId))
     activeTimers.delete(orderId)
   }
+}
+
+// ─── Notificación: pedido entregado sin pagar ─────────────────────────────────
+export function notifyUnpaidDelivery(order) {
+  if (Notification.permission !== 'granted') return
+  if (order.isPaid || order.paymentMethod !== 'debt') return
+  const name = order.clientName ? ` de ${order.clientName}` : ''
+  new Notification('💸 Pedido entregado sin cobrar', {
+    body: `El pedido${name} fue entregado pero figura como "Debe". Recordá registrar el pago.`,
+    icon: '/icon-192.png',
+    tag: 'unpaid-' + order.id,
+  })
+}
+
+// ─── Resumen del día ──────────────────────────────────────────────────────────
+let dailySummaryTimer = null
+
+export function scheduleDailySummary() {
+  if (dailySummaryTimer) clearTimeout(dailySummaryTimer)
+
+  const now = new Date()
+  const target = new Date()
+  target.setHours(21, 0, 0, 0) // 21:00 hs
+
+  let msUntil = target.getTime() - now.getTime()
+  if (msUntil <= 0) return // ya pasó las 21hs
+
+  dailySummaryTimer = setTimeout(async () => {
+    if (Notification.permission !== 'granted') return
+    try {
+      const start = new Date()
+      start.setHours(0, 0, 0, 0)
+      const orders = await db.orders
+        .where('createdAt').aboveOrEqual(start.toISOString())
+        .toArray()
+      const delivered = orders.filter(o => o.status === 'delivered')
+      const total = delivered.reduce((sum, o) => sum + (o.total || 0), 0)
+      if (!delivered.length) return
+      new Notification('📊 Resumen de tu día', {
+        body: `Hoy entregaste ${delivered.length} pedido${delivered.length > 1 ? 's' : ''} por un total de $${total.toFixed(2)}. ¡Buen trabajo!`,
+        icon: '/icon-192.png',
+        tag: 'daily-summary',
+      })
+    } catch (e) { console.warn('[dailySummary]', e) }
+  }, msUntil)
 }
