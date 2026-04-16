@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { deductStock } from './useIngredients'
 import { pushRecord, pushDelete } from '../lib/sync'
+import { scheduleOneOrder, cancelOrderNotification } from './useStockNotifications'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 export const STATUS_CONFIG = {
@@ -118,6 +119,8 @@ export async function saveOrder(orderData, items) {
   pushRecord('orders', saved)
   const savedItems = await db.orderItems.where('orderId').equals(orderId).toArray()
   savedItems.forEach(i => pushRecord('order_items', i))
+  // Programar notificación si tiene hora de entrega
+  if (saved.deliveryTime) scheduleOneOrder(saved)
   return orderId
 }
 
@@ -146,6 +149,9 @@ export async function updateOrderStatus(id, status) {
   }
   const updated = await db.orders.get(id)
   pushRecord('orders', updated)
+  if (['delivered','cancelled','cancelled_wasted'].includes(status)) {
+    cancelOrderNotification(id)
+  }
 }
 
 // mode: 'restore' = vuelve al stock | 'wasted' = inutilizado (no vuelve)
