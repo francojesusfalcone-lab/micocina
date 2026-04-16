@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
+import { pushRecord, pushDelete } from '../lib/sync'
 
 // ─── Hooks de lectura ─────────────────────────────────────────────────────────
 export function useClients() {
@@ -95,27 +96,20 @@ export async function searchClients(query) {
 // ─── CRUD ─────────────────────────────────────────────────────────────────────
 export async function saveClient(data, id = null) {
   const now = new Date().toISOString()
-  const payload = {
-    name:     data.name.trim(),
-    phone:    data.phone?.trim() || '',
-    address:  data.address?.trim() || '',
-    notes:    data.notes?.trim() || '',
-    updatedAt: now,
-  }
-  if (id) {
-    await db.clients.update(id, payload)
-    return id
-  }
-  return db.clients.add({ ...payload, createdAt: now })
+  const payload = { name: data.name.trim(), phone: data.phone?.trim() || '', address: data.address?.trim() || '', notes: data.notes?.trim() || '', updatedAt: now }
+  let clientId
+  if (id) { await db.clients.update(id, payload); clientId = id }
+  else { clientId = await db.clients.add({ ...payload, createdAt: now }) }
+  const saved = await db.clients.get(clientId)
+  pushRecord('clients', saved)
+  return clientId
 }
 
 export async function deleteClient(id) {
-  // Desvincula órdenes pero no las borra
   const orders = await db.orders.where('clientId').equals(id).toArray()
-  for (const o of orders) {
-    await db.orders.update(o.id, { clientId: null })
-  }
+  for (const o of orders) await db.orders.update(o.id, { clientId: null })
   await db.clients.delete(id)
+  pushDelete('clients', id)
 }
 
 // Vincula una orden a un cliente (o actualiza datos de cliente en la orden)

@@ -4,6 +4,7 @@ import { useAppStore } from './store/appStore'
 import { db, initDB } from './db'
 import { loadPlanFromDB } from './lib/mercadopago'
 import { supabase } from './lib/supabase'
+import { syncFromSupabase, setSyncUserId } from './lib/sync'
 import BottomNav from './components/BottomNav'
 import ToastContainer from './components/ToastContainer'
 import LoginPage            from './pages/LoginPage'
@@ -107,13 +108,15 @@ export default function App() {
         if (ob?.value) setOnboardingDone(true)
         if (session) {
           try {
+            setSyncUserId(session.user.id)
             const { data } = await supabase.from('profiles').select('plan').eq('id', session.user.id).single()
-            // Si Supabase tiene plan premium, usar ese. Si no, usar el local (permite dev toggle)
             if (data?.plan === 'premium') {
               setPlan('premium')
             } else {
               setPlan(await loadPlanFromDB(db))
             }
+            // Sync datos desde Supabase en background
+            syncFromSupabase(session.user.id).catch(() => {})
           } catch { setPlan(await loadPlanFromDB(db)) }
         } else {
           setPlan(await loadPlanFromDB(db))

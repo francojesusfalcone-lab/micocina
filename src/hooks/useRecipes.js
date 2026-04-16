@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
+import { pushRecord, pushDelete } from '../lib/sync'
 
 export const RECIPE_CATEGORIES = [
   'Pizzas',
@@ -100,37 +101,28 @@ export async function saveRecipe(recipeData, items, existingId = null) {
 
   if (existingId) {
     await db.recipes.update(existingId, { ...recipeData, updatedAt: now })
-    // Borrar ingredientes anteriores y reemplazar
     await db.recipeIngredients.where('recipeId').equals(existingId).delete()
   } else {
     recipeId = await db.recipes.add({ ...recipeData, createdAt: now, updatedAt: now })
   }
-
-  // Insertar ingredientes nuevos
   if (items.length > 0) {
-    await db.recipeIngredients.bulkAdd(
-      items.map((item) => ({
-        recipeId,
-        ingredientId: item.ingredientId,
-        quantity:     Number(item.quantity),
-        unit:         item.unit,
-      }))
-    )
+    await db.recipeIngredients.bulkAdd(items.map((item) => ({
+      recipeId, ingredientId: item.ingredientId, quantity: Number(item.quantity), unit: item.unit,
+    })))
   }
-
+  const saved = await db.recipes.get(recipeId)
+  pushRecord('recipes', saved)
+  const riRows = await db.recipeIngredients.where('recipeId').equals(recipeId).toArray()
+  riRows.forEach(r => pushRecord('recipe_ingredients', r))
   return recipeId
 }
 
 export async function deleteRecipe(id) {
-  // Verificar si está en comandas activas
-  const usedInOrders = await db.orderItems
-    .where('recipeId').equals(id)
-    .count()
-  if (usedInOrders > 0) {
-    throw new Error(`Esta receta tiene ${usedInOrders} pedido(s) registrado(s). No se puede eliminar.`)
-  }
+  const usedInOrders = await db.orderItems.where('recipeId').equals(id).count()
+  if (usedInOrders > 0) throw new Error(`Esta receta tiene ${usedInOrders} pedido(s) registrado(s). No se puede eliminar.`)
   await db.recipeIngredients.where('recipeId').equals(id).delete()
   await db.recipes.delete(id)
+  pushDelete('recipes', id)
 }
 
 export async function toggleRecipeActive(id, isActive) {

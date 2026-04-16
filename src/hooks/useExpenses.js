@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
+import { pushRecord, pushDelete } from '../lib/sync'
 
 // ─── Categorías de gastos ────────────────────────────────────────────────────
 export const EXPENSE_CATEGORIES = [
@@ -91,22 +92,16 @@ export function useDailyExpenseTotal() {
 // ─── CRUD ────────────────────────────────────────────────────────────────────
 export async function saveExpense(data, id = null) {
   const now = new Date().toISOString()
-  const payload = {
-    name:        data.name.trim(),
-    category:    data.category || 'other',
-    amount:      parseFloat(data.amount) || 0,
-    frequency:   data.frequency || 'monthly',
-    isRecurring: data.frequency !== 'one_time',
-    notes:       data.notes?.trim() || '',
-    updatedAt:   now,
-  }
-  if (id) {
-    await db.expenses.update(id, payload)
-    return id
-  }
-  return db.expenses.add({ ...payload, createdAt: now })
+  const payload = { name: data.name.trim(), category: data.category || 'other', amount: parseFloat(data.amount) || 0, frequency: data.frequency || 'monthly', isRecurring: data.frequency !== 'one_time', notes: data.notes?.trim() || '', updatedAt: now }
+  let expenseId
+  if (id) { await db.expenses.update(id, payload); expenseId = id }
+  else { expenseId = await db.expenses.add({ ...payload, createdAt: now }) }
+  const saved = await db.expenses.get(expenseId)
+  pushRecord('expenses', saved)
+  return expenseId
 }
 
 export async function deleteExpense(id) {
   await db.expenses.delete(id)
+  pushDelete('expenses', id)
 }

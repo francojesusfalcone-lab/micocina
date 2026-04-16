@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { useAppStore } from '../store/appStore'
 import { notifyIfLowStock } from './useStockNotifications'
+import { pushRecord, pushDelete } from '../lib/sync'
 
 // ─── Unidades disponibles ────────────────────────────────────────────────────
 export const UNITS = [
@@ -66,48 +67,31 @@ export async function saveIngredient(data, existingId = null) {
   const now = new Date().toISOString()
 
   if (existingId) {
-    // Update
     const old = await db.ingredients.get(existingId)
     await db.ingredients.update(existingId, { ...data, updatedAt: now })
-
-    // Si cambió el precio, guardar en historial
     if (old && old.pricePerUnit !== data.pricePerUnit) {
-      await db.ingredientPriceHistory.add({
-        ingredientId: existingId,
-        price: data.pricePerUnit,
-        date: now,
-      })
+      await db.ingredientPriceHistory.add({ ingredientId: existingId, price: data.pricePerUnit, date: now })
     }
+    const updated = await db.ingredients.get(existingId)
+    pushRecord('ingredients', updated)
     return existingId
   } else {
-    // Create
-    const id = await db.ingredients.add({
-      ...data,
-      createdAt: now,
-      updatedAt: now,
-    })
-    // Guardar precio inicial en historial
-    await db.ingredientPriceHistory.add({
-      ingredientId: id,
-      price: data.pricePerUnit,
-      date: now,
-    })
+    const id = await db.ingredients.add({ ...data, createdAt: now, updatedAt: now })
+    await db.ingredientPriceHistory.add({ ingredientId: id, price: data.pricePerUnit, date: now })
+    const created = await db.ingredients.get(id)
+    pushRecord('ingredients', created)
     return id
   }
 }
 
 export async function deleteIngredient(id) {
-  // Verificar si está usado en alguna receta
-  const usedIn = await db.recipeIngredients
-    .where('ingredientId').equals(id)
-    .count()
-
+  const usedIn = await db.recipeIngredients.where('ingredientId').equals(id).count()
   if (usedIn > 0) {
     throw new Error(`Este ingrediente está usado en ${usedIn} receta(s). Eliminalo de las recetas primero.`)
   }
-
   await db.ingredientPriceHistory.where('ingredientId').equals(id).delete()
   await db.ingredients.delete(id)
+  pushDelete('ingredients', id)
 }
 
 export async function updateIngredientPrice(id, newPrice) {

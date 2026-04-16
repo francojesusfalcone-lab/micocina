@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import { deductStock } from './useIngredients'
+import { pushRecord, pushDelete } from '../lib/sync'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 export const STATUS_CONFIG = {
@@ -102,31 +103,21 @@ export async function saveOrder(orderData, items) {
   }, 0)
 
   const orderId = await db.orders.add({
-    clientName:    orderData.clientName || '',
-    clientId:      orderData.clientId || null,
-    clientPhone:   orderData.clientPhone || '',
-    clientAddress: orderData.clientAddress || '',
-    status:        'pending',
-    paymentMethod: orderData.paymentMethod || 'cash',
-    deliveryTime:  orderData.deliveryTime || '',
-    notes:         orderData.notes || '',
-    total,
-    isPaid:        orderData.isPaid ?? false,
-    stockDeducted: false,
-    createdAt:     now,
-    updatedAt:     now,
+    clientName: orderData.clientName || '', clientId: orderData.clientId || null,
+    clientPhone: orderData.clientPhone || '', clientAddress: orderData.clientAddress || '',
+    status: 'pending', paymentMethod: orderData.paymentMethod || 'cash',
+    deliveryTime: orderData.deliveryTime || '', notes: orderData.notes || '',
+    total, isPaid: orderData.isPaid ?? false, stockDeducted: false,
+    createdAt: now, updatedAt: now,
   })
-
-  // Guardar items
-  await db.orderItems.bulkAdd(
-    items.map((item) => ({
-      orderId,
-      recipeId:   item.recipeId,
-      quantity:   item.quantity,
-      unitPrice:  item.recipe?.salePrice ?? item.unitPrice ?? 0,
-    }))
-  )
-
+  await db.orderItems.bulkAdd(items.map((item) => ({
+    orderId, recipeId: item.recipeId, quantity: item.quantity,
+    unitPrice: item.recipe?.salePrice ?? item.unitPrice ?? 0,
+  })))
+  const saved = await db.orders.get(orderId)
+  pushRecord('orders', saved)
+  const savedItems = await db.orderItems.where('orderId').equals(orderId).toArray()
+  savedItems.forEach(i => pushRecord('order_items', i))
   return orderId
 }
 
@@ -137,33 +128,24 @@ export async function updateOrderStatus(id, status) {
 
   await db.orders.update(id, { status, updatedAt: now })
 
-  // Al marcar como entregado, descontar stock si no se hizo
   if (status === 'delivered' && !order.stockDeducted) {
     const items = await db.orderItems.where('orderId').equals(id).toArray()
     for (const item of items) {
       const recipe = await db.recipes.get(item.recipeId)
       if (recipe?.isPremiumCombo && recipe.comboItems?.length) {
-        // Es un combo: descontar stock de cada sub-producto × qty del combo
         for (const comboItem of recipe.comboItems) {
-          const subRecipeItems = await db.recipeIngredients
-            .where('recipeId').equals(comboItem.recipeId)
-            .toArray()
-          for (const ri of subRecipeItems) {
-            await deductStock(ri.ingredientId, ri.quantity * comboItem.qty * item.quantity)
-          }
+          const subRecipeItems = await db.recipeIngredients.where('recipeId').equals(comboItem.recipeId).toArray()
+          for (const ri of subRecipeItems) await deductStock(ri.ingredientId, ri.quantity * comboItem.qty * item.quantity)
         }
       } else {
-        // Producto normal
-        const recipeItems = await db.recipeIngredients
-          .where('recipeId').equals(item.recipeId)
-          .toArray()
-        for (const ri of recipeItems) {
-          await deductStock(ri.ingredientId, ri.quantity * item.quantity)
-        }
+        const recipeItems = await db.recipeIngredients.where('recipeId').equals(item.recipeId).toArray()
+        for (const ri of recipeItems) await deductStock(ri.ingredientId, ri.quantity * item.quantity)
       }
     }
     await db.orders.update(id, { stockDeducted: true, updatedAt: now })
   }
+  const updated = await db.orders.get(id)
+  pushRecord('orders', updated)
 }
 
 // mode: 'restore' = vuelve al stock | 'wasted' = inutilizado (no vuelve)
@@ -210,11 +192,14 @@ export async function cancelOrder(id, mode = 'restore') {
     stockDeducted: false,
     updatedAt: now,
   })
+  const updated = await db.orders.get(id)
+  pushRecord('orders', updated)
 }
 
 export async function deleteOrder(id) {
   await db.orderItems.where('orderId').equals(id).delete()
   await db.orders.delete(id)
+  pushDelete('orders', id)
 }
 
 export async function markOrderPaid(id, isPaid) {
