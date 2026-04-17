@@ -27,7 +27,7 @@ export default function StockPage() {
   return (
     <div className="flex flex-col min-h-full bg-app">
       <PageHeader
-        title="Ingredientes & Stock"
+        title="Stock"
         subtitle={`${ingredients.length} ingredientes`}
         action={
           <button
