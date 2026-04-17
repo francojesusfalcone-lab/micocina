@@ -140,14 +140,14 @@ export default function PremiumPage() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setSelectedPlan('monthly')}
-                className={`rounded-xl p-3 border-2 text-center transition-all ${selectedPlan === 'monthly' ? 'border-amber-500 bg-amber-100' : 'border-amber-200 bg-white'}`}
+                className={`rounded-xl p-3 border-2 text-center transition-all ${selectedPlan === 'monthly' ? 'border-amber-500 bg-amber-100' : 'border-amber-200 bg-card-color'}`}
               >
                 <p className="text-sm font-bold text-amber-800">Mensual</p>
                 <p className="text-lg font-display font-bold text-amber-600">USD 9.99</p>
               </button>
               <button
                 onClick={() => setSelectedPlan('annual')}
-                className={`rounded-xl p-3 border-2 text-center transition-all relative ${selectedPlan === 'annual' ? 'border-amber-500 bg-amber-100' : 'border-amber-200 bg-white'}`}
+                className={`rounded-xl p-3 border-2 text-center transition-all relative ${selectedPlan === 'annual' ? 'border-amber-500 bg-amber-100' : 'border-amber-200 bg-card-color'}`}
               >
                 <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">-25%</span>
                 <p className="text-sm font-bold text-amber-800">Anual</p>
@@ -238,7 +238,7 @@ export default function PremiumPage() {
               <div className="px-3 py-3 text-xs font-bold text-amber-700 uppercase tracking-wide text-center bg-amber-50">Premium</div>
             </div>
             {FEATURES.map((f, i) => (
-              <div key={i} className={`grid grid-cols-3 border-t border-app ${i % 2 === 0 ? 'bg-white' : 'bg-surface-50/50'}`}>
+              <div key={i} className={`grid grid-cols-3 border-t border-app ${i % 2 === 0 ? 'bg-card-color' : 'bg-surface-50/50'}`}>
                 <div className="px-3 py-3 text-sm text-app-secondary font-medium flex items-center gap-1.5">
                   {f.icon && <f.icon size={13} className="text-app-faint shrink-0" />}
                   {f.label}
@@ -268,14 +268,14 @@ export default function PremiumPage() {
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setSelectedPlan('monthly')}
-              className={`rounded-2xl p-4 border-2 text-center transition-all ${selectedPlan === 'monthly' ? 'border-amber-500 bg-amber-50' : 'border-app bg-white'}`}
+              className={`rounded-2xl p-4 border-2 text-center transition-all ${selectedPlan === 'monthly' ? 'border-amber-500 bg-amber-50' : 'border-app bg-card-color'}`}
             >
               <p className="text-sm font-bold text-app-secondary">Mensual</p>
               <p className="text-2xl font-display font-bold text-amber-600">USD 9.99</p>
             </button>
             <button
               onClick={() => setSelectedPlan('annual')}
-              className={`rounded-2xl p-4 border-2 text-center transition-all relative ${selectedPlan === 'annual' ? 'border-amber-500 bg-amber-50' : 'border-app bg-white'}`}
+              className={`rounded-2xl p-4 border-2 text-center transition-all relative ${selectedPlan === 'annual' ? 'border-amber-500 bg-amber-50' : 'border-app bg-card-color'}`}
             >
               <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">-25%</span>
               <p className="text-sm font-bold text-app-secondary">Anual</p>
