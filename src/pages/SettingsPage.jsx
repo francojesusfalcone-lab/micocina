@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Store, Globe, Crown, ChevronRight, Wallet, Users, Bell, Moon, Info, LogOut, Shield, Trash2, Share2, Download, HelpCircle } from 'lucide-react'
+import { Store, Globe, Crown, ChevronRight, Wallet, Users, Bell, Moon, Info, LogOut, Shield, Trash2, Share2, Download, HelpCircle, Clock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import { useAppStore } from '../store/appStore'
@@ -42,6 +42,13 @@ export default function SettingsPage() {
   const { dark, toggle: toggleDark } = useDarkMode()
   const [installPrompt, setInstallPrompt] = useState(null)
   const [installed, setInstalled] = useState(false)
+  const [inactivityHours, setInactivityHours] = useState(7)
+
+  useEffect(() => {
+    db.settings.get('inactivityHours').then(r => {
+      if (r?.value) setInactivityHours(r.value)
+    })
+  }, [])
 
   useEffect(() => {
     const handler = (e) => { e.preventDefault(); setInstallPrompt(e) }
@@ -137,6 +144,30 @@ export default function SettingsPage() {
           <SettingsRow icon={Users} label="CRM Clientes" value={isPremium ? 'Historial y deudas por cliente' : 'Premium'} onClick={() => navigate('/clientes')} color="blue" badge={!isPremium ? <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg mr-1">PRO</span> : null} />
           {divider}
           <SettingsRow icon={Bell} label="Notificaciones" value="Funcionan solo con la app abierta" onClick={() => {}} color="blue" />
+          {divider}
+          {/* Horas de inactividad */}
+          <div style={{backgroundColor:'var(--bg-card)'}} className="w-full flex items-center gap-3 px-4 py-3.5">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-blue-50 text-blue-600">
+              <Clock size={18} />
+            </div>
+            <div className="flex-1 text-left min-w-0">
+              <p className="text-sm font-semibold text-app-primary">Horas hasta "Sin actividad"</p>
+              <p className="text-xs text-app-muted mt-0.5">Si no hay pedidos en este tiempo, pasa a sin actividad</p>
+            </div>
+            <select
+              value={inactivityHours}
+              onChange={async (e) => {
+                const val = Number(e.target.value)
+                setInactivityHours(val)
+                await db.settings.put({ key: 'inactivityHours', value: val })
+              }}
+              className="text-sm font-bold text-app-primary bg-surface-100 border border-app rounded-xl px-3 py-1.5 shrink-0"
+            >
+              {[4, 6, 7, 8, 10, 12].map(h => (
+                <option key={h} value={h}>{h}hs</option>
+              ))}
+            </select>
+          </div>
           {divider}
           {/* Toggle modo oscuro */}
           <button

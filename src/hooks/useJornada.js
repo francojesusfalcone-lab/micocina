@@ -1,20 +1,24 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 
-const INACTIVITY_HOURS = 7 // horas sin pedidos → pasa a "sin actividad"
+const DEFAULT_INACTIVITY_HOURS = 7
+
+async function getInactivityHours() {
+  const setting = await db.settings.get('inactivityHours')
+  return setting?.value ?? DEFAULT_INACTIVITY_HOURS
+}
 
 export function useJornada() {
   return useLiveQuery(async () => {
-    const estado    = await db.jornada.get('estado')
-    const apertura  = await db.jornada.get('apertura')
+    const estado       = await db.jornada.get('estado')
+    const apertura     = await db.jornada.get('apertura')
     const ultimoPedido = await db.jornada.get('ultimoPedido')
+    const inactivityHours = await getInactivityHours()
 
-    // Si fue cerrado manualmente → 'cerrado'
     if (estado?.value === 'cerrado') {
       return { estado: 'cerrado', apertura: apertura?.value ?? null }
     }
 
-    // Si hay apertura, ver si sigue "en actividad" o pasó a "sin actividad"
     if (apertura?.value) {
       const msInactividad = ultimoPedido?.value
         ? Date.now() - new Date(ultimoPedido.value).getTime()
@@ -22,13 +26,12 @@ export function useJornada() {
 
       const horasInactivo = msInactividad / (1000 * 60 * 60)
 
-      if (horasInactivo >= INACTIVITY_HOURS) {
+      if (horasInactivo >= inactivityHours) {
         return { estado: 'sin_actividad', apertura: apertura.value, ultimoPedido: ultimoPedido?.value }
       }
       return { estado: 'activo', apertura: apertura.value, ultimoPedido: ultimoPedido?.value }
     }
 
-    // Sin apertura aún → sin actividad
     return { estado: 'sin_actividad', apertura: null }
   }, [], { estado: 'sin_actividad', apertura: null })
 }
