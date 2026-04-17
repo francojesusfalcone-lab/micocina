@@ -273,6 +273,7 @@ export default function DashboardPage() {
               </div>
               <p className="text-sm font-semibold text-app-muted">Sin comandas activas</p>
               <p className="text-xs text-app-faint mt-1">Las comandas aparecerán acá</p>
+              <p className="text-xs text-primary-500 mt-1 font-medium">💡 Podés empezar con un solo producto</p>
               <button onClick={() => navigate('/comandas/nueva')} className="btn-primary mt-4 text-sm py-2.5 px-5">
                 + Nueva comanda
               </button>

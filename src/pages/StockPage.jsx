@@ -76,7 +76,7 @@ export default function StockPage() {
               icon={Package}
               image="/empty-stock.webp"
               title="Sin ingredientes aún"
-              description="Cargá tus ingredientes con precios para calcular los costos reales de cada receta."
+              description="Cargá tus ingredientes con precios para calcular los costos reales de cada receta. No necesitás cargar todo de una — empezá con uno."
               action={
                 <button
                   onClick={() => navigate('/stock/nuevo')}

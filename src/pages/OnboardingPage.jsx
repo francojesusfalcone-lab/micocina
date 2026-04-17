@@ -78,6 +78,7 @@ export default function OnboardingPage() {
             className="input-field text-base"
           />
           <p className="text-xs text-app-faint mt-1">Podés cambiarlo después en Configuración.</p>
+          <p className="text-xs text-primary-500 mt-2 font-medium">💡 No necesitás cargar todo — podés empezar con un solo producto</p>
         </div>
 
         {/* País */}
