@@ -5,8 +5,8 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 const SECTIONS = [
   {
     emoji: '🌅',
-    title: 'Abrí y cerrá el día',
-    content: `Tocá "Abrir negocio" cuando empezás (no importa la hora). Vendé todo el día normal. Cuando terminás, tocá "Cerrar negocio" — la app calcula sola qué vendiste, qué insumos gastaste y cuánto te quedó en el bolsillo.\n\nSi se te olvida cerrar, no pasa nada: cerrás el día anterior y abrís uno nuevo cuando volvés.`,
+    title: 'Cómo funciona el estado del día',
+    content: `MiCuchina detecta sola cuándo estás trabajando. No necesitás tocar nada.\n\n🟢 En actividad — aparece automáticamente cuando creás tu primer pedido del día. La app empieza a contar ganancias desde ese momento.\n\n⚪ Sin actividad — si pasaron más de 7 horas sin pedidos, la app entra en este estado sola. Sigue mostrando el último resultado.\n\n🔒 Día cerrado — si vos querés cerrar el día manualmente, tocá "En actividad" y luego "Cerrar día". Útil para ver el resumen y empezar uno nuevo limpio.\n\nSi trabajás de madrugada o en horarios irregulares, no hay problema: el contador es por inactividad, no por hora. No te corta a medianoche.`,
   },
   {
     emoji: '🛒',
