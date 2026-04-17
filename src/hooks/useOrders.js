@@ -3,6 +3,7 @@ import { db } from '../db'
 import { deductStock } from './useIngredients'
 import { pushRecord, pushDelete } from '../lib/sync'
 import { scheduleOneOrder, cancelOrderNotification, notifyUnpaidDelivery } from './useStockNotifications'
+import { activarJornada } from './useJornada'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 export const STATUS_CONFIG = {
@@ -115,6 +116,8 @@ export async function saveOrder(orderData, items) {
     orderId, recipeId: item.recipeId, quantity: item.quantity,
     unitPrice: item.recipe?.salePrice ?? item.unitPrice ?? 0,
   })))
+  // Activar jornada automáticamente al primer pedido
+  await activarJornada()
   const saved = await db.orders.get(orderId)
   pushRecord('orders', saved)
   const savedItems = await db.orderItems.where('orderId').equals(orderId).toArray()

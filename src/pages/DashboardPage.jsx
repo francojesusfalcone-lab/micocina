@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore, formatCurrency } from '../store/appStore'
 import { PremiumBadge } from '../components/PremiumGate'
 import { useDashboardStats, useActiveOrders, useRealProfit } from '../hooks/useDashboard'
-import { useJornada, abrirJornada, cerrarJornada } from '../hooks/useJornada'
+import { useJornada, cerrarDia, reabrirDia } from '../hooks/useJornada'
 import { STATUS_CONFIG, PAYMENT_METHODS } from '../hooks/useOrders'
 import GlobalSearch from '../components/GlobalSearch'
 import clsx from 'clsx'
@@ -137,26 +137,33 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-2">
             <GlobalSearch />
-            {/* Botón jornada */}
-            {!jornada.abierto ? (
-              <button
-                onClick={abrirJornada}
-                className="flex items-center gap-1.5 bg-primary-600 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-sm active:scale-95 transition-all"
-              >
-                <span className="text-base leading-none">🟢</span> Abrir
-              </button>
-            ) : confirmCerrar ? (
-              <div className="flex items-center gap-1.5">
-                <button onClick={() => setConfirmCerrar(false)} className="text-xs font-bold text-app-muted bg-surface-100 px-2 py-2 rounded-xl">Cancelar</button>
-                <button onClick={() => { cerrarJornada(); setConfirmCerrar(false) }} className="text-xs font-bold text-white bg-red-500 px-2 py-2 rounded-xl">Confirmar</button>
-              </div>
-            ) : (
+            {/* Estado de actividad */}
+            {jornada.estado === 'activo' && (
               <button
                 onClick={() => setConfirmCerrar(true)}
-                className="flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-all"
+                className="flex items-center gap-1.5 bg-primary-50 text-primary-700 border border-primary-200 text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-all"
               >
-                <span className="text-base leading-none">🔴</span> Cerrar
+                <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" /> En actividad
               </button>
+            )}
+            {jornada.estado === 'sin_actividad' && (
+              <div className="flex items-center gap-1.5 bg-surface-100 text-app-muted text-xs font-bold px-3 py-2 rounded-xl">
+                <span className="w-2 h-2 rounded-full bg-gray-400" /> Sin actividad
+              </div>
+            )}
+            {jornada.estado === 'cerrado' && (
+              <button
+                onClick={reabrirDia}
+                className="flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-2 rounded-xl active:scale-95 transition-all"
+              >
+                🔒 Día cerrado
+              </button>
+            )}
+            {confirmCerrar && (
+              <div className="flex items-center gap-1.5 absolute right-4 top-4 z-10 bg-card-color border border-app rounded-xl px-3 py-2 shadow-lg">
+                <button onClick={() => setConfirmCerrar(false)} className="text-xs font-bold text-app-muted">Cancelar</button>
+                <button onClick={() => { cerrarDia(); setConfirmCerrar(false) }} className="text-xs font-bold text-white bg-red-500 px-2 py-1 rounded-lg">Cerrar día</button>
+              </div>
             )}
             {/* Badge Premium */}
             {!isPremium ? (
@@ -172,11 +179,16 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Banner jornada cerrada */}
-      {!jornada.abierto && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between">
-          <p className="text-xs font-semibold text-amber-700">Jornada cerrada — las stats son del último período</p>
-          <button onClick={abrirJornada} className="text-xs font-bold text-amber-700 underline">Abrir ahora</button>
+      {/* Banner estado */}
+      {jornada.estado === 'cerrado' && (
+        <div className="bg-surface-100 border-b border-app px-4 py-2.5 flex items-center justify-between">
+          <p className="text-xs font-semibold text-app-muted">🔒 Día cerrado — mostrando último resultado</p>
+          <button onClick={reabrirDia} className="text-xs font-bold text-primary-600 underline">Reabrir</button>
+        </div>
+      )}
+      {jornada.estado === 'sin_actividad' && jornada.apertura && (
+        <div className="bg-surface-100 border-b border-app px-4 py-2.5">
+          <p className="text-xs font-semibold text-app-muted">⚪ Sin actividad reciente — mostrando último resultado</p>
         </div>
       )}
 
