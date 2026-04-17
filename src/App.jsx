@@ -41,6 +41,7 @@ import InvitePage           from './pages/InvitePage'
 import TermsPage            from './pages/TermsPage'
 import SplashScreen         from './components/SplashScreen'
 import PageTransition       from './components/PageTransition'
+import WelcomeTutorial      from './components/WelcomeTutorial'
 import { useStockNotifications } from './hooks/useStockNotifications'
 import { useDarkMode } from './hooks/useDarkMode'
 
@@ -164,6 +165,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
+      <WelcomeTutorial />
       <Routes>
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/onboarding" element={onboardingDone ? <Navigate to="/" replace /> : <OnboardingPage />} />

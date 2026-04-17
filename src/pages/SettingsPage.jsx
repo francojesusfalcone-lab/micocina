@@ -136,7 +136,7 @@ export default function SettingsPage() {
           {divider}
           <SettingsRow icon={Users} label="CRM Clientes" value={isPremium ? 'Historial y deudas por cliente' : 'Premium'} onClick={() => navigate('/clientes')} color="blue" badge={!isPremium ? <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-lg mr-1">PRO</span> : null} />
           {divider}
-          <SettingsRow icon={Bell} label="Notificaciones" value="Stock bajo y pedidos próximos" onClick={() => {}} color="blue" />
+          <SettingsRow icon={Bell} label="Notificaciones" value="Funcionan solo con la app abierta" onClick={() => {}} color="blue" />
           {divider}
           {/* Toggle modo oscuro */}
           <button
@@ -205,7 +205,7 @@ export default function SettingsPage() {
         </Section>
 
         <p onClick={handleDevTap} className="text-center text-xs text-app-faint mt-6 mb-4 select-none">
-          MiCuchina · Hecho con ❤️ para cocineras de Latinoamérica
+          MiCuchina · Hecho con ❤️ para el chef de tu negocio
         </p>
       </div>
 

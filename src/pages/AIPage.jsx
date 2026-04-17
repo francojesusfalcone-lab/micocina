@@ -181,6 +181,10 @@ export default function AIPage() {
               <h2 className="text-lg font-display font-bold text-app-primary">¿Qué está pasando en tu negocio?</h2>
               <p className="text-sm text-app-muted mt-2 leading-relaxed max-w-xs mx-auto">La IA analiza tus ventas, costos, stock y clientes para darte sugerencias concretas.</p>
             </div>
+            <div className="w-full bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-start gap-2">
+              <AlertTriangle size={15} className="text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-700 leading-relaxed">Para mejores resultados necesitás al menos <span className="font-bold">2 días de datos cargados</span>. El análisis es orientativo — la decisión final siempre es tuya.</p>
+            </div>
             <div className="w-full space-y-2 text-left text-sm text-app-muted">
               {['📊 Últimos 30 días de ventas','🏆 Platos más vendidos y rentables','⚠️ Stock bajo y compras urgentes','💸 Gastos fijos vs ganancias reales','🕐 Hora pico y patrones de pedidos'].map(item => (
                 <div key={item} className="bg-card-color rounded-xl px-3 py-2.5 border border-app">{item}</div>
@@ -253,7 +257,7 @@ export default function AIPage() {
               </div>
             )}
 
-            <p className="text-xs text-app-faint text-center px-4 leading-relaxed">Análisis basado en los datos registrados en MiCuchina.</p>
+            <p className="text-xs text-app-faint text-center px-4 leading-relaxed">Análisis basado en los datos registrados en MiCuchina. Es orientativo — la decisión final siempre es tuya.</p>
           </>
         )}
       </div>
